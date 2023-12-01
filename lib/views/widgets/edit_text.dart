@@ -1,4 +1,3 @@
-import 'package:believer/controller/app_localization.dart';
 import 'package:believer/controller/my_app.dart';
 import 'package:flutter/material.dart';
 
@@ -36,7 +35,7 @@ class _EditTextState extends State<EditText> {
         decoration: InputDecoration(
             hintText: widget.hint,
             labelStyle: TextStyle(color: primaryColor),
-            labelText: widget.title.tr(context),
+            labelText: widget.title,
             suffixIcon: widget.secure
                 ? IconButton(
                     onPressed: () {

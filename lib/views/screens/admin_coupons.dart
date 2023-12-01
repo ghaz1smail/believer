@@ -58,17 +58,14 @@ class _AdminCouponsState extends State<AdminCoupons> {
                     ),
                     Expanded(
                       child: result.isEmpty
-                          ? const Column(
+                          ? Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(
-                                  Icons.description,
-                                  size: 100,
-                                ),
-                                SizedBox(
+                                Image.asset('assets/images/no_result.png'),
+                                const SizedBox(
                                   height: 20,
                                 ),
-                                Text('No data found')
+                                const Text('No data found')
                               ],
                             )
                           : ListView.builder(

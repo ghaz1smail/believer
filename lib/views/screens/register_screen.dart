@@ -15,112 +15,151 @@ class RegisterScreen extends StatefulWidget {
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _RegisterScreenState extends State<RegisterScreen>
+    with SingleTickerProviderStateMixin {
   bool signIn = true;
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocBuilder<AuthCubit, AuthState>(
-        builder: (context, state) {
-          signIn = auth.signIn;
-          return Form(
-            key: auth.key,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        body: BlocBuilder<AuthCubit, AuthState>(
+          builder: (context, state) {
+            signIn = _tabController.index == 0;
+            return Form(
+              key: auth.key,
               child: SafeArea(
                 child: ListView(
                   keyboardDismissBehavior:
                       ScrollViewKeyboardDismissBehavior.onDrag,
                   children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 40),
+                      child: Image.asset(
+                        'assets/images/logo.png',
+                        height: 40,
+                      ),
+                    ),
                     Container(
-                      alignment: Alignment.center,
-                      padding: const EdgeInsets.only(top: 50, bottom: 15),
-                      child: AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 500),
-                        child: Text(
-                          signIn ? 'signIn'.tr(context) : 'signUp'.tr(context),
-                          key: ValueKey<String>(signIn ? 'signIn' : 'signUp'),
-                          style: const TextStyle(
-                              fontSize: 30, fontWeight: FontWeight.w500),
-                        ),
+                      decoration: const BoxDecoration(
+                          border: Border.symmetric(horizontal: BorderSide())),
+                      margin: const EdgeInsets.only(bottom: 25),
+                      child: TabBar(
+                        onTap: (value) {
+                          setState(() {});
+                        },
+                        controller: _tabController,
+                        tabs: const [
+                          Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Text(
+                              'Sign In',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Text(
+                              'Create account',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          )
+                        ],
+                        indicatorColor: primaryColor,
                       ),
                     ),
                     if (!signIn)
-                      EditText(
-                          hint: 'Ex. Ghazi',
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 10),
+                        child: EditText(
+                            hint: 'Ex. Ghazi',
+                            function: auth.auth,
+                            controller: auth.name,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'pleaseName'.tr(context);
+                              }
+                              return null;
+                            },
+                            title: 'name'),
+                      ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
+                      child: EditText(
+                          hint: 'example@gmail.com',
                           function: auth.auth,
-                          controller: auth.name,
+                          controller: auth.email,
                           validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'pleaseName'.tr(context);
+                            if (!value!.contains('@') && !value.contains('.')) {
+                              return 'pleaseEmail'.tr(context);
                             }
                             return null;
                           },
-                          title: 'name'),
-                    const SizedBox(
-                      height: 20,
+                          title: 'email'),
                     ),
-                    EditText(
-                        hint: 'example@gmail.com',
-                        function: auth.auth,
-                        controller: auth.email,
-                        validator: (value) {
-                          if (!value!.contains('@') && !value.contains('.')) {
-                            return 'pleaseEmail'.tr(context);
-                          }
-                          return null;
-                        },
-                        title: 'email'),
-                    const SizedBox(
-                      height: 20,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
+                      child: EditText(
+                          hint: '',
+                          secure: true,
+                          function: auth.auth,
+                          controller: auth.password,
+                          validator: (value) {
+                            if (value!.length < 8) {
+                              return 'pleasePassword'.tr(context);
+                            }
+                            return null;
+                          },
+                          title: 'password'),
                     ),
-                    EditText(
-                        hint: '',
-                        secure: true,
-                        function: auth.auth,
-                        controller: auth.password,
-                        validator: (value) {
-                          if (value!.length < 8) {
-                            return 'pleasePassword'.tr(context);
-                          }
-                          return null;
-                        },
-                        title: 'password'),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Align(
-                      child: MaterialButton(
-                        minWidth: dWidth,
-                        height: 50,
-                        onPressed: () async {
-                          auth.auth(context);
-                        },
-                        shape: const RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(25))),
-                        color: primaryColor,
-                        child: state is LoadingState
-                            ? const CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
-                              )
-                            : Text(
-                                signIn
-                                    ? 'signIn'.tr(context)
-                                    : 'signUp'.tr(context),
-                                style: const TextStyle(
-                                    fontSize: 18, color: Colors.white),
-                              ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
+                      child: Align(
+                        child: MaterialButton(
+                          minWidth: dWidth,
+                          height: 50,
+                          onPressed: () async {
+                            auth.auth(context, signIn);
+                          },
+                          shape: const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(25))),
+                          color: primaryColor,
+                          child: state is LoadingState
+                              ? const CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                )
+                              : Text(
+                                  signIn
+                                      ? 'signIn'.tr(context)
+                                      : 'signUp'.tr(context),
+                                  style: const TextStyle(
+                                      fontSize: 18, color: Colors.white),
+                                ),
+                        ),
                       ),
                     ),
                     signIn
                         ? Container(
-                            margin: const EdgeInsets.only(bottom: 25),
+                            alignment: Alignment.center,
+                            margin: const EdgeInsets.only(bottom: 50),
                             child: TextButton(
                                 style: ButtonStyle(
                                     overlayColor: MaterialStateProperty.all(
-                                        Colors.amber.shade50)),
+                                        Colors.red.shade50)),
                                 onPressed: () {
                                   staticWidgets.showBottom(context,
                                       const BottomSheetForgot(), 0.4, 0.5);
@@ -133,8 +172,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 )),
                           )
                         : Container(
-                            margin: const EdgeInsets.only(bottom: 25, top: 10),
+                            margin: const EdgeInsets.only(bottom: 50, top: 10),
                             child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Checkbox(
                                   shape: const CircleBorder(),
@@ -225,46 +265,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ],
                       ),
                     const SizedBox(
-                      height: 25,
+                      height: 20,
                     ),
-                    if (state is! LoadingState)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 500),
-                            child: Text(
-                              signIn
-                                  ? 'dontHave'.tr(context)
-                                  : 'haveAcc'.tr(context),
-                              key: ValueKey<String>(
-                                  signIn ? 'dontHave' : 'haveAcc'),
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.w400),
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              auth.changeStatus();
-                            },
-                            style: ButtonStyle(
-                                overlayColor: MaterialStateProperty.all(
-                                    Colors.red.shade50)),
-                            child: AnimatedSwitcher(
-                              duration: const Duration(milliseconds: 500),
-                              child: Text(
-                                  signIn
-                                      ? 'signUp'.tr(context)
-                                      : 'signIn'.tr(context),
-                                  key: ValueKey<String>(
-                                      signIn ? 'signUp' : 'signIn'),
-                                  style: TextStyle(
-                                    color: primaryColor,
-                                  )),
-                            ),
-                          ),
-                        ],
-                      ),
                     if (state is! LoadingState)
                       Align(
                         child: InkWell(
@@ -285,9 +287,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ],
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

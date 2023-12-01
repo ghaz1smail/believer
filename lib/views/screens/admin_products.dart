@@ -58,18 +58,15 @@ class _AdminProductsState extends State<AdminProducts> {
                       },
                     ),
                     result.isEmpty
-                        ? const Expanded(
+                        ? Expanded(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(
-                                  Icons.description,
-                                  size: 100,
-                                ),
-                                SizedBox(
+                                Image.asset('assets/images/no_result.png'),
+                                const SizedBox(
                                   height: 20,
                                 ),
-                                Text('No data found')
+                                const Text('No data found')
                               ],
                             ),
                           )

@@ -71,8 +71,8 @@ class _BottomSheetForgotState extends State<BottomSheetForgot> {
           ),
           Center(
             child: MaterialButton(
-              minWidth: 100,
-              height: 40,
+              minWidth: 150,
+              height: 50,
               onPressed: () async {
                 resetPass();
               },

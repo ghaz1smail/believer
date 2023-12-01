@@ -6,7 +6,6 @@ import 'package:believer/views/screens/admin_categories.dart';
 import 'package:believer/views/widgets/app_bar.dart';
 import 'package:believer/views/widgets/edit_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:hl_image_picker/hl_image_picker.dart';
 
@@ -38,11 +37,11 @@ class _CategoryDetailsState extends State<CategoryDetails> {
       final ref = await firebaseStorage
           .ref(
               'categories/${widget.category.id.isEmpty ? id : widget.category.id}')
-          .putFile(File(imageFile.first.path),
-              SettableMetadata(contentType: 'image/png'));
+          .putFile(File(imageFile.first.path));
 
       url = await ref.ref.getDownloadURL();
     }
+
     if (widget.category.id.isEmpty) {
       final link = await staticFunctions.generateLink(id, 'category');
       if (widget.catId.isEmpty) {
@@ -101,10 +100,10 @@ class _CategoryDetailsState extends State<CategoryDetails> {
   _openPicker() async {
     try {
       final images = await HLImagePicker().openPicker(
-        selectedIds: imageFile.map((e) => e.id).toList(),
         pickerOptions: const HLPickerOptions(
           mediaType: MediaType.image,
           compressFormat: CompressFormat.png,
+          compressQuality: 0,
           maxSelectedAssets: 1,
         ),
       );
@@ -193,7 +192,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                   title: 'Title in English',
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
                 EditText(
                   function: updateData,
@@ -210,7 +209,9 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                 const SizedBox(
                   height: 10,
                 ),
-                if (widget.category.id.isNotEmpty && !loading)
+                if (widget.category.id.isNotEmpty &&
+                    !loading &&
+                    widget.catId.isEmpty)
                   TextButton(
                       onPressed: () {
                         Navigator.push(

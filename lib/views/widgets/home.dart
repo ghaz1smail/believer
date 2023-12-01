@@ -1,18 +1,15 @@
-import 'package:believer/controller/app_localization.dart';
 import 'package:believer/controller/my_app.dart';
 import 'package:believer/cubit/user_cubit.dart';
 import 'package:believer/models/banner_model.dart';
 import 'package:believer/models/category_model.dart';
 import 'package:believer/models/product_model.dart';
 import 'package:believer/views/screens/category_screen.dart';
-import 'package:believer/views/widgets/categories_bottom_sheet.dart';
+import 'package:believer/views/screens/splash_screen.dart';
 import 'package:believer/views/widgets/network_image.dart';
 import 'package:believer/views/widgets/product_tile.dart';
 import 'package:believer/views/widgets/shimmer.dart';
-import 'package:believer/views/widgets/user_app_bar.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Home extends StatefulWidget {
@@ -23,112 +20,61 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  bool scroll = false;
-  ScrollController scrollController = ScrollController();
-
+  CarouselController controller = CarouselController();
+  int current = 0;
   @override
   void initState() {
     super.initState();
-    scrollController.addListener(() {
-      setState(() {
-        scroll = scrollController.position.pixels > 150;
-      });
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: UserAppBar(
-          scroll: scroll,
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          centerTitle: false,
+          title: Text(
+            'Hi ${auth.userData.name}',
+            style: const TextStyle(
+              color: Colors.black,
+            ),
+          ),
+          actions: [
+            CircleAvatar(
+              backgroundColor: Colors.grey.shade300,
+              child: IconButton(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.apps,
+                    color: Colors.black,
+                  )),
+            ),
+            const SizedBox(
+              width: 5,
+            ),
+            CircleAvatar(
+              backgroundColor: Colors.grey.shade300,
+              child: IconButton(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.notifications,
+                    color: Colors.black,
+                  )),
+            ),
+            const SizedBox(
+              width: 5,
+            ),
+          ],
         ),
         body: BlocBuilder<UserCubit, UserState>(
           builder: (context, state) {
             return RefreshIndicator(
+              color: primaryColor,
               onRefresh: () async {
                 setState(() {});
               },
-              child: ListView(controller: scrollController, children: [
-                FutureBuilder(
-                  future: firestore.collection('banners').get(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      List<BannerModel> data = snapshot.data!.docs
-                          .map((doc) => BannerModel.fromJson(doc.data()))
-                          .toList();
-                      if (data.isEmpty) {
-                        return const SizedBox();
-                      }
-                      return CarouselSlider(
-                        options: CarouselOptions(
-                            autoPlay: true,
-                            height: 175,
-                            enlargeCenterPage: true,
-                            autoPlayInterval: const Duration(seconds: 30)),
-                        items: data.map((i) {
-                          return Container(
-                            width: dWidth,
-                            margin: const EdgeInsets.symmetric(vertical: 10),
-                            decoration: const BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20))),
-                            child: ClipRRect(
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(20)),
-                                child: NImage(
-                                  url: i.url,
-                                  h: 175,
-                                  fit: BoxFit.fitWidth,
-                                )),
-                          );
-                        }).toList(),
-                      );
-                    }
-                    return CarouselSlider(
-                      options: CarouselOptions(
-                        height: 175,
-                        enlargeCenterPage: true,
-                      ),
-                      items: [1, 2].map((i) {
-                        return Shimmers(
-                          child: Container(
-                            width: dWidth,
-                            margin: const EdgeInsets.symmetric(vertical: 10),
-                            decoration: const BoxDecoration(
-                                color: Colors.amber,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20))),
-                          ),
-                        );
-                      }).toList(),
-                    );
-                  },
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Row(
-                    children: [
-                      Text(
-                        'category'.tr(context),
-                        style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      const Spacer(),
-                      TextButton(
-                        onPressed: () async {
-                          staticWidgets.showBottom(context,
-                              const BottomSheetCategories(), 0.75, 0.9);
-                        },
-                        style: ButtonStyle(
-                            overlayColor: MaterialStateProperty.all(
-                                Colors.amber.shade50)),
-                        child: Text('seeAll'.tr(context),
-                            style:
-                                TextStyle(color: primaryColor, fontSize: 12)),
-                      ),
-                    ],
-                  ),
-                ),
+              child: ListView(children: [
                 FutureBuilder(
                   future: firestore.collection('categories').get(),
                   builder: (context, snapshot) {
@@ -161,12 +107,12 @@ class _HomeState extends State<Home> {
                                   margin: const EdgeInsets.symmetric(
                                       horizontal: 10),
                                   child: SizedBox(
-                                    width: 75,
+                                    width: 70,
                                     child: Column(
                                       children: [
                                         Container(
-                                          height: 75,
-                                          width: 75,
+                                          height: 70,
+                                          width: 70,
                                           decoration: BoxDecoration(
                                             border:
                                                 Border.all(color: primaryColor),
@@ -180,7 +126,7 @@ class _HomeState extends State<Home> {
                                                       Radius.circular(100)),
                                               child: NImage(
                                                 url: category.url,
-                                                h: 75,
+                                                h: 70,
                                               )),
                                         ),
                                         Container(
@@ -189,6 +135,8 @@ class _HomeState extends State<Home> {
                                           child: Text(
                                             category.titleEn,
                                             overflow: TextOverflow.ellipsis,
+                                            style:
+                                                const TextStyle(fontSize: 12),
                                           ),
                                         )
                                       ],
@@ -226,6 +174,80 @@ class _HomeState extends State<Home> {
                           ),
                         )),
                       ),
+                    );
+                  },
+                ),
+                FutureBuilder(
+                  future: firestore.collection('banners').get(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      List<BannerModel> data = snapshot.data!.docs
+                          .map((doc) => BannerModel.fromJson(doc.data()))
+                          .toList();
+                      if (data.isEmpty) {
+                        return const SizedBox();
+                      }
+                      return Column(
+                        children: [
+                          CarouselSlider(
+                            carouselController: controller,
+                            options: CarouselOptions(
+                                autoPlay: true,
+                                height: 200,
+                                viewportFraction: 1,
+                                autoPlayInterval: const Duration(seconds: 30)),
+                            items: data.map((i) {
+                              return Container(
+                                width: dWidth,
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                child: NImage(
+                                  url: i.url,
+                                  h: 200,
+                                  fit: BoxFit.fitWidth,
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: data.asMap().entries.map((entry) {
+                              return GestureDetector(
+                                onTap: () =>
+                                    controller.animateToPage(entry.key),
+                                child: Container(
+                                  width: 8.0,
+                                  height: 8.0,
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 4.0),
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: (primaryColor).withOpacity(
+                                          current == entry.key ? 0.9 : 0.4)),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ],
+                      );
+                    }
+                    return CarouselSlider(
+                      options: CarouselOptions(
+                        height: 200,
+                        enlargeCenterPage: true,
+                      ),
+                      items: [1, 2].map((i) {
+                        return Shimmers(
+                          child: Container(
+                            width: dWidth,
+                            margin: const EdgeInsets.symmetric(vertical: 10),
+                            decoration: BoxDecoration(
+                                color: primaryColor,
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(20))),
+                          ),
+                        );
+                      }).toList(),
                     );
                   },
                 ),

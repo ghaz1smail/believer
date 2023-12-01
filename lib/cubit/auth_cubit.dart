@@ -22,15 +22,10 @@ class AuthCubit extends Cubit<AuthState> {
       password = TextEditingController(),
       name = TextEditingController();
   UserModel userData = UserModel();
-  bool agree = false, signIn = true;
+  bool agree = false;
 
   agreeTerm() {
     agree = !agree;
-    emit(AuthInitial());
-  }
-
-  changeStatus() {
-    signIn = !signIn;
     emit(AuthInitial());
   }
 
@@ -46,7 +41,7 @@ class AuthCubit extends Cubit<AuthState> {
     if (firebaseAuth.currentUser != null) {
       if (firebaseAuth.currentUser!.isAnonymous ||
           firebaseAuth.currentUser!.uid == staticData.adminUID) {
-        await Future.delayed(const Duration(seconds: 1));
+        await Future.delayed(const Duration(seconds: 3));
       } else {
         final stopwatch = Stopwatch()..start();
         await getUserData();
@@ -214,7 +209,7 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  auth(context) async {
+  auth(context, signIn) async {
     if (!key.currentState!.validate()) {
       return;
     }

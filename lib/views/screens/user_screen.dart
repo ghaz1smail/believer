@@ -1,8 +1,8 @@
 import 'package:believer/controller/my_app.dart';
 import 'package:believer/cubit/user_cubit.dart';
-import 'package:believer/views/widgets/cart.dart';
 import 'package:believer/views/widgets/home.dart';
 import 'package:believer/views/widgets/profile.dart';
+import 'package:believer/views/widgets/search.dart';
 import 'package:believer/views/widgets/user_bottom_bar.dart';
 import 'package:believer/views/widgets/wish_list.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +30,7 @@ class _UserScreenState extends State<UserScreen> {
             body: SafeArea(
               child: IndexedStack(
                 index: userCubit.selectedIndex,
-                children: const [Home(), WishList(), Cart(), Profile()],
+                children: const [Home(), Search(), WishList(), Profile()],
               ),
             ));
       },

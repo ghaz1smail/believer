@@ -8,7 +8,6 @@ import 'package:believer/views/widgets/category_picker_bottom_sheet.dart';
 import 'package:believer/views/widgets/edit_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:hl_image_picker/hl_image_picker.dart';
 
@@ -98,9 +97,8 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
     for (var e in selectedImages) {
       if (!media.contains(e.id)) {
         var id2 = DateTime.now().millisecondsSinceEpoch.toString();
-        final ref = await firebaseStorage
-            .ref('products/$id2')
-            .putFile(File(e.path), SettableMetadata(contentType: 'image/png'));
+        final ref =
+            await firebaseStorage.ref('products/$id2').putFile(File(e.path));
 
         media.add(await ref.ref.getDownloadURL());
       }
@@ -148,6 +146,7 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
         selectedIds: selectedImages.map((e) => e.id).toList(),
         pickerOptions: const HLPickerOptions(
           mediaType: MediaType.image,
+          compressQuality: 0,
           compressFormat: CompressFormat.png,
           maxSelectedAssets: 5,
         ),
@@ -281,6 +280,9 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
                     },
                     hint: 'Iphone',
                     title: 'Product title in English'),
+                const SizedBox(
+                  height: 20,
+                ),
                 EditText(
                     function: () {},
                     controller: tar,
@@ -293,7 +295,7 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
                     hint: 'ايفون',
                     title: 'Product title in Arabic'),
                 const Padding(
-                  padding: EdgeInsets.only(left: 5, top: 10),
+                  padding: EdgeInsets.only(left: 5, top: 20),
                   child: Text('Main category'),
                 ),
                 FutureBuilder(
@@ -369,6 +371,9 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
                       }
                       return const Text('Loading...');
                     }),
+                const SizedBox(
+                  height: 20,
+                ),
                 EditText(
                     function: () {},
                     controller: den,
@@ -380,6 +385,9 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
                     },
                     hint: 'storage 64',
                     title: 'Product descrition in English'),
+                const SizedBox(
+                  height: 20,
+                ),
                 EditText(
                     function: () {},
                     controller: dar,
@@ -391,6 +399,9 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
                     },
                     hint: 'مساحة ٦٤',
                     title: 'Product descrition in Arabic'),
+                const SizedBox(
+                  height: 20,
+                ),
                 EditText(
                     function: () {},
                     controller: price,
@@ -403,6 +414,9 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
                     hint: '100',
                     number: true,
                     title: 'Product price'),
+                const SizedBox(
+                  height: 20,
+                ),
                 EditText(
                     function: () {},
                     controller: stock,
