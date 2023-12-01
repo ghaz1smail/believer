@@ -51,13 +51,13 @@ class AuthCubit extends Cubit<AuthState> {
         final stopwatch = Stopwatch()..start();
         await getUserData();
         stopwatch.stop();
-        if (stopwatch.elapsed.inSeconds < 2) {
+        if (stopwatch.elapsed.inSeconds < 3) {
           await Future.delayed(
-              Duration(seconds: 2 - stopwatch.elapsed.inSeconds));
+              Duration(seconds: 3 - stopwatch.elapsed.inSeconds));
         }
       }
     } else {
-      await Future.delayed(const Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 3));
     }
     navigator();
   }

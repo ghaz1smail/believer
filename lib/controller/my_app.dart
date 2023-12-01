@@ -44,7 +44,7 @@ StaticData staticData = StaticData();
 StaticWidgets staticWidgets = StaticWidgets();
 StaticFunctions staticFunctions = StaticFunctions();
 
-Color primaryColor = const Color(0xfffcba03);
+Color primaryColor = const Color(0xffEE4439);
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

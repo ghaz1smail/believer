@@ -1,5 +1,4 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'package:believer/controller/app_localization.dart';
 import 'package:believer/controller/my_app.dart';
 import 'package:believer/views/screens/splash_screen.dart';
@@ -71,22 +70,25 @@ class _BottomSheetForgotState extends State<BottomSheetForgot> {
                 title: 'email'),
           ),
           Center(
-            child: loading
-                ? const CircularProgressIndicator()
-                : MaterialButton(
-                    minWidth: 100,
-                    height: 40,
-                    onPressed: () async {
-                      resetPass();
-                    },
-                    shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(25))),
-                    color: primaryColor,
-                    child: Text(
+            child: MaterialButton(
+              minWidth: 100,
+              height: 40,
+              onPressed: () async {
+                resetPass();
+              },
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(25))),
+              color: primaryColor,
+              child: loading
+                  ? const CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2,
+                    )
+                  : Text(
                       'submit'.tr(context),
                       style: const TextStyle(fontSize: 18, color: Colors.white),
                     ),
-                  ),
+            ),
           )
         ],
       ),

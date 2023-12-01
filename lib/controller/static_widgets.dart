@@ -36,7 +36,7 @@ class StaticWidgets {
                         height: 5,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
-                            color: Colors.amber.shade300)),
+                            color: Colors.red.shade300)),
                   ),
                   widget,
                 ],

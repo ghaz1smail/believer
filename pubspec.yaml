@@ -17,6 +17,7 @@ dependencies:
 
   cupertino_icons: ^1.0.2
   dio: ^5.3.3
+  lottie: ^2.7.0
   syncfusion_flutter_charts: ^23.2.4
   share_plus: ^6.3.4
   url_launcher: ^6.2.1
@@ -51,3 +52,4 @@ flutter:
   assets:
     - assets/images/
     - assets/lang/
+    - assets/lotties/
