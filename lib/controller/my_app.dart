@@ -10,12 +10,14 @@ import 'package:believer/views/screens/admin_banners.dart';
 import 'package:believer/views/screens/admin_coupons.dart';
 import 'package:believer/views/screens/admin_products.dart';
 import 'package:believer/views/screens/admin_screen.dart';
+import 'package:believer/views/screens/categories_screen.dart';
 import 'package:believer/views/screens/checkout_screen.dart';
 import 'package:believer/views/screens/forgot_password.dart';
 import 'package:believer/views/screens/notification_screen.dart';
 import 'package:believer/views/screens/register_screen.dart';
 import 'package:believer/views/screens/splash_screen.dart';
 import 'package:believer/views/screens/user_screen.dart';
+import 'package:believer/views/screens/cart_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -94,6 +96,8 @@ class MyApp extends StatelessWidget {
             routes: {
               'register': (context) => const RegisterScreen(),
               'user': (context) => const UserScreen(),
+              'cart': (context) => const CartScreen(),
+              'categories': (context) => const CategoriesScreen(),
               'admin': (context) => const AdminScreen(),
               'adminP': (context) => const AdminProducts(),
               'adminB': (context) => const AdminBanners(),

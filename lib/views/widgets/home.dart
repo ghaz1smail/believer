@@ -30,6 +30,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           elevation: 0,
           backgroundColor: Colors.transparent,
@@ -42,9 +43,11 @@ class _HomeState extends State<Home> {
           ),
           actions: [
             CircleAvatar(
-              backgroundColor: Colors.grey.shade300,
+              backgroundColor: Colors.grey.shade200,
               child: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, 'categories');
+                  },
                   icon: const Icon(
                     Icons.apps,
                     color: Colors.black,
@@ -54,9 +57,11 @@ class _HomeState extends State<Home> {
               width: 5,
             ),
             CircleAvatar(
-              backgroundColor: Colors.grey.shade300,
+              backgroundColor: Colors.grey.shade200,
               child: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, 'cart');
+                  },
                   icon: const Icon(
                     Icons.shopping_bag,
                     color: Colors.black,
@@ -194,7 +199,7 @@ class _HomeState extends State<Home> {
                                 child: NImage(
                                   url: i.url,
                                   h: 200,
-                                  fit: BoxFit.fitWidth,
+                                  fit: BoxFit.cover,
                                 ),
                               );
                             }).toList(),
@@ -241,9 +246,15 @@ class _HomeState extends State<Home> {
                     );
                   },
                 ),
-                const Text('Best seller'),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  child: Text(
+                    'Best seller',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                  ),
+                ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 15, right: 15, top: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: FutureBuilder(
                     future: firestore
                         .collection('products')

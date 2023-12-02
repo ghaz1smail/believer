@@ -1,5 +1,6 @@
 import 'package:believer/controller/my_app.dart';
 import 'package:believer/models/product_model.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -32,15 +33,65 @@ class _SearchState extends State<Search> {
                   List<ProductModel> data = snapshot.data!.docs
                       .map((e) => ProductModel.fromJson(e.data()))
                       .toList();
-                  Iterable result = data.where(
-                      (element) => element.titleEn.contains(controller.text));
+                  Iterable result = data.where((element) =>
+                      element.titleEn
+                          .toLowerCase()
+                          .contains(controller.text.toLowerCase()) ||
+                      element.titleAr
+                          .toLowerCase()
+                          .contains(controller.text.toLowerCase()));
                   return result.isEmpty
-                      ? Image.asset('assets/images/no_result.png')
-                      : ListView.builder(
-                          itemCount: result.length,
-                          itemBuilder: (context, index) {
-                            return Container();
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset('assets/images/no_result.png'),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            const Text('No products found')
+                          ],
+                        )
+                      : RefreshIndicator(
+                          color: primaryColor,
+                          onRefresh: () async {
+                            setState(() {});
                           },
+                          child: ListView.separated(
+                            separatorBuilder: (context, index) =>
+                                const Divider(),
+                            itemCount: result.length,
+                            itemBuilder: (context, index) {
+                              ProductModel product = result.toList()[index];
+                              return Container(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                child: ListTile(
+                                  leading: ClipRRect(
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(10)),
+                                    child: CachedNetworkImage(
+                                      imageUrl: product.media![0],
+                                      width: 50,
+                                      height: 50,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  title: Text(
+                                    product.titleEn,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  visualDensity:
+                                      const VisualDensity(vertical: 4),
+                                  subtitle: Text(
+                                    'AED ${product.price}',
+                                    style: const TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
                         );
                 }
                 return const Center(child: CircularProgressIndicator());

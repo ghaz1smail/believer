@@ -25,6 +25,7 @@ class _WishListState extends State<WishList> {
             child: Padding(
               padding: const EdgeInsets.only(left: 15, right: 15, top: 20),
               child: RefreshIndicator(
+                color: primaryColor,
                 onRefresh: () async {
                   setState(() {});
                 },

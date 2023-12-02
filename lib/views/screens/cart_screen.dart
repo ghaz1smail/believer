@@ -2,26 +2,31 @@ import 'package:believer/controller/my_app.dart';
 import 'package:believer/cubit/user_cubit.dart';
 import 'package:believer/models/cart_model.dart';
 import 'package:believer/views/screens/user_screen.dart';
+import 'package:believer/views/widgets/app_bar.dart';
 import 'package:believer/views/widgets/counter.dart';
 import 'package:believer/views/widgets/remove_cart.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class Cart extends StatefulWidget {
-  const Cart({super.key});
+class CartScreen extends StatefulWidget {
+  const CartScreen({super.key});
 
   @override
-  State<Cart> createState() => _CartState();
+  State<CartScreen> createState() => _CartScreenState();
 }
 
-class _CartState extends State<Cart> {
+class _CartScreenState extends State<CartScreen> {
   bool showBottom = true, end = true;
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<UserCubit, UserState>(
       builder: (context, state) {
         return Scaffold(
+            appBar: const AppBarCustom(
+              action: {},
+              title: 'Cart',
+            ),
             bottomNavigationBar: userCubit.cartList.isEmpty
                 ? null
                 : AnimatedContainer(
