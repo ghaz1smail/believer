@@ -1,4 +1,3 @@
-import 'package:believer/controller/my_app.dart';
 import 'package:believer/cubit/user_cubit.dart';
 import 'package:believer/views/widgets/home.dart';
 import 'package:believer/views/widgets/profile.dart';
@@ -24,8 +23,7 @@ class _UserScreenState extends State<UserScreen> {
       builder: (context, state) {
         userCubit = BlocProvider.of<UserCubit>(context);
         return Scaffold(
-            backgroundColor:
-                userCubit.selectedIndex == 0 ? primaryColor : Colors.white,
+            backgroundColor: Colors.white,
             bottomNavigationBar: const UserBottomBar(),
             body: SafeArea(
               child: IndexedStack(

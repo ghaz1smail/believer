@@ -15,11 +15,13 @@ class BadgeIcon extends StatelessWidget {
         shape: BoxShape.circle,
       ),
       child: Center(
-        child: Text(
-          badgeText,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 9,
+        child: FittedBox(
+          child: Text(
+            badgeText,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 9,
+            ),
           ),
         ),
       ),

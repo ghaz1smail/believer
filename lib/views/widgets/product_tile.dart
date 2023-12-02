@@ -3,7 +3,7 @@ import 'package:believer/cubit/user_cubit.dart';
 import 'package:believer/models/product_model.dart';
 import 'package:believer/views/screens/product_details.dart';
 import 'package:believer/views/screens/user_screen.dart';
-import 'package:believer/views/widgets/counter.dart';
+import 'package:believer/views/widgets/icon_badge.dart';
 import 'package:believer/views/widgets/network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,157 +30,218 @@ class _ProductTileState extends State<ProductTile> {
                   builder: (context) => ProductDetails(product: widget.product),
                 ));
           },
-          child: Column(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                    border: Border.all(width: 0.5),
-                    borderRadius: const BorderRadius.all(Radius.circular(20))),
-                margin: const EdgeInsets.only(bottom: 5),
-                height: 200,
-                child: GridTile(
-                    header: Align(
-                      alignment: Alignment.centerRight,
+          child: Container(
+            padding: const EdgeInsets.all(5),
+            decoration: BoxDecoration(
+                border: Border.all(width: 0.4, color: Colors.black26),
+                borderRadius: const BorderRadius.all(Radius.circular(10))),
+            child: Column(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(width: 0.4, color: Colors.black26),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(10))),
+                  margin: const EdgeInsets.only(bottom: 5),
+                  height: 210,
+                  child: GridTile(
+                      footer: InkWell(
+                        onTap: () {
+                          userCubit.addToCart(widget.product, 1);
+                        },
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: AnimatedContainer(
+                            margin: const EdgeInsets.all(5),
+                            decoration: const BoxDecoration(
+                                color: Colors.white,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(100))),
+                            duration: const Duration(milliseconds: 250),
+                            width: userCubit.cartList
+                                    .containsKey(widget.product.id)
+                                ? 60
+                                : 30,
+                            height: 30,
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    LineAwesome.cart_arrow_down_solid,
+                                    color: primaryColor,
+                                    size: 20,
+                                  ),
+                                  if (userCubit.cartList
+                                      .containsKey(widget.product.id))
+                                    const SizedBox(
+                                      width: 2.5,
+                                    ),
+                                  if (userCubit.cartList
+                                      .containsKey(widget.product.id))
+                                    SizedBox(
+                                        height: 25,
+                                        width: 25,
+                                        child: BadgeIcon(
+                                            badgeText: userCubit
+                                                .cartList[widget.product.id]!
+                                                .count
+                                                .toString()))
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                       child: Container(
-                        height: 35,
-                        width: 35,
-                        decoration: const BoxDecoration(
-                            color: Colors.white,
+                        decoration: BoxDecoration(
+                            color: primaryColor,
                             borderRadius:
-                                BorderRadius.all(Radius.circular(100))),
-                        margin: const EdgeInsets.all(5),
-                        child: widget.product.id.isNotEmpty
-                            ? StreamBuilder(
-                                stream: firestore
-                                    .collection('products')
-                                    .doc(widget.product.id)
-                                    .snapshots(),
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasData) {
-                                    ProductModel product =
-                                        ProductModel.fromJson(
-                                            snapshot.data!.data() as Map);
-                                    return IconButton(
-                                      icon: Icon(
-                                        product.favorites!.contains(
-                                                firebaseAuth.currentUser!.uid)
-                                            ? Icons.favorite
-                                            : Icons.favorite_border,
-                                        color: Colors.red,
-                                        size: 18,
-                                      ),
-                                      onPressed: () async {
-                                        await userCubit.favoriteStatus(product);
-                                      },
-                                    );
-                                  }
-
-                                  return IconButton(
-                                    icon: Icon(
-                                      widget.product.favorites!.contains(
+                                const BorderRadius.all(Radius.circular(10))),
+                        height: 100,
+                        width: 100,
+                        child: widget.product.media!.isNotEmpty
+                            ? ClipRRect(
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(10)),
+                                child: NImage(
+                                    url: widget.product.media![0], h: 100))
+                            : const SizedBox(),
+                      )),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 3, vertical: 5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        widget.product.titleEn,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                      widget.product.id.isNotEmpty
+                          ? StreamBuilder(
+                              stream: firestore
+                                  .collection('products')
+                                  .doc(widget.product.id)
+                                  .snapshots(),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  ProductModel product = ProductModel.fromJson(
+                                      snapshot.data!.data() as Map);
+                                  return InkWell(
+                                    onTap: () async {
+                                      await userCubit.favoriteStatus(product);
+                                    },
+                                    child: Icon(
+                                      product.favorites!.contains(
                                               firebaseAuth.currentUser!.uid)
                                           ? Icons.favorite
                                           : Icons.favorite_border,
                                       color: Colors.red,
                                       size: 18,
                                     ),
-                                    onPressed: () async {
-                                      await userCubit
-                                          .favoriteStatus(widget.product);
-                                    },
                                   );
-                                })
-                            : const SizedBox(),
-                      ),
-                    ),
-                    footer: Align(
-                      alignment: Alignment.centerRight,
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 250),
-                        width: userCubit.cartList.containsKey(widget.product.id)
-                            ? 100
-                            : 35,
-                        height: 35,
-                        decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(100))),
-                        margin: const EdgeInsets.all(5),
-                        child: userCubit.cartList.containsKey(widget.product.id)
-                            ? FittedBox(
-                                fit: BoxFit.scaleDown,
-                                child: Counter(
-                                  remove: () {
-                                    userCubit.addToCart(widget.product, -1);
+                                }
+
+                                return InkWell(
+                                  onTap: () async {
+                                    await userCubit
+                                        .favoriteStatus(widget.product);
                                   },
-                                  add: () {
-                                    userCubit.addToCart(widget.product, 1);
-                                  },
-                                  other: () {
-                                    userCubit.removeFromCart(widget.product.id);
-                                  },
-                                  count: userCubit
-                                      .cartList[widget.product.id]!.count,
-                                ),
-                              )
-                            : IconButton(
-                                icon: const Icon(
-                                  BoxIcons.bx_cart_add,
-                                  color: Colors.amber,
-                                  size: 20,
-                                ),
-                                onPressed: () {
-                                  userCubit.addToCart(widget.product, 1);
-                                },
-                              ),
-                      ),
-                    ),
-                    child: Container(
-                      decoration: const BoxDecoration(
-                          color: Colors.amber,
-                          borderRadius: BorderRadius.all(Radius.circular(20))),
-                      height: 100,
-                      width: 100,
-                      child: widget.product.media!.isNotEmpty
-                          ? ClipRRect(
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(20)),
-                              child:
-                                  NImage(url: widget.product.media![0], h: 100))
+                                  child: Icon(
+                                    widget.product.favorites!.contains(
+                                            firebaseAuth.currentUser!.uid)
+                                        ? Icons.favorite
+                                        : Icons.favorite_border,
+                                    color: Colors.red,
+                                    size: 18,
+                                  ),
+                                );
+                              })
                           : const SizedBox(),
-                    )),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 5),
-                child: Text(
-                  widget.product.titleEn,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontWeight: FontWeight.w500),
+                    ],
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 3),
-                child: Row(
-                  children: [
-                    Text('AED ${widget.product.price.toStringAsFixed(2)}'),
-                    const Spacer(),
-                    const Icon(
-                      Icons.star,
-                      size: 16,
-                      color: Colors.amber,
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    const Text('5.0'),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.only(left: 3, right: 3, bottom: 5),
+                  child: StarRating(
+                    rate: widget.product.rate ?? [],
+                  ),
                 ),
-              )
-            ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 3),
+                  child: Row(
+                    children: [
+                      Text(
+                        'AED ${widget.product.price.toStringAsFixed(2)}',
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         );
       },
+    );
+  }
+}
+
+class StarRating extends StatefulWidget {
+  const StarRating(
+      {super.key, this.size = 20, required this.rate, this.tap = false});
+  final double size;
+  final List rate;
+  final bool tap;
+
+  @override
+  State<StarRating> createState() => _StarRatingState();
+}
+
+class _StarRatingState extends State<StarRating> {
+  int _rating = 0;
+  double calculate = 0;
+
+  @override
+  void initState() {
+    if (!widget.tap && widget.rate.isNotEmpty) {
+      _rating = (widget.rate.map((m) => m['rating']).reduce((a, b) => a + b) /
+              widget.rate.length)
+          .round();
+    }
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(5, (index) {
+            return InkWell(
+              onTap: widget.tap
+                  ? () {
+                      setState(() {
+                        _rating = index + 1;
+                      });
+                    }
+                  : null,
+              child: Icon(
+                index < _rating ? Icons.star : Icons.star_border,
+                color: Colors.orange,
+                size: widget.size,
+              ),
+            );
+          }),
+        ),
+        Text('(${widget.rate.length})')
+      ],
     );
   }
 }

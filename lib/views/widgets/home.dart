@@ -58,7 +58,7 @@ class _HomeState extends State<Home> {
               child: IconButton(
                   onPressed: () {},
                   icon: const Icon(
-                    Icons.notifications,
+                    Icons.shopping_bag,
                     color: Colors.black,
                   )),
             ),
@@ -75,20 +75,21 @@ class _HomeState extends State<Home> {
                 setState(() {});
               },
               child: ListView(children: [
-                FutureBuilder(
-                  future: firestore.collection('categories').get(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      List<CategoryModel> data = snapshot.data!.docs
-                          .map((doc) => CategoryModel.fromJson(doc.data()))
-                          .toList();
-                      if (data.isEmpty) {
-                        return const SizedBox();
-                      }
-                      return SizedBox(
-                        height: 100,
-                        width: dWidth,
-                        child: ListView.builder(
+                Container(
+                  margin: const EdgeInsets.only(top: 5),
+                  height: 90,
+                  width: dWidth,
+                  child: FutureBuilder(
+                    future: firestore.collection('categories').get(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        List<CategoryModel> data = snapshot.data!.docs
+                            .map((doc) => CategoryModel.fromJson(doc.data()))
+                            .toList();
+                        if (data.isEmpty) {
+                          return const SizedBox();
+                        }
+                        return ListView.builder(
                             itemCount: data.length,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
@@ -105,57 +106,46 @@ class _HomeState extends State<Home> {
                                 },
                                 child: Container(
                                   margin: const EdgeInsets.symmetric(
-                                      horizontal: 10),
-                                  child: SizedBox(
-                                    width: 70,
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          height: 70,
-                                          width: 70,
-                                          decoration: BoxDecoration(
-                                            border:
-                                                Border.all(color: primaryColor),
+                                      horizontal: 7.5),
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        height: 70,
+                                        width: 70,
+                                        margin:
+                                            const EdgeInsets.only(bottom: 5),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: primaryColor, width: 0.1),
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(100)),
+                                        ),
+                                        child: ClipRRect(
                                             borderRadius:
                                                 const BorderRadius.all(
                                                     Radius.circular(100)),
-                                          ),
-                                          child: ClipRRect(
-                                              borderRadius:
-                                                  const BorderRadius.all(
-                                                      Radius.circular(100)),
-                                              child: NImage(
-                                                url: category.url,
-                                                h: 70,
-                                              )),
-                                        ),
-                                        Container(
-                                          margin: const EdgeInsets.only(top: 5),
-                                          height: 20,
-                                          child: Text(
-                                            category.titleEn,
-                                            overflow: TextOverflow.ellipsis,
-                                            style:
-                                                const TextStyle(fontSize: 12),
-                                          ),
-                                        )
-                                      ],
-                                    ),
+                                            child: NImage(
+                                              url: category.url,
+                                              h: 70,
+                                            )),
+                                      ),
+                                      Text(
+                                        category.titleEn,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(fontSize: 11),
+                                      )
+                                    ],
                                   ),
                                 ),
                               );
-                            }),
-                      );
-                    }
-                    return SizedBox(
-                      height: 100,
-                      width: dWidth,
-                      child: ListView.builder(
+                            });
+                      }
+                      return ListView.builder(
                         itemCount: 5,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) => Shimmers(
                             child: Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 10),
+                          margin: const EdgeInsets.symmetric(horizontal: 7.5),
                           child: Column(
                             children: [
                               const CircleAvatar(
@@ -163,19 +153,19 @@ class _HomeState extends State<Home> {
                               ),
                               Container(
                                 margin: const EdgeInsets.only(top: 5),
-                                decoration: const BoxDecoration(
-                                    color: Colors.amber,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10))),
-                                height: 20,
+                                decoration: BoxDecoration(
+                                    color: primaryColor,
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(10))),
+                                height: 5,
                                 width: 20,
                               )
                             ],
                           ),
                         )),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
                 FutureBuilder(
                   future: firestore.collection('banners').get(),
@@ -251,10 +241,15 @@ class _HomeState extends State<Home> {
                     );
                   },
                 ),
+                const Text('Best seller'),
                 Padding(
                   padding: const EdgeInsets.only(left: 15, right: 15, top: 20),
                   child: FutureBuilder(
-                    future: firestore.collection('products').get(),
+                    future: firestore
+                        .collection('products')
+                        .orderBy('seller')
+                        .limit(50)
+                        .get(),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         List<ProductModel> data = snapshot.data!.docs
@@ -271,7 +266,7 @@ class _HomeState extends State<Home> {
                                     crossAxisCount: 2,
                                     crossAxisSpacing: 15,
                                     mainAxisSpacing: 15,
-                                    childAspectRatio: 0.65),
+                                    childAspectRatio: 0.58),
                             itemCount: data.length,
                             itemBuilder: (context, index) {
                               ProductModel product = data[index];
@@ -286,7 +281,7 @@ class _HomeState extends State<Home> {
                                   crossAxisCount: 2,
                                   crossAxisSpacing: 15,
                                   mainAxisSpacing: 15,
-                                  childAspectRatio: 0.65),
+                                  childAspectRatio: 0.58),
                           itemCount: 6,
                           itemBuilder: (context, index) => Shimmers(
                               child: ProductTile(
