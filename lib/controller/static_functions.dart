@@ -62,13 +62,13 @@ class StaticFunctions {
 
     final dynamicLinkData = {
       'dynamicLinkInfo': {
-        'domainUriPrefix': 'https://darleyexpress.page.link',
-        'link': 'https://www.darleyexpress.com?screen=/$route/$id',
+        'domainUriPrefix': 'https://believer.page.link',
+        'link': 'https://www.believer.com?screen=/$route/$id',
         'androidInfo': {
-          'androidPackageName': 'com.comma.darleyexpress',
+          'androidPackageName': 'com.comma.believer',
         },
         'iosInfo': {
-          'iosBundleId': 'com.comma.darleyexpress',
+          'iosBundleId': 'com.comma.believer',
         },
       },
       'suffix': {

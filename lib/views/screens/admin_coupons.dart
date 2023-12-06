@@ -1,9 +1,10 @@
-import 'package:believer/controller/my_app.dart';
-import 'package:believer/models/coupon_model.dart';
-import 'package:believer/views/screens/coupon_details.dart';
-import 'package:believer/views/widgets/app_bar.dart';
+import 'package:darleyexpress/controller/my_app.dart';
+import 'package:darleyexpress/models/coupon_model.dart';
+import 'package:darleyexpress/views/screens/coupon_details.dart';
+import 'package:darleyexpress/views/widgets/app_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:ticket_widget/ticket_widget.dart';
 
@@ -26,13 +27,14 @@ class _AdminCouponsState extends State<AdminCoupons> {
           await Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => CouponDetails(
-                    coupon: CouponModel(descriptionEn: 'New coupon')),
+                builder: (context) =>
+                    CouponDetails(coupon: CouponModel(code: 'New coupon')),
               ));
           setState(() {});
         }
       }),
       body: RefreshIndicator(
+        color: primaryColor,
         onRefresh: () async {
           setState(() {});
         },
@@ -58,14 +60,17 @@ class _AdminCouponsState extends State<AdminCoupons> {
                     ),
                     Expanded(
                       child: result.isEmpty
-                          ? Column(
+                          ? const Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Image.asset('assets/images/no_result.png'),
-                                const SizedBox(
+                                Icon(
+                                  Icons.description,
+                                  size: 100,
+                                ),
+                                SizedBox(
                                   height: 20,
                                 ),
-                                const Text('No data found')
+                                Text('No data found')
                               ],
                             )
                           : ListView.builder(
@@ -90,23 +95,57 @@ class _AdminCouponsState extends State<AdminCoupons> {
                                         vertical: 10),
                                     color: primaryColor,
                                     isCornerRounded: true,
-                                    padding: const EdgeInsets.all(20),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 15),
                                     child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
+                                        Text(
+                                          coupon.titleEn,
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 15,
+                                        ),
                                         Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
-                                            const Text('data'),
-                                            IconButton(
-                                              onPressed: () {},
-                                              icon: const Icon(Icons.copy),
-                                            )
+                                            const Icon(BoxIcons.bxs_offer),
+                                            Text(
+                                              '${coupon.discount}%',
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                              ),
+                                            ),
                                           ],
                                         ),
-                                        const Text('data'),
-                                        const Row(
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
-                                            Icon(BoxIcons.bxs_offer),
-                                            Text('data'),
+                                            Text(
+                                              coupon.code,
+                                              style: const TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            IconButton(
+                                              onPressed: () {
+                                                Clipboard.setData(ClipboardData(
+                                                    text: coupon.code));
+                                              },
+                                              icon: const Icon(
+                                                Icons.copy,
+                                                size: 20,
+                                              ),
+                                            )
                                           ],
                                         ),
                                       ],

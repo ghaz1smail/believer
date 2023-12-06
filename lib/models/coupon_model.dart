@@ -1,5 +1,7 @@
 class CouponModel {
   final String id;
+  final String titleAr;
+  final String titleEn;
   final String descriptionEn;
   final String descriptionAr;
   final String code;
@@ -13,6 +15,8 @@ class CouponModel {
       {this.id = '',
       this.descriptionEn = '',
       this.descriptionAr = '',
+      this.titleAr = '',
+      this.titleEn = '',
       this.code = '',
       this.timestamp,
       this.endTime,
@@ -24,12 +28,16 @@ class CouponModel {
     return CouponModel(
         descriptionEn: json['descriptionEn'] ?? '',
         descriptionAr: json['descriptionAr'] ?? '',
+        titleAr: json['titleAr'] ?? '',
+        titleEn: json['titleEn'] ?? '',
         id: json['id'] ?? '',
         code: json['code'] ?? '',
-        timestamp: json['timestamp'] ?? DateTime.now(),
-        endTime: json['endTime'] ?? DateTime.now(),
+        timestamp: DateTime.parse(
+            json['timestamp'] ?? DateTime.now().toIso8601String()),
+        endTime:
+            DateTime.parse(json['endTime'] ?? DateTime.now().toIso8601String()),
         link: json['link'] ?? '',
-        max: json['max'] ?? 0.0,
-        discount: json['discount'] ?? 0.0);
+        max: double.parse(json['max']),
+        discount: double.parse(json['discount']));
   }
 }

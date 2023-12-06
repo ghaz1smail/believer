@@ -13,6 +13,11 @@ class UserCubit extends Cubit<UserState> {
   int selectedIndex = 0;
   Map<String, CartModel> cartList = {};
 
+  clearCart() {
+    cartList.clear();
+    emit(UserLoaded());
+  }
+
   double totalCartPrice() {
     double t = 0;
     cartList.values

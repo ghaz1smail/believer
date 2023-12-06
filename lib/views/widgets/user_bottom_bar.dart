@@ -18,13 +18,12 @@ class _UserBottomBarState extends State<UserBottomBar> {
       color: Colors.white,
       child: Container(
         decoration: const BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                  blurRadius: 0.5, offset: Offset(0, -1), color: Colors.grey)
-            ],
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+                blurRadius: 0.5, offset: Offset(0, -1), color: Colors.grey)
+          ],
+        ),
         child: BlocBuilder<UserCubit, UserState>(
           builder: (context, state) {
             return SalomonBottomBar(

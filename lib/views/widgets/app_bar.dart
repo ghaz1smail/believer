@@ -1,3 +1,5 @@
+import 'package:believer/views/screens/user_screen.dart';
+import 'package:believer/views/widgets/icon_badge.dart';
 import 'package:flutter/material.dart';
 
 class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
@@ -19,46 +21,65 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
       ),
       backgroundColor: Colors.white,
       elevation: 0,
-      leadingWidth: 70,
+      leadingWidth: 60,
       actions: [
         if (action.isNotEmpty)
           Container(
-            width: 70,
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-            child: loading
-                ? const Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : Container(
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(width: 0.5),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(100))),
-                    child: InkWell(
-                      onTap: () async {
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: loading
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : GestureDetector(
+                      onTap: () {
                         action['function']();
                       },
-                      child: Icon(
-                        action['icon'] as IconData,
-                        color: Colors.black,
-                        size: 20,
+                      child: const Chip(
+                        label: Text('Add'),
+                        padding: EdgeInsets.zero,
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(25))),
                       ),
+                    )),
+        if (action['icon'].toString() == 'Icons.shopping_bag')
+          Container(
+            width: 60,
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                CircleAvatar(
+                  backgroundColor: Colors.grey.shade200,
+                  child: IconButton(
+                    onPressed: () async {
+                      action['function']();
+                    },
+                    icon: Icon(
+                      action['icon'] as IconData,
+                      color: Colors.black,
+                      size: 20,
                     ),
                   ),
+                ),
+                if (userCubit.totalCartCount() > 0)
+                  Positioned(
+                      top: 0,
+                      right: 0,
+                      child: BadgeIcon(
+                          badgeText: userCubit.totalCartCount().toString()))
+              ],
+            ),
           ),
       ],
       leading: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-        child: Container(
-          decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(width: 0.5),
-              borderRadius: const BorderRadius.all(Radius.circular(100))),
-          child: InkWell(
-            onTap: () async {
-              Navigator.pop(context);
-            },
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: InkWell(
+          onTap: () async {
+            Navigator.pop(context);
+          },
+          child: CircleAvatar(
+            backgroundColor: Colors.grey.shade200,
             child: const Icon(
               Icons.arrow_back,
               color: Colors.black,

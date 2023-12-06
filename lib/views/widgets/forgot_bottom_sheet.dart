@@ -77,7 +77,7 @@ class _BottomSheetForgotState extends State<BottomSheetForgot> {
                 resetPass();
               },
               shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(25))),
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
               color: primaryColor,
               child: loading
                   ? const CircularProgressIndicator(

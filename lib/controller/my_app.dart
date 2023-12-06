@@ -74,6 +74,7 @@ class MyApp extends StatelessWidget {
             scaffoldMessengerKey: snackbarKey,
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
+                scaffoldBackgroundColor: Colors.white,
                 primaryColor: primaryColor,
                 appBarTheme: AppBarTheme(backgroundColor: primaryColor)),
             supportedLocales: const [Locale('en'), Locale('ar')],

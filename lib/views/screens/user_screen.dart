@@ -1,5 +1,7 @@
 import 'package:believer/cubit/user_cubit.dart';
+import 'package:believer/views/screens/splash_screen.dart';
 import 'package:believer/views/widgets/home.dart';
+import 'package:believer/views/widgets/icon_badge.dart';
 import 'package:believer/views/widgets/profile.dart';
 import 'package:believer/views/widgets/search.dart';
 import 'package:believer/views/widgets/user_bottom_bar.dart';
@@ -24,6 +26,58 @@ class _UserScreenState extends State<UserScreen> {
         userCubit = BlocProvider.of<UserCubit>(context);
         return Scaffold(
             backgroundColor: Colors.white,
+            appBar: AppBar(
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              centerTitle: false,
+              title: Text(
+                'Hi ${auth.userData.name}',
+                style: const TextStyle(
+                  color: Colors.black,
+                ),
+              ),
+              actions: [
+                CircleAvatar(
+                  backgroundColor: Colors.grey.shade200,
+                  child: IconButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, 'categories');
+                      },
+                      icon: const Icon(
+                        Icons.apps,
+                        color: Colors.black,
+                      )),
+                ),
+                const SizedBox(
+                  width: 5,
+                ),
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: Colors.grey.shade200,
+                      child: IconButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, 'cart');
+                          },
+                          icon: const Icon(
+                            Icons.shopping_bag,
+                            color: Colors.black,
+                          )),
+                    ),
+                    if (userCubit.totalCartCount() > 0)
+                      Positioned(
+                          top: 0,
+                          right: 0,
+                          child: BadgeIcon(
+                              badgeText: userCubit.totalCartCount().toString()))
+                  ],
+                ),
+                const SizedBox(
+                  width: 5,
+                ),
+              ],
+            ),
             bottomNavigationBar: const UserBottomBar(),
             body: SafeArea(
               child: IndexedStack(

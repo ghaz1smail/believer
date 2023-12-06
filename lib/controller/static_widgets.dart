@@ -9,7 +9,7 @@ class StaticWidgets {
       context: context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
-          top: Radius.circular(20),
+          top: Radius.circular(25),
         ),
       ),
       isScrollControlled: true,

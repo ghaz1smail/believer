@@ -13,52 +13,58 @@ class Counter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        InkWell(
-          onTap: () {
-            if (count > 1) {
-              remove();
-            } else {
-              other();
-            }
-          },
-          child: Container(
-            margin: const EdgeInsets.only(right: 10),
-            padding: const EdgeInsets.all(2),
-            decoration: BoxDecoration(
-                color: Colors.grey.shade400,
-                borderRadius: const BorderRadius.all(Radius.circular(5))),
-            child: const Icon(
-              Icons.remove,
-              size: 20,
-              color: Colors.white,
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+          color: Colors.grey.shade200,
+          borderRadius: const BorderRadius.all(Radius.circular(100))),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          InkWell(
+            onTap: () {
+              if (count > 1) {
+                remove();
+              } else {
+                other();
+              }
+            },
+            child: Container(
+              margin: const EdgeInsets.only(right: 10),
+              padding: const EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                  color: primaryColor,
+                  borderRadius: const BorderRadius.all(Radius.circular(100))),
+              child: const Icon(
+                Icons.remove,
+                size: 20,
+                color: Colors.white,
+              ),
             ),
           ),
-        ),
-        Text(
-          count.toString(),
-          style: const TextStyle(color: Colors.black),
-        ),
-        InkWell(
-          onTap: () {
-            add();
-          },
-          child: Container(
-            margin: const EdgeInsets.only(left: 10),
-            padding: const EdgeInsets.all(2),
-            decoration: BoxDecoration(
-                color: primaryColor,
-                borderRadius: const BorderRadius.all(Radius.circular(5))),
-            child: const Icon(
-              Icons.add,
-              color: Colors.white,
-              size: 20,
+          Text(
+            count.toString(),
+            style: const TextStyle(color: Colors.black),
+          ),
+          InkWell(
+            onTap: () {
+              add();
+            },
+            child: Container(
+              margin: const EdgeInsets.only(left: 10),
+              padding: const EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                  color: primaryColor,
+                  borderRadius: const BorderRadius.all(Radius.circular(100))),
+              child: const Icon(
+                Icons.add,
+                color: Colors.white,
+                size: 20,
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

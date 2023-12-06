@@ -5,6 +5,7 @@ import 'package:believer/views/screens/product_details.dart';
 import 'package:believer/views/screens/user_screen.dart';
 import 'package:believer/views/widgets/icon_badge.dart';
 import 'package:believer/views/widgets/network_image.dart';
+import 'package:believer/views/widgets/rating_stars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:icons_plus/icons_plus.dart';
@@ -38,12 +39,13 @@ class _ProductTileState extends State<ProductTile> {
             child: Column(
               children: [
                 Container(
+                  padding: const EdgeInsets.all(1),
                   decoration: BoxDecoration(
                       border: Border.all(width: 0.4, color: Colors.black26),
                       borderRadius:
                           const BorderRadius.all(Radius.circular(10))),
                   margin: const EdgeInsets.only(bottom: 5),
-                  height: 210,
+                  height: 175,
                   child: GridTile(
                       footer: InkWell(
                         onTap: () {
@@ -187,61 +189,6 @@ class _ProductTileState extends State<ProductTile> {
           ),
         );
       },
-    );
-  }
-}
-
-class StarRating extends StatefulWidget {
-  const StarRating(
-      {super.key, this.size = 20, required this.rate, this.tap = false});
-  final double size;
-  final List rate;
-  final bool tap;
-
-  @override
-  State<StarRating> createState() => _StarRatingState();
-}
-
-class _StarRatingState extends State<StarRating> {
-  int _rating = 0;
-  double calculate = 0;
-
-  @override
-  void initState() {
-    if (!widget.tap && widget.rate.isNotEmpty) {
-      _rating = (widget.rate.map((m) => m['rating']).reduce((a, b) => a + b) /
-              widget.rate.length)
-          .round();
-    }
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(5, (index) {
-            return InkWell(
-              onTap: widget.tap
-                  ? () {
-                      setState(() {
-                        _rating = index + 1;
-                      });
-                    }
-                  : null,
-              child: Icon(
-                index < _rating ? Icons.star : Icons.star_border,
-                color: Colors.orange,
-                size: widget.size,
-              ),
-            );
-          }),
-        ),
-        Text('(${widget.rate.length})')
-      ],
     );
   }
 }

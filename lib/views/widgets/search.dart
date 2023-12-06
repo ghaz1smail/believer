@@ -1,5 +1,6 @@
 import 'package:believer/controller/my_app.dart';
 import 'package:believer/models/product_model.dart';
+import 'package:believer/views/screens/product_details.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -66,6 +67,14 @@ class _SearchState extends State<Search> {
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 10),
                                 child: ListTile(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              ProductDetails(product: product),
+                                        ));
+                                  },
                                   leading: ClipRRect(
                                     borderRadius: const BorderRadius.all(
                                         Radius.circular(10)),

@@ -4,7 +4,6 @@ import 'package:believer/models/banner_model.dart';
 import 'package:believer/models/category_model.dart';
 import 'package:believer/models/product_model.dart';
 import 'package:believer/views/screens/category_screen.dart';
-import 'package:believer/views/screens/splash_screen.dart';
 import 'package:believer/views/widgets/network_image.dart';
 import 'package:believer/views/widgets/product_tile.dart';
 import 'package:believer/views/widgets/shimmer.dart';
@@ -29,52 +28,11 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          centerTitle: false,
-          title: Text(
-            'Hi ${auth.userData.name}',
-            style: const TextStyle(
-              color: Colors.black,
-            ),
-          ),
-          actions: [
-            CircleAvatar(
-              backgroundColor: Colors.grey.shade200,
-              child: IconButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, 'categories');
-                  },
-                  icon: const Icon(
-                    Icons.apps,
-                    color: Colors.black,
-                  )),
-            ),
-            const SizedBox(
-              width: 5,
-            ),
-            CircleAvatar(
-              backgroundColor: Colors.grey.shade200,
-              child: IconButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, 'cart');
-                  },
-                  icon: const Icon(
-                    Icons.shopping_bag,
-                    color: Colors.black,
-                  )),
-            ),
-            const SizedBox(
-              width: 5,
-            ),
-          ],
-        ),
-        body: BlocBuilder<UserCubit, UserState>(
-          builder: (context, state) {
-            return RefreshIndicator(
+    return BlocBuilder<UserCubit, UserState>(
+      builder: (context, state) {
+        return Scaffold(
+            backgroundColor: Colors.white,
+            body: RefreshIndicator(
               color: primaryColor,
               onRefresh: () async {
                 setState(() {});
@@ -82,7 +40,7 @@ class _HomeState extends State<Home> {
               child: ListView(children: [
                 Container(
                   margin: const EdgeInsets.only(top: 5),
-                  height: 90,
+                  height: 95,
                   width: dWidth,
                   child: FutureBuilder(
                     future: firestore.collection('categories').get(),
@@ -277,7 +235,7 @@ class _HomeState extends State<Home> {
                                     crossAxisCount: 2,
                                     crossAxisSpacing: 15,
                                     mainAxisSpacing: 15,
-                                    childAspectRatio: 0.58),
+                                    childAspectRatio: 0.65),
                             itemCount: data.length,
                             itemBuilder: (context, index) {
                               ProductModel product = data[index];
@@ -292,7 +250,7 @@ class _HomeState extends State<Home> {
                                   crossAxisCount: 2,
                                   crossAxisSpacing: 15,
                                   mainAxisSpacing: 15,
-                                  childAspectRatio: 0.58),
+                                  childAspectRatio: 0.65),
                           itemCount: 6,
                           itemBuilder: (context, index) => Shimmers(
                               child: ProductTile(
@@ -302,8 +260,8 @@ class _HomeState extends State<Home> {
                   ),
                 )
               ]),
-            );
-          },
-        ));
+            ));
+      },
+    );
   }
 }

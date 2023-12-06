@@ -50,7 +50,8 @@ class _RegisterScreenState extends State<RegisterScreen>
                     ),
                     Container(
                       decoration: const BoxDecoration(
-                          border: Border.symmetric(horizontal: BorderSide())),
+                          border: Border.symmetric(
+                              horizontal: BorderSide(width: 0.25))),
                       margin: const EdgeInsets.only(bottom: 25),
                       child: TabBar(
                         onTap: (value) {
@@ -74,6 +75,8 @@ class _RegisterScreenState extends State<RegisterScreen>
                           )
                         ],
                         indicatorColor: primaryColor,
+                        indicatorWeight: 4,
+                        indicatorSize: TabBarIndicatorSize.tab,
                       ),
                     ),
                     if (!signIn)
@@ -276,7 +279,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                                 ?.pushReplacementNamed('user');
                           },
                           splashColor: Colors.red.shade100,
-                          child: Text('Continue without account',
+                          child: Text('Continue as Guest',
                               key: ValueKey<String>(
                                   signIn ? 'signUp' : 'signIn'),
                               style: TextStyle(
