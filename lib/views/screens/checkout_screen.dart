@@ -10,6 +10,7 @@ import 'package:believer/views/widgets/app_bar.dart';
 import 'package:believer/views/widgets/edit_text.dart';
 import 'package:believer/views/widgets/payment_bottom_sheet.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -31,6 +32,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     await firestore.collection('orders').get().then((value) {
       numbbers = value.size;
     });
+
+    for (int i = 0; i < userCubit.cartList.entries.length; i++) {
+      await firestore
+          .collection('products')
+          .doc(userCubit.cartList.entries.toList()[i].key)
+          .update({
+        'stock': FieldValue.increment(
+            -userCubit.cartList.entries.toList()[i].value.count)
+      });
+    }
 
     var data = {
       'number': numbbers + 1,
@@ -241,6 +252,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     child: MaterialButton(
                       minWidth: 0,
                       height: 25,
+                      color: primaryColor,
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       onPressed: () async {
                         await Navigator.pushNamed(context, 'address');

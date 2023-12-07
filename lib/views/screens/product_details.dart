@@ -50,37 +50,50 @@ class _ProductDetailsState extends State<ProductDetails> {
                     ),
                   ],
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Counter(
-                      remove: () {
-                        setState(() {
-                          count--;
-                        });
-                      },
-                      other: () {},
-                      add: () {
-                        setState(() {
-                          count++;
-                        });
-                      },
-                      count: count,
-                    ),
-                    MaterialButton(
-                      onPressed: () {
-                        userCubit.addToCart(widget.product, count);
-                        Navigator.pop(context);
-                      },
-                      color: primaryColor,
-                      minWidth: dWidth / 2,
-                      textColor: Colors.white,
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(100))),
-                      child: const Text('Add to cart'),
-                    )
-                  ],
-                ),
+                child: widget.product.stock == 0
+                    ? Align(
+                        child: Text(
+                          'Out of stock',
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: primaryColor,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Counter(
+                            remove: () {
+                              setState(() {
+                                count--;
+                              });
+                            },
+                            other: () {},
+                            add: () {
+                              if (count < widget.product.stock) {
+                                setState(() {
+                                  count++;
+                                });
+                              }
+                            },
+                            count: count,
+                          ),
+                          MaterialButton(
+                            onPressed: () {
+                              userCubit.addToCart(widget.product, count);
+                              Navigator.pop(context);
+                            },
+                            color: primaryColor,
+                            minWidth: dWidth / 2,
+                            textColor: Colors.white,
+                            shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(100))),
+                            child: const Text('Add to cart'),
+                          )
+                        ],
+                      ),
               ),
             ),
             body: ListView(
@@ -149,7 +162,10 @@ class _ProductDetailsState extends State<ProductDetails> {
                                         color: Colors.red,
                                         size: 18,
                                       ),
-                                      onPressed: () async {},
+                                      onPressed: () async {
+                                        await userCubit
+                                            .favoriteStatus(widget.product);
+                                      },
                                     );
                                   }),
                             ),

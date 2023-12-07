@@ -14,6 +14,8 @@ class _AdminScreenState extends State<AdminScreen> {
     return Scaffold(
         drawer: const Drawer(child: AdminDrawer()),
         appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
           title: const Text('Admin'),
         ),
         body: Padding(

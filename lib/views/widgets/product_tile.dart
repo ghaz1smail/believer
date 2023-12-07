@@ -47,54 +47,66 @@ class _ProductTileState extends State<ProductTile> {
                   margin: const EdgeInsets.only(bottom: 5),
                   height: 175,
                   child: GridTile(
-                      footer: InkWell(
-                        onTap: () {
-                          userCubit.addToCart(widget.product, 1);
-                        },
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: AnimatedContainer(
-                            margin: const EdgeInsets.all(5),
-                            decoration: const BoxDecoration(
-                                color: Colors.white,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(100))),
-                            duration: const Duration(milliseconds: 250),
-                            width: userCubit.cartList
-                                    .containsKey(widget.product.id)
-                                ? 60
-                                : 30,
-                            height: 30,
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    LineAwesome.cart_arrow_down_solid,
-                                    color: primaryColor,
-                                    size: 20,
-                                  ),
-                                  if (userCubit.cartList
-                                      .containsKey(widget.product.id))
-                                    const SizedBox(
-                                      width: 2.5,
+                      footer: widget.product.stock == 0
+                          ? Container()
+                          : InkWell(
+                              onTap: () {
+                                if (userCubit.cartList
+                                    .containsKey(widget.product.id)) {
+                                  if (userCubit
+                                          .cartList[widget.product.id]!.count <
+                                      widget.product.stock) {
+                                    userCubit.addToCart(widget.product, 1);
+                                  }
+                                } else {
+                                  userCubit.addToCart(widget.product, 1);
+                                }
+                              },
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: AnimatedContainer(
+                                  margin: const EdgeInsets.all(5),
+                                  decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(100))),
+                                  duration: const Duration(milliseconds: 250),
+                                  width: userCubit.cartList
+                                          .containsKey(widget.product.id)
+                                      ? 60
+                                      : 30,
+                                  height: 30,
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          LineAwesome.cart_arrow_down_solid,
+                                          color: primaryColor,
+                                          size: 20,
+                                        ),
+                                        if (userCubit.cartList
+                                            .containsKey(widget.product.id))
+                                          const SizedBox(
+                                            width: 2.5,
+                                          ),
+                                        if (userCubit.cartList
+                                            .containsKey(widget.product.id))
+                                          SizedBox(
+                                              height: 25,
+                                              width: 25,
+                                              child: BadgeIcon(
+                                                  badgeText: userCubit
+                                                      .cartList[
+                                                          widget.product.id]!
+                                                      .count
+                                                      .toString()))
+                                      ],
                                     ),
-                                  if (userCubit.cartList
-                                      .containsKey(widget.product.id))
-                                    SizedBox(
-                                        height: 25,
-                                        width: 25,
-                                        child: BadgeIcon(
-                                            badgeText: userCubit
-                                                .cartList[widget.product.id]!
-                                                .count
-                                                .toString()))
-                                ],
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                      ),
                       child: Container(
                         decoration: BoxDecoration(
                             color: primaryColor,
