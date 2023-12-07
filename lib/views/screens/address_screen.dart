@@ -81,11 +81,12 @@ class _AddressScreenState extends State<AddressScreen> {
                       decoration: BoxDecoration(
                           border: Border.all(color: primaryColor),
                           borderRadius:
-                              const BorderRadius.all(Radius.circular(10))),
+                              const BorderRadius.all(Radius.circular(25))),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(e.label == 'home' ? Icons.home : Icons.work),
                               const SizedBox(
@@ -105,14 +106,11 @@ class _AddressScreenState extends State<AddressScreen> {
                                             Radius.circular(10))),
                                     child: Text(
                                       'default'.tr(context),
-                                      style: const TextStyle(fontSize: 10),
+                                      style: const TextStyle(
+                                          fontSize: 10, color: Colors.white),
                                     ))
                             ],
                           ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Text(e.phone),
                           const Divider(),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -128,7 +126,22 @@ class _AddressScreenState extends State<AddressScreen> {
                                 ),
                               ),
                             ],
-                          )
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('phone'.tr(context)),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  e.phone,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ),

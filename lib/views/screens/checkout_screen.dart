@@ -7,6 +7,7 @@ import 'package:believer/views/screens/order_details.dart';
 import 'package:believer/views/screens/splash_screen.dart';
 import 'package:believer/views/screens/user_screen.dart';
 import 'package:believer/views/widgets/app_bar.dart';
+import 'package:believer/views/widgets/edit_text.dart';
 import 'package:believer/views/widgets/payment_bottom_sheet.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +48,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         'label': auth.userData.address!.first.label,
         'name': auth.userData.address!.first.name,
       },
+      'walletData': {
+        'number': auth.userData.wallet!.first.number,
+        'name': auth.userData.address!.first.name,
+      },
       'orderList': userCubit.cartList.entries
           .map((e) => {
                 'id': e.key,
@@ -73,19 +78,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     return Scaffold(
       bottomNavigationBar: SafeArea(
         child: Container(
-            height: 150,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 0.5,
-                  blurRadius: 0.5,
-                  offset: const Offset(0, -2),
-                ),
-              ],
-            ),
+            height: 200,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+            decoration: const BoxDecoration(
+                color: Colors.white,
+                border: Border(top: BorderSide(color: Colors.grey))),
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -149,32 +146,39 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           '${'AED'.tr(context)} ${(userCubit.totalCartPrice() - ((userCubit.totalCartPrice() * (couponData.discount / 100)) > couponData.max ? couponData.max : (userCubit.totalCartPrice() * (couponData.discount / 100))) + 25).toStringAsFixed(2)}'),
                     ],
                   ),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   makeOrder
                       ? const CircularProgressIndicator()
                       : MaterialButton(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           onPressed: () async {
                             if (auth.userData.address!.isNotEmpty) {
-                              // setState(() {
-                              //   makeOrder = true;
-                              // });
+                              if (auth.userData.wallet!.isNotEmpty) {
+                                setState(() {
+                                  makeOrder = true;
+                                });
 
-                              // await staticFunctions.makePayment(
-                              //     (userCubit.totalCartPrice() -
-                              //         ((userCubit.totalCartPrice() *
-                              //             (couponData.discount / 100))) +
-                              //         25.0),
-                              //     ordering);
+                                await ordering();
 
-                              staticWidgets.showBottom(context,
-                                  const BottomSheetPayment(), 0.85, 0.9);
+                                // await staticFunctions.makePayment(
+                                //     (userCubit.totalCartPrice() -
+                                //         ((userCubit.totalCartPrice() *
+                                //             (couponData.discount / 100))) +
+                                //         25.0),
+                                //     ordering);
+                              } else {
+                                staticWidgets.showBottom(context,
+                                    const BottomSheetPayment(), 0.85, 0.9);
+                              }
                             } else {
                               Fluttertoast.showToast(
                                   msg: 'pleaseAddress'.tr(context));
                             }
                           },
                           height: 45,
-                          minWidth: 100,
+                          minWidth: dWidth,
                           shape: const RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(20))),
@@ -193,6 +197,45 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            SizedBox(
+              height: 100,
+              width: dWidth,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: userCubit.cartList.length,
+                itemBuilder: (context, index) {
+                  CartModel cart = userCubit.cartList.values.toList()[index];
+                  return SizedBox(
+                    width: 275,
+                    child: ListTile(
+                      leading: ClipRRect(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
+                        child: CachedNetworkImage(
+                          imageUrl: cart.productData!.media![0],
+                          width: 75,
+                          height: 75,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      title: Text(
+                        cart.productData!.titleEn,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      visualDensity: const VisualDensity(vertical: 4),
+                      subtitle: Text(
+                        '${'AED'.tr(context)} ${cart.productData!.price}  x${cart.count}',
+                        style: const TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            const Divider(
+              color: Colors.grey,
+            ),
             auth.userData.address!.isEmpty
                 ? Align(
                     child: MaterialButton(
@@ -204,12 +247,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         setState(() {});
                       },
                       shape: const RoundedRectangleBorder(
-                          side: BorderSide(),
-                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                          borderRadius: BorderRadius.all(Radius.circular(25))),
                       child: Text(
                         'addNew'.tr(context),
                         style:
-                            TextStyle(fontSize: 12, color: Colors.red.shade700),
+                            const TextStyle(fontSize: 12, color: Colors.white),
                       ),
                     ),
                   )
@@ -229,127 +271,81 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         await Navigator.pushNamed(context, 'address');
                         setState(() {});
                       },
+                      color: primaryColor,
                       shape: const RoundedRectangleBorder(
-                          side: BorderSide(),
-                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                          borderRadius: BorderRadius.all(Radius.circular(25))),
                       child: Text(
                         'change'.tr(context),
-                        style: TextStyle(
-                            fontSize: 12, color: Colors.amber.shade700),
+                        style:
+                            const TextStyle(fontSize: 12, color: Colors.white),
                       ),
                     ),
                   ),
             const Divider(
               color: Colors.grey,
             ),
-            Text(
-              'orderList'.tr(context),
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: userCubit.cartList.length,
-                itemBuilder: (context, index) {
-                  CartModel cart = userCubit.cartList.values.toList()[index];
-                  return ListTile(
-                    leading: ClipRRect(
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      child: CachedNetworkImage(
-                        imageUrl: cart.productData!.media![0],
-                        width: 75,
-                        height: 75,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    title: Text(
-                      cart.productData!.titleEn,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    visualDensity: const VisualDensity(vertical: 4),
-                    subtitle: Text(
-                      '${'AED'.tr(context)} ${cart.productData!.price}',
-                      style: const TextStyle(
-                          color: Colors.black, fontWeight: FontWeight.w500),
-                    ),
-                  );
-                },
-              ),
-            ),
-            const Divider(),
             Container(
-              margin: const EdgeInsets.only(bottom: 10),
-              decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(25)),
-                  color: Colors.grey.shade200),
+              margin: const EdgeInsets.symmetric(vertical: 10),
               child: Row(
                 children: [
                   Flexible(
-                    child: TextField(
-                      controller: code,
-                      decoration: InputDecoration(
-                          hintText: 'promo'.tr(context),
-                          enabledBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          focusedBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          border: const OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          contentPadding:
-                              const EdgeInsets.symmetric(horizontal: 15)),
-                    ),
+                    child: EditText(
+                        function: () {},
+                        controller: code,
+                        validator: (v) => '',
+                        hint: 'promo'.tr(context),
+                        title: 'promo'.tr(context)),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                    ),
-                    child: loading
-                        ? const CircularProgressIndicator()
-                        : MaterialButton(
-                            textColor: Colors.white,
-                            onPressed: () async {
-                              setState(() {
-                                loading = true;
-                              });
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                      ),
+                      child: loading
+                          ? const CircularProgressIndicator()
+                          : FloatingActionButton(
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(100))),
+                              backgroundColor: primaryColor,
+                              mini: true,
+                              onPressed: () async {
+                                setState(() {
+                                  loading = true;
+                                });
 
-                              await firestore
-                                  .collection('coupons')
-                                  .where('code', whereIn: [
-                                    code.text.toLowerCase(),
-                                    code.text.toUpperCase()
-                                  ])
-                                  .get()
-                                  .then((value) {
-                                    if (value.size > 0) {
-                                      couponData = CouponModel.fromJson(
-                                          value.docs.first.data());
+                                await firestore
+                                    .collection('coupons')
+                                    .where('code', whereIn: [
+                                      code.text.toLowerCase(),
+                                      code.text.toUpperCase()
+                                    ])
+                                    .get()
+                                    .then((value) {
+                                      if (value.size > 0) {
+                                        couponData = CouponModel.fromJson(
+                                            value.docs.first.data());
 
-                                      if (couponData.endTime!
-                                          .isBefore(DateTime.now())) {
-                                        Fluttertoast.showToast(
-                                            msg: 'expired'.tr(context));
+                                        if (couponData.endTime!
+                                            .isBefore(DateTime.now())) {
+                                          Fluttertoast.showToast(
+                                              msg: 'expired'.tr(context));
+                                          couponData = CouponModel();
+                                        }
+                                      } else {
                                         couponData = CouponModel();
+                                        Fluttertoast.showToast(
+                                            msg: 'noCode'.tr(context));
                                       }
-                                    } else {
-                                      couponData = CouponModel();
-                                      Fluttertoast.showToast(
-                                          msg: 'noCode'.tr(context));
-                                    }
-                                  });
-                              setState(() {
-                                loading = false;
-                              });
-                            },
-                            color: primaryColor,
-                            height: 40,
-                            shape: const RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(25))),
-                            child: Text('apply'.tr(context)),
-                          ),
-                  )
+                                    });
+                                setState(() {
+                                  loading = false;
+                                });
+                              },
+                              child: const Icon(
+                                Icons.send,
+                                color: Colors.white,
+                                size: 20,
+                              )))
                 ],
               ),
             ),

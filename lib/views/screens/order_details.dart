@@ -41,40 +41,16 @@ class _OrderDetailsState extends State<OrderDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarCustom(
-        action: !order.rated && order.status == 'complete'
-            ? {
-                'icon': Icons.star,
-                'function': () async {
-                  await staticWidgets.showBottom(
-                      context,
-                      BottomSheetReview(
-                        id: order.timestamp!.millisecondsSinceEpoch.toString(),
-                      ),
-                      0.5,
-                      0.75);
-                  fetch();
-                }
-              }
-            : {},
-        title: '#${order.number}',
+      appBar: const AppBarCustom(
+        action: {},
+        title: 'Order details',
       ),
       bottomNavigationBar: SafeArea(
         child: Container(
-            height: 130,
+            height: 140,
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 0.5,
-                    blurRadius: 0.5,
-                    offset: const Offset(0, -2),
-                  ),
-                ],
-                borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(20))),
+            decoration: const BoxDecoration(
+                border: Border(top: BorderSide(color: Colors.grey))),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -106,9 +82,8 @@ class _OrderDetailsState extends State<OrderDetails> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text('${'discount'.tr(context)}:'),
-                    Text(
-                      '${order.discount}%',
-                    ),
+                    Text('- ${'AED'.tr(context)} ${order.discount}',
+                        style: const TextStyle()),
                   ],
                 ),
                 const SizedBox(
@@ -144,25 +119,15 @@ class _OrderDetailsState extends State<OrderDetails> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('orderNumber'.tr(context)),
-                Text(order.number.toString())
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [Text('name'.tr(context)), Text(order.name)],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('phone'.tr(context)),
-                Text(order.addressData!.phone)
+                Text(
+                  'orderNumber'.tr(context),
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.w500),
+                ),
+                Text(
+                  order.number.toString(),
+                  style: const TextStyle(fontSize: 18),
+                )
               ],
             ),
             const SizedBox(
@@ -171,68 +136,105 @@ class _OrderDetailsState extends State<OrderDetails> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('address'.tr(context)),
-                Text(order.addressData!.address)
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('orderT&D'.tr(context)),
-                Text(DateFormat('dd/MM/yyyy hh:mm a').format(order.timestamp!))
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('status'.tr(context)),
-                Text(order.status.tr(context))
+                Text(
+                  'name'.tr(context),
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.w500),
+                ),
+                Text(
+                  order.name,
+                  style: const TextStyle(fontSize: 18),
+                )
               ],
             ),
             const Divider(
               color: Colors.grey,
             ),
+            const Text(
+              'Delivey details',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            Text(order.addressData!.address),
+            const SizedBox(
+              height: 5,
+            ),
+            Text(order.addressData!.phone),
+            const Divider(
+              color: Colors.grey,
+            ),
             Text(
-              'orderList'.tr(context),
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+              order.status.tr(context),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
             ),
-            ListView.separated(
-              shrinkWrap: true,
-              separatorBuilder: (context, index) => const Divider(),
-              itemCount: order.orderList!.length,
-              itemBuilder: (context, index) {
-                ProductModel orderList = order.orderList![index];
-                return ListTile(
-                  leading: ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    child: CachedNetworkImage(
-                      imageUrl: orderList.media![0],
-                      width: 75,
-                      height: 75,
-                      fit: BoxFit.cover,
+            const SizedBox(
+              height: 5,
+            ),
+            Text(
+              DateFormat('EE, dd/MM/yyyy hh:mm a').format(order.timestamp!),
+            ),
+            const Divider(
+              color: Colors.grey,
+            ),
+            SizedBox(
+              height: 100,
+              width: dWidth,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: order.orderList!.length,
+                itemBuilder: (context, index) {
+                  ProductModel orderList = order.orderList![index];
+                  return SizedBox(
+                    width: 275,
+                    child: ListTile(
+                      leading: ClipRRect(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
+                        child: CachedNetworkImage(
+                          imageUrl: orderList.media![0],
+                          width: 75,
+                          height: 75,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      title: Text(
+                        locale.locale == 'ar'
+                            ? orderList.titleAr
+                            : orderList.titleEn,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      visualDensity: const VisualDensity(vertical: 4),
+                      subtitle: Text(
+                        '${'AED'.tr(context)} ${orderList.price}  x${orderList.count}',
+                        style: const TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.w500),
+                      ),
                     ),
-                  ),
-                  title: Text(
-                    locale.locale == 'ar'
-                        ? orderList.titleAr
-                        : orderList.titleEn,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  visualDensity: const VisualDensity(vertical: 4),
-                  subtitle: Text(
-                    '${'AED'.tr(context)} ${orderList.price}',
-                    style: const TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.w500),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
+            if (!order.rated && order.status == 'complete')
+              MaterialButton(
+                onPressed: () async {
+                  await staticWidgets.showBottom(
+                      context,
+                      BottomSheetReview(
+                        id: order.timestamp!.millisecondsSinceEpoch.toString(),
+                      ),
+                      0.5,
+                      0.75);
+                  fetch();
+                },
+                color: primaryColor,
+                height: 45,
+                textColor: Colors.white,
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(25))),
+                child: const Text('Review order'),
+              )
           ]),
         ),
       ),

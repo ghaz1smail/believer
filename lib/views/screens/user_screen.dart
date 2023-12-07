@@ -57,7 +57,7 @@ class _UserScreenState extends State<UserScreen> {
                     CircleAvatar(
                       backgroundColor: Colors.grey.shade200,
                       child: IconButton(
-                          onPressed: () {
+                          onPressed: () async {
                             Navigator.pushNamed(context, 'cart');
                           },
                           icon: const Icon(

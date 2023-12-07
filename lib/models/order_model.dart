@@ -12,6 +12,7 @@ class OrderModel {
   final bool rated;
   final DateTime? timestamp;
   final AddressModel? addressData;
+  final WalletModel? walletData;
   final List<ProductModel>? orderList;
 
   OrderModel(
@@ -25,6 +26,7 @@ class OrderModel {
       this.status = '',
       this.rated = false,
       this.orderList,
+      this.walletData,
       this.addressData});
 
   factory OrderModel.fromJson(Map data) {
@@ -41,6 +43,7 @@ class OrderModel {
         timestamp: DateTime.parse(
             data['timestamp'] ?? DateTime.now().toIso8601String()),
         addressData: AddressModel.fromJson(data['addressData'] as Map),
+        walletData: WalletModel.fromJson(data['walletData'] as Map),
         orderList: d.map((e) => ProductModel.fromJson(e as Map)).toList());
   }
 }

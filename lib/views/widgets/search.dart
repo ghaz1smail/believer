@@ -45,7 +45,10 @@ class _SearchState extends State<Search> {
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Image.asset('assets/images/no_result.png'),
+                            Image.asset(
+                              'assets/images/empty_data.png',
+                              height: 150,
+                            ),
                             const SizedBox(
                               height: 20,
                             ),

@@ -42,7 +42,10 @@ class _WishListState extends State<WishList> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Image.asset('assets/images/empty_fav.png'),
+                              Image.asset(
+                                'assets/images/empty_fav.png',
+                                height: 150,
+                              ),
                               const SizedBox(
                                 height: 10,
                               ),

@@ -122,6 +122,49 @@ class _AddressDetailsState extends State<AddressDetails> {
         child: Form(
           key: key,
           child: Column(children: [
+            EditText(
+                function: () {},
+                controller: name,
+                validator: (p) {
+                  if (p!.isEmpty) {
+                    return 'pleaseAddressName'.tr(context);
+                  }
+                  return null;
+                },
+                hint: 'My home',
+                title: 'addressName'),
+            const SizedBox(
+              height: 20,
+            ),
+            EditText(
+                function: () {},
+                controller: address,
+                validator: (p) {
+                  if (p!.isEmpty) {
+                    return 'pleaseYourAddress'.tr(context);
+                  }
+                  return null;
+                },
+                hint: '',
+                title: 'address'),
+            const SizedBox(
+              height: 20,
+            ),
+            EditText(
+                function: () {},
+                number: true,
+                controller: phone,
+                validator: (p) {
+                  if (p!.isEmpty) {
+                    return 'pleasephone'.tr(context);
+                  }
+                  return null;
+                },
+                hint: '009',
+                title: 'phone'),
+            const SizedBox(
+              height: 20,
+            ),
             Text('label'.tr(context)),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -134,12 +177,14 @@ class _AddressDetailsState extends State<AddressDetails> {
                     });
                   },
                   child: Chip(
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(25))),
                     side: const BorderSide(color: Colors.grey),
                     label: Text(
                       'homes'.tr(context),
                     ),
                     backgroundColor:
-                        label == 'home' ? Colors.amber.shade200 : Colors.white,
+                        label == 'home' ? Colors.red.shade100 : Colors.white,
                   ),
                 ),
                 const SizedBox(
@@ -153,48 +198,16 @@ class _AddressDetailsState extends State<AddressDetails> {
                     });
                   },
                   child: Chip(
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(25))),
                     side: const BorderSide(color: Colors.grey),
                     label: Text('work'.tr(context)),
                     backgroundColor:
-                        label == 'work' ? Colors.amber.shade200 : Colors.white,
+                        label == 'work' ? Colors.red.shade100 : Colors.white,
                   ),
                 ),
               ],
             ),
-            EditText(
-                function: () {},
-                controller: name,
-                validator: (p) {
-                  if (p!.isEmpty) {
-                    return 'pleaseAddressName'.tr(context);
-                  }
-                  return null;
-                },
-                hint: 'My home',
-                title: 'addressName'),
-            EditText(
-                function: () {},
-                controller: address,
-                validator: (p) {
-                  if (p!.isEmpty) {
-                    return 'pleaseYourAddress'.tr(context);
-                  }
-                  return null;
-                },
-                hint: '',
-                title: 'address'),
-            EditText(
-                function: () {},
-                number: true,
-                controller: phone,
-                validator: (p) {
-                  if (p!.isEmpty) {
-                    return 'pleasephone'.tr(context);
-                  }
-                  return null;
-                },
-                hint: '009',
-                title: 'phone'),
             if (widget.address.label.isNotEmpty && !loading)
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

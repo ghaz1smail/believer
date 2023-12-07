@@ -115,20 +115,18 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         .map((doc) => ProductModel.fromJson(doc.data()))
                         .toList();
                     if (data.isEmpty) {
-                      return Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset('assets/images/empty_pro.png'),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            const Text(
-                              'No products available',
-                              style: TextStyle(fontWeight: FontWeight.w500),
-                            )
-                          ],
-                        ),
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset('assets/images/empty_pro.png'),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          const Text(
+                            'No products available',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                          )
+                        ],
                       );
                     }
                     return GridView.builder(

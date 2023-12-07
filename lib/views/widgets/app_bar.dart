@@ -1,5 +1,3 @@
-import 'package:believer/views/screens/user_screen.dart';
-import 'package:believer/views/widgets/icon_badge.dart';
 import 'package:flutter/material.dart';
 
 class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
@@ -42,39 +40,11 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
                                 BorderRadius.all(Radius.circular(25))),
                       ),
                     )),
-        if (action['icon'].toString() == 'Icons.shopping_bag')
-          Container(
-            width: 60,
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                CircleAvatar(
-                  backgroundColor: Colors.grey.shade200,
-                  child: IconButton(
-                    onPressed: () async {
-                      action['function']();
-                    },
-                    icon: Icon(
-                      action['icon'] as IconData,
-                      color: Colors.black,
-                      size: 20,
-                    ),
-                  ),
-                ),
-                if (userCubit.totalCartCount() > 0)
-                  Positioned(
-                      top: 0,
-                      right: 0,
-                      child: BadgeIcon(
-                          badgeText: userCubit.totalCartCount().toString()))
-              ],
-            ),
-          ),
       ],
       leading: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: InkWell(
+          borderRadius: const BorderRadius.all(Radius.circular(100)),
           onTap: () async {
             Navigator.pop(context);
           },

@@ -12,14 +12,17 @@ import 'package:believer/views/screens/admin_products.dart';
 import 'package:believer/views/screens/admin_screen.dart';
 import 'package:believer/views/screens/categories_screen.dart';
 import 'package:believer/views/screens/checkout_screen.dart';
-import 'package:believer/views/screens/forgot_password.dart';
 import 'package:believer/views/screens/notification_screen.dart';
+import 'package:believer/views/screens/orders_screen.dart';
+import 'package:believer/views/screens/payment_screen.dart';
 import 'package:believer/views/screens/register_screen.dart';
+import 'package:believer/views/screens/settings_screen.dart';
 import 'package:believer/views/screens/splash_screen.dart';
 import 'package:believer/views/screens/user_screen.dart';
 import 'package:believer/views/screens/cart_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,6 +37,7 @@ final GlobalKey<ScaffoldMessengerState> snackbarKey =
 FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 FirebaseFirestore firestore = FirebaseFirestore.instance;
 FirebaseStorage firebaseStorage = FirebaseStorage.instance;
+FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
 final physical =
     WidgetsBinding.instance.platformDispatcher.views.first.physicalSize;
@@ -74,6 +78,8 @@ class MyApp extends StatelessWidget {
             scaffoldMessengerKey: snackbarKey,
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
+                progressIndicatorTheme:
+                    ProgressIndicatorThemeData(color: primaryColor),
                 scaffoldBackgroundColor: Colors.white,
                 primaryColor: primaryColor,
                 appBarTheme: AppBarTheme(backgroundColor: primaryColor)),
@@ -97,8 +103,11 @@ class MyApp extends StatelessWidget {
             routes: {
               'register': (context) => const RegisterScreen(),
               'user': (context) => const UserScreen(),
-              'cart': (context) => const CartScreen(),
+              'payment': (context) => const PaymentScreen(),
+              'orders': (context) => const OrdersScreen(),
               'categories': (context) => const CategoriesScreen(),
+              'cart': (context) => const CartScreen(),
+              'settings': (context) => const SettingsScreen(),
               'admin': (context) => const AdminScreen(),
               'adminP': (context) => const AdminProducts(),
               'adminB': (context) => const AdminBanners(),
@@ -106,7 +115,6 @@ class MyApp extends StatelessWidget {
               'coupons': (context) => const AdminCoupons(),
               'checkout': (context) => const CheckoutScreen(),
               'notification': (context) => const NotificationScreen(),
-              'forgot': (context) => const ForgotPasswordScreen()
             },
             home: const SplashScreen(),
           );

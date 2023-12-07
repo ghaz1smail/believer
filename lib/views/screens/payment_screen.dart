@@ -16,7 +16,7 @@ class PaymentScreen extends StatefulWidget {
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
-  int i = -1;
+  bool loading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,129 +37,145 @@ class _PaymentScreenState extends State<PaymentScreen> {
           await auth.getUserData();
           setState(() {});
         },
-        child: auth.userData.wallet!.isEmpty
-            ? Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      'assets/images/empty_data.png',
-                      height: 150,
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      'noPayment'.tr(context),
-                      style: const TextStyle(fontWeight: FontWeight.w500),
-                    )
-                  ],
-                ),
+        child: loading
+            ? const Center(
+                child: CircularProgressIndicator(),
               )
-            : ListView.builder(
-                itemCount: auth.userData.wallet!.length,
-                itemBuilder: (context, index) {
-                  var e = auth.userData.wallet![index];
-                  return Row(
-                    children: [
-                      Flexible(
-                        child: CreditCardWidget(
-                          padding: 10,
-                          height: 125,
-                          isSwipeGestureEnabled: false,
-                          isChipVisible: false,
-                          cardBgColor: primaryColor,
-                          enableFloatingCard: true,
-                          cardNumber: e.number,
-                          expiryDate: e.date,
-                          cardHolderName: e.name,
-                          cvvCode: '',
-                          showBackView: false,
-                          obscureCardCvv: true,
-                          isHolderNameVisible: true,
-                          onCreditCardWidgetChange:
-                              (CreditCardBrand creditCardBrand) {},
+            : auth.userData.wallet!.isEmpty
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          'assets/images/empty_data.png',
+                          height: 150,
                         ),
-                      ),
-                      if (index != i)
-                        Column(
-                          children: [
-                            if (index == 0)
-                              Container(
-                                  margin:
-                                      const EdgeInsets.symmetric(horizontal: 5),
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 2, horizontal: 5),
-                                  decoration: BoxDecoration(
-                                      color: primaryColor,
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(10))),
-                                  child: Text(
-                                    'default'.tr(context),
-                                    style: const TextStyle(fontSize: 10),
-                                  )),
-                            IconButton(
-                                onPressed: () async {
-                                  setState(() {
-                                    i = index;
-                                  });
-                                  await firestore
-                                      .collection('users')
-                                      .doc(firebaseAuth.currentUser!.uid)
-                                      .update({
-                                    'wallet': FieldValue.arrayRemove([
-                                      {
-                                        'name': e.name,
-                                        'number': e.number,
-                                        'date': e.date
-                                      }
-                                    ])
-                                  });
-                                  await auth.getUserData();
-                                  setState(() {
-                                    i = -1;
-                                  });
-                                },
-                                icon: const Icon(
-                                  Icons.delete,
-                                  color: Colors.red,
-                                )),
-                            IconButton(
-                                onPressed: () async {
-                                  var d = auth.userData.wallet;
-                                  setState(() {
-                                    i = index;
-                                  });
-                                  d!.removeAt(index);
-                                  d.insert(
-                                      0,
-                                      WalletModel(
-                                        name: e.name,
-                                        date: e.date,
-                                        number: e.number,
-                                      ));
-
-                                  await firestore
-                                      .collection('users')
-                                      .doc(firebaseAuth.currentUser!.uid)
-                                      .update({
-                                    'wallet': d.map((e) => {
-                                          'name': e.name,
-                                          'number': e.number,
-                                          'date': e.date
-                                        })
-                                  });
-                                  await auth.getUserData();
-                                  setState(() {
-                                    i = -1;
-                                  });
-                                },
-                                icon: const Icon(Icons.edit))
-                          ],
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          'noPayment'.tr(context),
+                          style: const TextStyle(fontWeight: FontWeight.w500),
                         )
-                    ],
-                  );
-                }),
+                      ],
+                    ),
+                  )
+                : ListView.builder(
+                    itemCount: auth.userData.wallet!.length,
+                    itemBuilder: (context, index) {
+                      var e = auth.userData.wallet![index];
+                      return Column(
+                        children: [
+                          if (index == 0)
+                            Container(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 2, horizontal: 5),
+                                decoration: BoxDecoration(
+                                    color: primaryColor,
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(10))),
+                                child: Text(
+                                  'default'.tr(context),
+                                  style: const TextStyle(
+                                      fontSize: 10, color: Colors.white),
+                                )),
+                          Dismissible(
+                            key: UniqueKey(),
+                            onDismissed: (direction) async {
+                              setState(() {
+                                loading = true;
+                              });
+
+                              await firestore
+                                  .collection('users')
+                                  .doc(firebaseAuth.currentUser!.uid)
+                                  .update({
+                                'wallet': FieldValue.arrayRemove([
+                                  {
+                                    'name': e.name,
+                                    'number': e.number,
+                                    'date': e.date
+                                  }
+                                ])
+                              });
+
+                              await auth.getUserData();
+                              setState(() {
+                                loading = false;
+                              });
+                            },
+                            background: Container(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              alignment: Alignment.centerRight,
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(10)),
+                                color: Colors.red.shade200,
+                              ),
+                              child: const Icon(Icons.delete),
+                            ),
+                            child: Stack(
+                              children: [
+                                CreditCardWidget(
+                                  padding: 10,
+                                  height: 125,
+                                  isSwipeGestureEnabled: false,
+                                  isChipVisible: false,
+                                  cardBgColor: primaryColor,
+                                  enableFloatingCard: true,
+                                  cardNumber: e.number,
+                                  expiryDate: e.date,
+                                  cardHolderName: e.name,
+                                  cvvCode: '',
+                                  showBackView: false,
+                                  obscureCardCvv: true,
+                                  isHolderNameVisible: true,
+                                  onCreditCardWidgetChange:
+                                      (CreditCardBrand creditCardBrand) {},
+                                ),
+                                if (index != 0)
+                                  Positioned(
+                                    right: 15,
+                                    top: 10,
+                                    child: IconButton(
+                                        onPressed: () async {
+                                          var d = auth.userData.wallet;
+
+                                          d!.removeAt(index);
+                                          d.insert(
+                                              0,
+                                              WalletModel(
+                                                name: e.name,
+                                                date: e.date,
+                                                number: e.number,
+                                              ));
+
+                                          await firestore
+                                              .collection('users')
+                                              .doc(
+                                                  firebaseAuth.currentUser!.uid)
+                                              .update({
+                                            'wallet': d.map((e) => {
+                                                  'name': e.name,
+                                                  'number': e.number,
+                                                  'date': e.date
+                                                })
+                                          });
+
+                                          await auth.getUserData();
+                                          setState(() {
+                                            loading = false;
+                                          });
+                                        },
+                                        icon: const Icon(Icons.edit)),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
       ),
     );
   }

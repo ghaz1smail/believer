@@ -1,10 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:darleyexpress/controller/my_app.dart';
-import 'package:darleyexpress/models/coupon_model.dart';
-import 'package:darleyexpress/views/widgets/app_bar.dart';
-import 'package:darleyexpress/views/widgets/edit_text.dart';
-import 'package:darleyexpress/views/widgets/pick_date.dart';
+
+import 'package:believer/controller/my_app.dart';
+import 'package:believer/models/coupon_model.dart';
+import 'package:believer/views/widgets/app_bar.dart';
+import 'package:believer/views/widgets/edit_text.dart';
+import 'package:believer/views/widgets/pick_date.dart';
 import 'package:flutter/material.dart';
 
 class CouponDetails extends StatefulWidget {

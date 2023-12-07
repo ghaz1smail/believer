@@ -33,12 +33,7 @@ class _ProductDetailsState extends State<ProductDetails> {
     return BlocBuilder<UserCubit, UserState>(
       builder: (context, state) {
         return Scaffold(
-            appBar: AppBarCustom(action: {
-              'function': () {
-                Navigator.pushNamed(context, 'cart');
-              },
-              'icon': Icons.shopping_bag
-            }),
+            appBar: const AppBarCustom(action: {}),
             backgroundColor: Colors.white,
             bottomNavigationBar: SafeArea(
               child: Container(

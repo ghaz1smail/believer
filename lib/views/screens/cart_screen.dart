@@ -40,11 +40,12 @@ class _CartScreenState extends State<CartScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                    'Subtotal (${userCubit.totalCartCount()} items)'),
-                                Text(
-                                  'AED ${userCubit.totalCartPrice().toStringAsFixed(2)}',
+                                  'Subtotal (${userCubit.totalCartCount()} items)',
                                   style: const TextStyle(
                                       fontWeight: FontWeight.w600),
+                                ),
+                                Text(
+                                  'AED ${userCubit.totalCartPrice().toStringAsFixed(2)}',
                                 )
                               ],
                             ),
@@ -83,7 +84,10 @@ class _CartScreenState extends State<CartScreen> {
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Image.asset('assets/images/empty_cart.png'),
+                            Image.asset(
+                              'assets/images/empty_cart.png',
+                              height: 150,
+                            ),
                             const SizedBox(
                               height: 10,
                             ),

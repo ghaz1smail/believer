@@ -3,6 +3,7 @@ class ProductModel {
   final String titleEn;
   final String titleAr;
   final int stock;
+  final int count;
   final int seller;
   final DateTime? timestamp;
   final String link;
@@ -28,6 +29,7 @@ class ProductModel {
       this.descriptionEn = '',
       this.price = 0.0,
       this.stock = 0,
+      this.count = 0,
       this.seller = 0,
       this.discount = 0.0,
       this.media,
@@ -49,6 +51,7 @@ class ProductModel {
         media: json['media'] ?? [],
         discount: json['discount'] ?? 0.0,
         stock: json['stock'] ?? 0,
+        count: json['count'] ?? 0,
         seller: json['seller'] ?? 0,
         price: json['price'] ?? 0.0,
         descriptionAr: json['descriptionAr'] ?? '',
