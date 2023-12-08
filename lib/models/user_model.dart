@@ -1,3 +1,5 @@
+import 'package:cryptlib_2_0/cryptlib_2_0.dart';
+
 class UserModel {
   final String name;
   final String pic;
@@ -81,17 +83,23 @@ class WalletModel {
   final String name;
   final String number;
   final String date;
+  final String cvv;
 
   WalletModel({
     this.name = '',
     this.number = '',
     this.date = '',
+    this.cvv = '',
   });
   factory WalletModel.fromJson(Map json) {
     return WalletModel(
+      date: CryptLib.instance
+          .decryptCipherTextWithRandomIV(json['date'] ?? '', "date"),
       name: json['name'] ?? '',
-      date: json['date'] ?? '',
-      number: json['number'] ?? '',
+      number: CryptLib.instance
+          .decryptCipherTextWithRandomIV(json['number'] ?? '', "number"),
+      cvv: CryptLib.instance
+          .decryptCipherTextWithRandomIV(json['cvv'] ?? '', "cvv"),
     );
   }
 }

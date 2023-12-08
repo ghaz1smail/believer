@@ -63,7 +63,7 @@ class _WishListState extends State<WishList> {
                                   crossAxisCount: 2,
                                   crossAxisSpacing: 15,
                                   mainAxisSpacing: 15,
-                                  childAspectRatio: 0.65),
+                                  childAspectRatio: 0.7),
                           itemCount: data.length,
                           itemBuilder: (context, index) {
                             ProductModel product = data[index];
@@ -76,7 +76,7 @@ class _WishListState extends State<WishList> {
                           crossAxisCount: 2,
                           crossAxisSpacing: 15,
                           mainAxisSpacing: 15,
-                          childAspectRatio: 0.65,
+                          childAspectRatio: 0.7,
                         ),
                         itemCount: 6,
                         itemBuilder: (context, index) => Shimmers(

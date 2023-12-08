@@ -16,7 +16,20 @@ class _AdminScreenState extends State<AdminScreen> {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
-          title: const Text('Admin'),
+          leading: Builder(builder: (context) {
+            return IconButton(
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+                icon: const Icon(
+                  Icons.menu,
+                  color: Colors.black,
+                ));
+          }),
+          title: const Text(
+            'Admin',
+            style: TextStyle(color: Colors.black),
+          ),
         ),
         body: Padding(
           padding: const EdgeInsets.all(20),

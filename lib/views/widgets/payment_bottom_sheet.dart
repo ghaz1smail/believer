@@ -4,6 +4,7 @@ import 'package:believer/controller/app_localization.dart';
 import 'package:believer/controller/my_app.dart';
 import 'package:believer/views/screens/splash_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cryptlib_2_0/cryptlib_2_0.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 
@@ -29,16 +30,21 @@ class _BottomSheetPaymentState extends State<BottomSheetPayment> {
     setState(() {
       loading = true;
     });
-
+    final ccvv = CryptLib.instance.encryptPlainTextWithRandomIV(cvvCode, "cvv");
+    final cnumber =
+        CryptLib.instance.encryptPlainTextWithRandomIV(cardNumber, "number");
+    final cdate =
+        CryptLib.instance.encryptPlainTextWithRandomIV(expiryDate, "date");
     await firestore
         .collection('users')
         .doc(firebaseAuth.currentUser!.uid)
         .update({
       'wallet': FieldValue.arrayUnion([
         {
+          'cvv': ccvv,
           'name': cardHolderName,
-          'number': cardNumber,
-          'date': expiryDate,
+          'number': cnumber,
+          'date': cdate,
         }
       ])
     });

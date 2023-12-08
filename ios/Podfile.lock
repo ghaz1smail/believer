@@ -5,7 +5,7 @@ PODS:
   - AppAuth/Core (1.6.2)
   - AppAuth/ExternalUserAgent (1.6.2):
     - AppAuth/Core
-  - cloud_firestore (4.13.3):
+  - cloud_firestore (4.13.4):
     - Firebase/Firestore (= 10.18.0)
     - firebase_core
     - Flutter
@@ -28,22 +28,22 @@ PODS:
   - Firebase/Storage (10.18.0):
     - Firebase/CoreOnly
     - FirebaseStorage (~> 10.18.0)
-  - firebase_auth (4.15.0):
+  - firebase_auth (4.15.1):
     - Firebase/Auth (= 10.18.0)
     - firebase_core
     - Flutter
-  - firebase_core (2.24.0):
+  - firebase_core (2.24.1):
     - Firebase/CoreOnly (= 10.18.0)
     - Flutter
-  - firebase_dynamic_links (5.4.6):
+  - firebase_dynamic_links (5.4.7):
     - Firebase/DynamicLinks (= 10.18.0)
     - firebase_core
     - Flutter
-  - firebase_messaging (14.7.6):
+  - firebase_messaging (14.7.7):
     - Firebase/Messaging (= 10.18.0)
     - firebase_core
     - Flutter
-  - firebase_storage (11.5.3):
+  - firebase_storage (11.5.4):
     - Firebase/Storage (= 10.18.0)
     - firebase_core
     - Flutter
@@ -105,6 +105,7 @@ PODS:
   - FMDB/standard (2.7.5)
   - google_sign_in_ios (0.0.1):
     - Flutter
+    - FlutterMacOS
     - GoogleSignIn (~> 7.0)
   - GoogleDataTransport (9.3.0):
     - GoogleUtilities/Environment (~> 7.7)
@@ -211,7 +212,7 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_credit_card (from `.symlinks/plugins/flutter_credit_card/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
-  - google_sign_in_ios (from `.symlinks/plugins/google_sign_in_ios/ios`)
+  - google_sign_in_ios (from `.symlinks/plugins/google_sign_in_ios/darwin`)
   - hl_image_picker_ios (from `.symlinks/plugins/hl_image_picker_ios/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
@@ -279,7 +280,7 @@ EXTERNAL SOURCES:
   fluttertoast:
     :path: ".symlinks/plugins/fluttertoast/ios"
   google_sign_in_ios:
-    :path: ".symlinks/plugins/google_sign_in_ios/ios"
+    :path: ".symlinks/plugins/google_sign_in_ios/darwin"
   hl_image_picker_ios:
     :path: ".symlinks/plugins/hl_image_picker_ios/ios"
   path_provider_foundation:
@@ -304,14 +305,14 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   AppAuth: 3bb1d1cd9340bd09f5ed189fb00b1cc28e1e8570
-  cloud_firestore: 9b25b77371a845d07a48e5146799f6d4552f5940
+  cloud_firestore: 1a98da0743ee92f36efc74af98389f7843a12c53
   CropViewController: 58fb440f30dac788b129d2a1f24cffdcb102669c
   Firebase: 414ad272f8d02dfbf12662a9d43f4bba9bec2a06
-  firebase_auth: 02d1a6340f81020cc302fb8fea8518908c546cec
-  firebase_core: f802c5c1f6caff9b8d38b591a36e7b25f8878936
-  firebase_dynamic_links: 212953c972f7e952c853f69896dc4da0fa5cb06e
-  firebase_messaging: ca2fc59ddd52ef032d80f1a717d12eae8fa0e994
-  firebase_storage: 95b470ab32351049dfd3d97b595460ce7a189971
+  firebase_auth: d6737fa2721c9dfc57ca16a1bb57c244a4ae9332
+  firebase_core: 3d2a3f6e075df5207950cc5577202ed2e6805d9e
+  firebase_dynamic_links: 8bfa34aa12d121f47cc08bc0b46d7c299cfc36bf
+  firebase_messaging: 2e76ab04fe78290b7c093a26c0d1fa754b0dfa58
+  firebase_storage: a1cdbaa40928d5b8d31c8d632ba3e0a80d7d53d4
   FirebaseAppCheckInterop: 3cd914842ba46f4304050874cd284de82f154ffd
   FirebaseAuth: 12314b438fa76048540c8fb86d6cfc9e08595176
   FirebaseAuthInterop: 5818713dcd7239beb96c1125e4b14d6a5a910e5f
@@ -327,7 +328,7 @@ SPEC CHECKSUMS:
   flutter_credit_card: 48fb35065294868bc6a3e7f18a42f28929b84f48
   fluttertoast: 31b00dabfa7fb7bacd9e7dbee580d7a2ff4bf265
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
-  google_sign_in_ios: 8115e3fbe097e6509beb819ed602d47369d9011f
+  google_sign_in_ios: ede92ec558c3a73ec07cb180f31820152fb8ca89
   GoogleDataTransport: 57c22343ab29bc686febbf7cbb13bad167c2d8fe
   GoogleSignIn: b232380cf495a429b8095d3178a8d5855b42e842
   GoogleUtilities: 0759d1a57ebb953965c2dfe0ba4c82e95ccc2e34

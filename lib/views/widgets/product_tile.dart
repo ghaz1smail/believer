@@ -5,7 +5,6 @@ import 'package:believer/views/screens/product_details.dart';
 import 'package:believer/views/screens/user_screen.dart';
 import 'package:believer/views/widgets/icon_badge.dart';
 import 'package:believer/views/widgets/network_image.dart';
-import 'package:believer/views/widgets/rating_stars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:icons_plus/icons_plus.dart';
@@ -180,18 +179,11 @@ class _ProductTileState extends State<ProductTile> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 3, right: 3, bottom: 5),
-                  child: StarRating(
-                    rate: widget.product.rate ?? [],
-                  ),
-                ),
-                Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 3),
                   child: Row(
                     children: [
                       Text(
                         'AED ${widget.product.price.toStringAsFixed(2)}',
-                        style: const TextStyle(fontSize: 12),
                       ),
                     ],
                   ),

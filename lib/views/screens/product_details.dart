@@ -2,9 +2,7 @@ import 'package:believer/controller/my_app.dart';
 import 'package:believer/cubit/user_cubit.dart';
 import 'package:believer/models/product_model.dart';
 import 'package:believer/views/screens/user_screen.dart';
-import 'package:believer/views/widgets/app_bar.dart';
 import 'package:believer/views/widgets/counter.dart';
-import 'package:believer/views/widgets/rating_stars.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,7 +31,90 @@ class _ProductDetailsState extends State<ProductDetails> {
     return BlocBuilder<UserCubit, UserState>(
       builder: (context, state) {
         return Scaffold(
-            appBar: const AppBarCustom(action: {}),
+            appBar: AppBar(
+              leading: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: InkWell(
+                  borderRadius: const BorderRadius.all(Radius.circular(100)),
+                  onTap: () async {
+                    Navigator.pop(context);
+                  },
+                  child: CircleAvatar(
+                    backgroundColor: Colors.grey.shade200,
+                    child: const Icon(
+                      Icons.arrow_back,
+                      color: Colors.black,
+                      size: 20,
+                    ),
+                  ),
+                ),
+              ),
+              leadingWidth: 60,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: CircleAvatar(
+                    backgroundColor: Colors.grey.shade200,
+                    child: InkWell(
+                      onTap: () async {
+                        staticFunctions.shareData(widget.product.link);
+                      },
+                      child: const Icon(
+                        Icons.reply,
+                        color: Colors.black,
+                        size: 20,
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: CircleAvatar(
+                    backgroundColor: Colors.grey.shade200,
+                    child: StreamBuilder(
+                        stream: firestore
+                            .collection('products')
+                            .doc(widget.product.id)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            ProductModel product = ProductModel.fromJson(
+                                snapshot.data!.data() as Map);
+                            return IconButton(
+                              icon: Icon(
+                                product.favorites!
+                                        .contains(firebaseAuth.currentUser!.uid)
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
+                                color: Colors.red,
+                                size: 18,
+                              ),
+                              onPressed: () async {
+                                await userCubit.favoriteStatus(product);
+                              },
+                            );
+                          }
+
+                          return IconButton(
+                            icon: Icon(
+                              widget.product.favorites!
+                                      .contains(firebaseAuth.currentUser!.uid)
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
+                              color: Colors.red,
+                              size: 18,
+                            ),
+                            onPressed: () async {
+                              await userCubit.favoriteStatus(widget.product);
+                            },
+                          );
+                        }),
+                  ),
+                ),
+              ],
+            ),
             backgroundColor: Colors.white,
             bottomNavigationBar: SafeArea(
               child: Container(
@@ -98,100 +179,23 @@ class _ProductDetailsState extends State<ProductDetails> {
             ),
             body: ListView(
               children: [
-                Stack(
-                  children: [
-                    SizedBox(
-                      height: 250,
-                      child: PageView.builder(
-                        controller: _pageController,
-                        onPageChanged: (int page) {
-                          setState(() {
-                            _activePage = page;
-                          });
-                        },
-                        scrollDirection: Axis.horizontal,
-                        itemCount: widget.product.media!.length,
-                        itemBuilder: (context, index) => CachedNetworkImage(
-                          imageUrl: widget.product.media![index],
-                          width: dWidth,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
+                SizedBox(
+                  height: 250,
+                  child: PageView.builder(
+                    controller: _pageController,
+                    onPageChanged: (int page) {
+                      setState(() {
+                        _activePage = page;
+                      });
+                    },
+                    scrollDirection: Axis.horizontal,
+                    itemCount: widget.product.media!.length,
+                    itemBuilder: (context, index) => CachedNetworkImage(
+                      imageUrl: widget.product.media![index],
+                      width: dWidth,
+                      fit: BoxFit.cover,
                     ),
-                    Positioned(
-                      right: 0,
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 5),
-                            child: CircleAvatar(
-                              radius: 18,
-                              backgroundColor: Colors.white,
-                              child: StreamBuilder(
-                                  stream: firestore
-                                      .collection('products')
-                                      .doc(widget.product.id)
-                                      .snapshots(),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.hasData) {
-                                      ProductModel product =
-                                          ProductModel.fromJson(
-                                              snapshot.data!.data() as Map);
-                                      return IconButton(
-                                        icon: Icon(
-                                          product.favorites!.contains(
-                                                  firebaseAuth.currentUser!.uid)
-                                              ? Icons.favorite
-                                              : Icons.favorite_border,
-                                          color: Colors.red,
-                                          size: 18,
-                                        ),
-                                        onPressed: () async {
-                                          await userCubit
-                                              .favoriteStatus(product);
-                                        },
-                                      );
-                                    }
-
-                                    return IconButton(
-                                      icon: Icon(
-                                        widget.product.favorites!.contains(
-                                                firebaseAuth.currentUser!.uid)
-                                            ? Icons.favorite
-                                            : Icons.favorite_border,
-                                        color: Colors.red,
-                                        size: 18,
-                                      ),
-                                      onPressed: () async {
-                                        await userCubit
-                                            .favoriteStatus(widget.product);
-                                      },
-                                    );
-                                  }),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 5),
-                            child: CircleAvatar(
-                              radius: 18,
-                              backgroundColor: Colors.white,
-                              child: InkWell(
-                                onTap: () async {
-                                  staticFunctions
-                                      .shareData(widget.product.link);
-                                },
-                                child: Icon(
-                                  Icons.reply,
-                                  color: primaryColor,
-                                  size: 20,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
+                  ),
                 ),
                 const SizedBox(
                   height: 10,
@@ -225,20 +229,12 @@ class _ProductDetailsState extends State<ProductDetails> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  widget.product.titleEn,
-                                  style: const TextStyle(fontSize: 18),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                StarRating(
-                                  rate: widget.product.rate ?? [],
-                                ),
-                              ],
+                            Text(
+                              widget.product.titleEn,
+                              style: const TextStyle(fontSize: 18),
+                            ),
+                            const SizedBox(
+                              height: 10,
                             ),
                             Container(
                               padding: const EdgeInsets.all(10),

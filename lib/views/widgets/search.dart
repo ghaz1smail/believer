@@ -61,8 +61,9 @@ class _SearchState extends State<Search> {
                             setState(() {});
                           },
                           child: ListView.separated(
-                            separatorBuilder: (context, index) =>
-                                const Divider(),
+                            separatorBuilder: (context, index) => const Divider(
+                              height: 0,
+                            ),
                             itemCount: result.length,
                             itemBuilder: (context, index) {
                               ProductModel product = result.toList()[index];
@@ -92,8 +93,6 @@ class _SearchState extends State<Search> {
                                     product.titleEn,
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                  visualDensity:
-                                      const VisualDensity(vertical: 4),
                                   subtitle: Text(
                                     'AED ${product.price}',
                                     style: const TextStyle(

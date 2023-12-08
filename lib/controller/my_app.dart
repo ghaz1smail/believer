@@ -78,6 +78,7 @@ class MyApp extends StatelessWidget {
             scaffoldMessengerKey: snackbarKey,
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
+                useMaterial3: false,
                 progressIndicatorTheme:
                     ProgressIndicatorThemeData(color: primaryColor),
                 scaffoldBackgroundColor: Colors.white,
