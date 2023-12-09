@@ -2,6 +2,7 @@ import 'package:believer/controller/app_localization.dart';
 import 'package:believer/controller/my_app.dart';
 import 'package:believer/cubit/user_cubit.dart';
 import 'package:believer/models/cart_model.dart';
+import 'package:believer/views/screens/splash_screen.dart';
 import 'package:believer/views/screens/user_screen.dart';
 import 'package:believer/views/widgets/app_bar.dart';
 import 'package:believer/views/widgets/counter.dart';
@@ -9,6 +10,7 @@ import 'package:believer/views/widgets/remove_cart.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -56,7 +58,13 @@ class _CartScreenState extends State<CartScreen> {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 20),
                                 onPressed: () {
-                                  Navigator.pushNamed(context, 'checkout');
+                                  if (firebaseAuth.currentUser!.isAnonymous) {
+                                    Fluttertoast.showToast(
+                                        msg: 'pleaseFirst'.tr(context));
+                                    auth.logOut();
+                                  } else {
+                                    Navigator.pushNamed(context, 'checkout');
+                                  }
                                 },
                                 height: 45,
                                 minWidth: dWidth,

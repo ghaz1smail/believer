@@ -4,7 +4,6 @@ import 'package:believer/models/user_model.dart';
 import 'package:believer/views/screens/splash_screen.dart';
 import 'package:believer/views/widgets/app_bar.dart';
 import 'package:believer/views/widgets/payment_bottom_sheet.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 
@@ -82,21 +81,21 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           Dismissible(
                             key: UniqueKey(),
                             onDismissed: (direction) async {
+                              var d = auth.userData.wallet;
                               setState(() {
                                 loading = true;
                               });
+                              d!.removeAt(index);
 
                               await firestore
                                   .collection('users')
                                   .doc(firebaseAuth.currentUser!.uid)
                                   .update({
-                                'wallet': FieldValue.arrayRemove([
-                                  {
-                                    'name': e.name,
-                                    'number': e.number,
-                                    'date': e.date
-                                  }
-                                ])
+                                'wallet': d.map((e) => {
+                                      'name': e.name,
+                                      'number': e.number,
+                                      'date': e.date
+                                    })
                               });
 
                               await auth.getUserData();
@@ -141,7 +140,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                     child: IconButton(
                                         onPressed: () async {
                                           var d = auth.userData.wallet;
-
+                                          setState(() {
+                                            loading = true;
+                                          });
                                           d!.removeAt(index);
                                           d.insert(
                                               0,

@@ -157,7 +157,7 @@ class _BannnerDetailsState extends State<BannnerDetails> {
                 return null;
               },
               hint: 'Offers',
-              title: 'Title in English',
+              title: 'titleEn',
             ),
             const SizedBox(
               height: 20,
@@ -172,7 +172,7 @@ class _BannnerDetailsState extends State<BannnerDetails> {
                 return null;
               },
               hint: 'عروض',
-              title: 'Title in Arabic',
+              title: 'titleAr',
             ),
             if (widget.banner.id.isNotEmpty && !loading)
               Padding(

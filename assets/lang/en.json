@@ -12,7 +12,6 @@
        "name":"Name",
        "hi":"Hi",
        "best":"  Best seller",
-   
        "google":"Google",
        "apple":"Apple",
        "skip":"Continue as Guest",
@@ -34,9 +33,7 @@
        "seeAll":"See All",
        "noProducts":"No products available",
        "noFavorites":"No favorite products yet",
-       "AED":"AED",
-   
-   
+       "AED":"AED",   
        "subtotal":"Subtotal",
        "items":"items",
        "deliveryFee":"Delivery Fee",
@@ -107,7 +104,18 @@
        "noPayment":"No saved payment methods",
        "paymentMethod":"Payment methods",
        "add":"Add", 
-        "filter":"Filter",
+        "price":"Price",
+        "stock":"In stock",
+        "titleAr":"Title in Arabic",
+        "titleEn":"Title in English",
+        "descriptionEn":"Description in English",
+        "descriptionAr":"Description in Arabic",
+        "discountP":"Discount percent"    ,
+        "max":"Max dicount"    ,
+        "code":"Coupon codet"    ,
+      
+       
        "update":"Update"    
+       
 }
 

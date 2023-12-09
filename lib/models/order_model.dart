@@ -32,7 +32,7 @@ class OrderModel {
   factory OrderModel.fromJson(Map data) {
     List d = data['orderList'];
     return OrderModel(
-        number: data['number'] ?? 0,
+        number: data['number'],
         name: data['name'],
         total: double.parse(data['total'].toString()),
         delivery: double.parse(data['delivery'].toString()),

@@ -109,7 +109,7 @@ class _CouponDetailsState extends State<CouponDetails> {
                   return null;
                 },
                 hint: 'New year discount',
-                title: 'Title in English'),
+                title: 'titleEn'),
             const SizedBox(
               height: 20,
             ),
@@ -123,7 +123,7 @@ class _CouponDetailsState extends State<CouponDetails> {
                   return null;
                 },
                 hint: 'خصم بمناسبة السنة الجديدة',
-                title: 'Title in Arabic'),
+                title: 'titleAr'),
             const SizedBox(
               height: 10,
             ),
@@ -148,7 +148,7 @@ class _CouponDetailsState extends State<CouponDetails> {
                   return null;
                 },
                 hint: '50',
-                title: 'Discount percent'),
+                title: 'discountP'),
             const SizedBox(
               height: 20,
             ),
@@ -162,7 +162,7 @@ class _CouponDetailsState extends State<CouponDetails> {
                   return null;
                 },
                 hint: '100',
-                title: 'Max dicount'),
+                title: 'max'),
             const SizedBox(
               height: 20,
             ),
@@ -176,7 +176,7 @@ class _CouponDetailsState extends State<CouponDetails> {
                   return null;
                 },
                 hint: 'NEWYEAR',
-                title: 'Coupon code'),
+                title: 'code'),
             const SizedBox(
               height: 20,
             ),
@@ -190,7 +190,7 @@ class _CouponDetailsState extends State<CouponDetails> {
                   return null;
                 },
                 hint: '',
-                title: 'Description in English'),
+                title: 'descriptionEn'),
             const SizedBox(
               height: 20,
             ),
@@ -204,7 +204,7 @@ class _CouponDetailsState extends State<CouponDetails> {
                   return null;
                 },
                 hint: '',
-                title: 'Description in Arabic'),
+                title: 'descriptionAr'),
             if (widget.coupon.id.isNotEmpty && !loading)
               Padding(
                 padding: const EdgeInsets.all(20),

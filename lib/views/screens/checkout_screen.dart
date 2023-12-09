@@ -71,6 +71,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 'titleEn': e.value.productData!.titleEn,
                 'titleAr': e.value.productData!.titleAr,
                 'price': e.value.productData!.price,
+                'discount': e.value.productData!.discount,
                 'media': [e.value.productData!.media!.first],
                 'count': e.value.count,
               })

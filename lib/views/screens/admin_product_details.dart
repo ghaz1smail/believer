@@ -273,7 +273,7 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
                       return null;
                     },
                     hint: 'Iphone',
-                    title: 'Product title in English'),
+                    title: 'titleEn'),
                 const SizedBox(
                   height: 20,
                 ),
@@ -287,7 +287,7 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
                       return null;
                     },
                     hint: 'ايفون',
-                    title: 'Product title in Arabic'),
+                    title: 'titleAr'),
                 const Padding(
                   padding: EdgeInsets.only(left: 5, top: 20),
                   child: Text('Main category'),
@@ -378,7 +378,7 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
                       return null;
                     },
                     hint: 'storage 64',
-                    title: 'Product descrition in English'),
+                    title: 'descriptionEn'),
                 const SizedBox(
                   height: 20,
                 ),
@@ -392,7 +392,7 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
                       return null;
                     },
                     hint: 'مساحة ٦٤',
-                    title: 'Product descrition in Arabic'),
+                    title: 'descriptionAr'),
                 const SizedBox(
                   height: 20,
                 ),
@@ -407,7 +407,7 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
                     },
                     hint: '100',
                     number: true,
-                    title: 'Product price'),
+                    title: 'price'),
                 const SizedBox(
                   height: 20,
                 ),
@@ -422,7 +422,7 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
                       return null;
                     },
                     hint: '5',
-                    title: 'Product stock'),
+                    title: 'stock'),
                 if (widget.product.id.isNotEmpty && !loading)
                   Padding(
                     padding: const EdgeInsets.all(20),
