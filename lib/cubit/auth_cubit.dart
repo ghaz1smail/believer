@@ -105,6 +105,11 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
+  deleteAccount() async {
+    logOut();
+    await firebaseAuth.currentUser!.delete();
+  }
+
   navigator() async {
     if (firebaseAuth.currentUser?.uid == staticData.adminUID) {
       navigatorKey.currentState?.pushReplacementNamed('admin');

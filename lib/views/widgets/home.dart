@@ -1,3 +1,4 @@
+import 'package:believer/controller/app_localization.dart';
 import 'package:believer/controller/my_app.dart';
 import 'package:believer/cubit/user_cubit.dart';
 import 'package:believer/models/banner_model.dart';
@@ -93,7 +94,9 @@ class _HomeState extends State<Home> {
                                             )),
                                       ),
                                       Text(
-                                        category.titleEn,
+                                        locale.locale == 'ar'
+                                            ? category.titleAr
+                                            : category.titleEn,
                                         overflow: TextOverflow.ellipsis,
                                         style: const TextStyle(fontSize: 11),
                                       )
@@ -204,11 +207,13 @@ class _HomeState extends State<Home> {
                     );
                   },
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                   child: Text(
-                    'Best seller',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                    'best'.tr(context),
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.w500),
                   ),
                 ),
                 Padding(

@@ -1,3 +1,4 @@
+import 'package:believer/controller/app_localization.dart';
 import 'package:believer/cubit/user_cubit.dart';
 import 'package:believer/views/screens/splash_screen.dart';
 import 'package:believer/views/widgets/home.dart';
@@ -31,7 +32,7 @@ class _UserScreenState extends State<UserScreen> {
               backgroundColor: Colors.transparent,
               centerTitle: false,
               title: Text(
-                'Hi ${auth.userData.name}',
+                '${'hi'.tr(context)} ${auth.userData.name}',
                 style: const TextStyle(
                   color: Colors.black,
                 ),

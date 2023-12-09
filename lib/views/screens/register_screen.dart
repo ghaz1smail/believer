@@ -58,19 +58,19 @@ class _RegisterScreenState extends State<RegisterScreen>
                           setState(() {});
                         },
                         controller: _tabController,
-                        tabs: const [
+                        tabs: [
                           Padding(
-                            padding: EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(10),
                             child: Text(
-                              'Sign In',
-                              style: TextStyle(color: Colors.black),
+                              'signIn'.tr(context),
+                              style: const TextStyle(color: Colors.black),
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(10),
                             child: Text(
-                              'Create account',
-                              style: TextStyle(color: Colors.black),
+                              'createAcc'.tr(context),
+                              style: const TextStyle(color: Colors.black),
                             ),
                           )
                         ],
@@ -84,7 +84,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                         padding: const EdgeInsets.symmetric(
                             horizontal: 20, vertical: 10),
                         child: EditText(
-                            hint: 'Ex. Ghazi',
+                            hint: 'Ex. Ahmad',
                             function: auth.auth,
                             controller: auth.name,
                             validator: (value) {
@@ -234,7 +234,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                                       const SizedBox(
                                         width: 10,
                                       ),
-                                      const Text('Apple')
+                                      Text('apple'.tr(context))
                                     ],
                                   ))),
                           InkWell(
@@ -262,7 +262,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                                       const SizedBox(
                                         width: 10,
                                       ),
-                                      const Text('Google')
+                                      Text('google'.tr(context))
                                     ],
                                   ))),
                         ],
@@ -279,9 +279,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                                 ?.pushReplacementNamed('user');
                           },
                           splashColor: Colors.red.shade100,
-                          child: Text('Continue as Guest',
-                              key: ValueKey<String>(
-                                  signIn ? 'signUp' : 'signIn'),
+                          child: Text('skip'.tr(context),
                               style: TextStyle(
                                 color: primaryColor,
                               )),

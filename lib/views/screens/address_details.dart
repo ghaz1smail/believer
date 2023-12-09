@@ -111,7 +111,7 @@ class _AddressDetailsState extends State<AddressDetails> {
       appBar: AppBarCustom(
           title: widget.address.name,
           action: {
-            'icon': widget.address.label.isNotEmpty ? Icons.edit : Icons.add,
+            'title': widget.address.label.isEmpty ? 'add' : 'update',
             'function': () {
               submit(false);
             },

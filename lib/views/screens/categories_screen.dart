@@ -1,3 +1,4 @@
+import 'package:believer/controller/app_localization.dart';
 import 'package:believer/controller/my_app.dart';
 import 'package:believer/models/category_model.dart';
 import 'package:believer/views/screens/category_screen.dart';
@@ -17,9 +18,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const AppBarCustom(
-        action: {},
-        title: 'Categories',
+      appBar: AppBarCustom(
+        action: const {},
+        title: 'categories'.tr(context),
       ),
       body: FutureBuilder(
         future: firestore.collection('categories').get(),
@@ -29,7 +30,21 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                 .map((doc) => CategoryModel.fromJson(doc.data()))
                 .toList();
             if (data.isEmpty) {
-              return const SizedBox();
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/images/empty_data.png',
+                      height: 150,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Text('noData'.tr(context))
+                  ],
+                ),
+              );
             }
             return Padding(
               padding: const EdgeInsets.only(top: 20),

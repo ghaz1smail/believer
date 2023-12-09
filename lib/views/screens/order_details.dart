@@ -2,10 +2,11 @@ import 'package:believer/controller/app_localization.dart';
 import 'package:believer/controller/my_app.dart';
 import 'package:believer/models/order_model.dart';
 import 'package:believer/models/product_model.dart';
+import 'package:believer/views/screens/product_details.dart';
 import 'package:believer/views/widgets/app_bar.dart';
+import 'package:believer/views/widgets/bottom_sheet_status.dart';
 import 'package:believer/views/widgets/review_bottom_sheet.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-
 import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
@@ -41,9 +42,19 @@ class _OrderDetailsState extends State<OrderDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppBarCustom(
-        action: {},
-        title: 'Order details',
+      appBar: AppBarCustom(
+        action: order.status != 'complete' &&
+                firebaseAuth.currentUser!.uid == staticData.adminUID
+            ? {
+                'title': 'update',
+                'function': () async {
+                  await staticWidgets.showBottom(
+                      context, BottomSheetStatus(order: order), 0.4, 0.5);
+                  fetch();
+                }
+              }
+            : {},
+        title: 'orderDetails'.tr(context),
       ),
       bottomNavigationBar: SafeArea(
         child: Container(
@@ -150,9 +161,9 @@ class _OrderDetailsState extends State<OrderDetails> {
             const Divider(
               color: Colors.grey,
             ),
-            const Text(
-              'Delivey details',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+            Text(
+              'shipping'.tr(context),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
             ),
             const SizedBox(
               height: 5,
@@ -173,7 +184,8 @@ class _OrderDetailsState extends State<OrderDetails> {
               height: 5,
             ),
             Text(
-              DateFormat('EE, dd/MM/yyyy hh:mm a').format(order.timestamp!),
+              DateFormat('EE, dd/MM/yyyy hh:mm a', locale.locale)
+                  .format(order.timestamp!),
             ),
             const Divider(
               color: Colors.grey,
@@ -189,6 +201,23 @@ class _OrderDetailsState extends State<OrderDetails> {
                   return SizedBox(
                     width: 275,
                     child: ListTile(
+                      onTap: () async {
+                        await firestore
+                            .collection('products')
+                            .doc(orderList.id)
+                            .get()
+                            .then((value) {
+                          if (value.exists) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ProductDetails(
+                                      product: ProductModel.fromJson(
+                                          value.data() as Map)),
+                                ));
+                          }
+                        });
+                      },
                       leading: ClipRRect(
                         borderRadius:
                             const BorderRadius.all(Radius.circular(10)),
@@ -216,7 +245,9 @@ class _OrderDetailsState extends State<OrderDetails> {
                 },
               ),
             ),
-            if (!order.rated && order.status == 'complete')
+            if (!order.rated &&
+                order.status == 'complete' &&
+                firebaseAuth.currentUser!.uid != staticData.adminUID)
               MaterialButton(
                 onPressed: () async {
                   await staticWidgets.showBottom(
@@ -233,7 +264,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                 textColor: Colors.white,
                 shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(25))),
-                child: const Text('Review order'),
+                child: Text('reviewOrder'.tr(context)),
               )
           ]),
         ),

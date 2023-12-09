@@ -1,3 +1,4 @@
+import 'package:believer/controller/app_localization.dart';
 import 'package:believer/controller/my_app.dart';
 import 'package:believer/models/product_model.dart';
 import 'package:believer/views/screens/product_details.dart';
@@ -46,13 +47,13 @@ class _SearchState extends State<Search> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Image.asset(
-                              'assets/images/empty_data.png',
+                              'assets/images/empty_pro.png',
                               height: 150,
                             ),
                             const SizedBox(
                               height: 20,
                             ),
-                            const Text('No products found')
+                            Text('noProducts'.tr(context))
                           ],
                         )
                       : RefreshIndicator(
@@ -93,11 +94,31 @@ class _SearchState extends State<Search> {
                                     product.titleEn,
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                  subtitle: Text(
-                                    'AED ${product.price}',
-                                    style: const TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w500),
+                                  subtitle: Row(
+                                    children: [
+                                      Text(
+                                        'AED ${product.price}',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            decoration: product.discount == 0
+                                                ? null
+                                                : TextDecoration.lineThrough,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      if (product.discount != 0)
+                                        Text(
+                                          (product.price -
+                                                  (product.price *
+                                                      (product.discount / 100)))
+                                              .toStringAsFixed(2),
+                                          style: const TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                    ],
                                   ),
                                 ),
                               );

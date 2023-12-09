@@ -1,3 +1,4 @@
+import 'package:believer/controller/app_localization.dart';
 import 'package:believer/controller/my_app.dart';
 import 'package:believer/cubit/user_cubit.dart';
 import 'package:believer/models/cart_model.dart';
@@ -105,9 +106,9 @@ class _BottomSheetRemoveCartState extends State<BottomSheetRemoveCart> {
                   shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(25))),
                   color: Colors.grey.shade400,
-                  child: const Text(
-                    'Cancel',
-                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  child: Text(
+                    'cancelx'.tr(context),
+                    style: const TextStyle(fontSize: 18, color: Colors.white),
                   ),
                 ),
                 const SizedBox(
@@ -123,9 +124,9 @@ class _BottomSheetRemoveCartState extends State<BottomSheetRemoveCart> {
                   shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(25))),
                   color: primaryColor,
-                  child: const Text(
-                    'Remove',
-                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  child: Text(
+                    'remove'.tr(context),
+                    style: const TextStyle(fontSize: 18, color: Colors.white),
                   ),
                 ),
               ],

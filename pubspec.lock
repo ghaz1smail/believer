@@ -185,6 +185,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.3"
+  csv:
+    dependency: "direct main"
+    description:
+      name: csv
+      sha256: "63ed2871dd6471193dffc52c0e6c76fb86269c00244d244297abbb355c84a86e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.1.1"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -233,6 +241,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.4"
+  file_picker:
+    dependency: "direct main"
+    description:
+      name: file_picker
+      sha256: "4e42aacde3b993c5947467ab640882c56947d9d27342a5b6f2895b23956954a6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.1.1"
   firebase_auth:
     dependency: "direct main"
     description:
@@ -387,6 +403,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_plugin_android_lifecycle:
+    dependency: transitive
+    description:
+      name: flutter_plugin_android_lifecycle
+      sha256: b068ffc46f82a55844acfa4fdbb61fad72fa2aef0905548419d97f0f95c456da
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.17"
   flutter_stripe:
     dependency: "direct main"
     description:
@@ -485,38 +509,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.12.2+1"
-  hl_image_picker:
-    dependency: "direct main"
-    description:
-      name: hl_image_picker
-      sha256: "53f3131d2d759e0818fd5fe16ac277ec8a83398abdc209633fba28781405e965"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.2.10"
-  hl_image_picker_android:
-    dependency: transitive
-    description:
-      name: hl_image_picker_android
-      sha256: "6e3dcd5a812c6bf0a3100edb0b1042cf11a4ad482e7de7dbf03b396d0ee45369"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.2.4"
-  hl_image_picker_ios:
-    dependency: transitive
-    description:
-      name: hl_image_picker_ios
-      sha256: "3dad885981aac1752afc89635d6cacda3ffc924ae6d9e3da7fb46efe5117e104"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.2.6"
-  hl_image_picker_platform_interface:
-    dependency: transitive
-    description:
-      name: hl_image_picker_platform_interface
-      sha256: "9690724ba6f3f92ae120a138d6e702c3426a3acd29f4c2ede7b0620bf81aee5b"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.2.2"
   http:
     dependency: transitive
     description:
@@ -541,6 +533,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.0"
+  image_pickers:
+    dependency: "direct main"
+    description:
+      name: image_pickers
+      sha256: "7acc89b328f7e3ebe3c83f70a2178d4be0abd08bf1c61f95c5c2c1f14358e051"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.4+7"
   intl:
     dependency: transitive
     description:
@@ -777,10 +777,10 @@ packages:
     dependency: "direct main"
     description:
       name: share_plus
-      sha256: b1f15232d41e9701ab2f04181f21610c36c83a12ae426b79b4bd011c567934b1
+      sha256: f74fc3f1cbd99f39760182e176802f693fa0ec9625c045561cfad54681ea93dd
       url: "https://pub.dev"
     source: hosted
-    version: "6.3.4"
+    version: "7.2.1"
   share_plus_platform_interface:
     dependency: transitive
     description:
@@ -962,22 +962,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "9.6.0"
-  syncfusion_flutter_charts:
-    dependency: "direct main"
-    description:
-      name: syncfusion_flutter_charts
-      sha256: "97142a0192f6fd44f299c30c0b97399ab503de17ef3860e560078bb6be3903de"
-      url: "https://pub.dev"
-    source: hosted
-    version: "23.2.7"
-  syncfusion_flutter_core:
-    dependency: transitive
-    description:
-      name: syncfusion_flutter_core
-      sha256: a2427697bfad5b611db78ea4c4daef82d3350b83c729a8dc37959662a31547f9
-      url: "https://pub.dev"
-    source: hosted
-    version: "23.2.7"
   synchronized:
     dependency: transitive
     description:
@@ -1142,10 +1126,10 @@ packages:
     dependency: transitive
     description:
       name: win32
-      sha256: a6f0236dbda0f63aa9a25ad1ff9a9d8a4eaaa5012da0dc59d21afdb1dc361ca4
+      sha256: b0f37db61ba2f2e9b7a78a1caece0052564d1bc70668156cf3a29d676fe4e574
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.4"
+    version: "5.1.1"
   xdg_directories:
     dependency: transitive
     description:

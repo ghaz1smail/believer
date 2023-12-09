@@ -8,7 +8,9 @@ import 'package:believer/cubit/user_cubit.dart';
 import 'package:believer/views/screens/address_screen.dart';
 import 'package:believer/views/screens/admin_banners.dart';
 import 'package:believer/views/screens/admin_coupons.dart';
+import 'package:believer/views/screens/admin_orders.dart';
 import 'package:believer/views/screens/admin_products.dart';
+import 'package:believer/views/screens/admin_reviews.dart';
 import 'package:believer/views/screens/admin_screen.dart';
 import 'package:believer/views/screens/categories_screen.dart';
 import 'package:believer/views/screens/checkout_screen.dart';
@@ -110,6 +112,8 @@ class MyApp extends StatelessWidget {
               'cart': (context) => const CartScreen(),
               'settings': (context) => const SettingsScreen(),
               'admin': (context) => const AdminScreen(),
+              'adminOrders': (context) => const AdminOrders(),
+              'adminReviews': (context) => const AdminReviews(),
               'adminP': (context) => const AdminProducts(),
               'adminB': (context) => const AdminBanners(),
               'address': (context) => const AddressScreen(),

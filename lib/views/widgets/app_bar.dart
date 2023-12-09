@@ -1,3 +1,4 @@
+import 'package:believer/controller/app_localization.dart';
 import 'package:flutter/material.dart';
 
 class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
@@ -32,10 +33,10 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
                       onTap: () {
                         action['function']();
                       },
-                      child: const Chip(
-                        label: Text('Add'),
+                      child: Chip(
+                        label: Text(action['title'].toString().tr(context)),
                         padding: EdgeInsets.zero,
-                        shape: RoundedRectangleBorder(
+                        shape: const RoundedRectangleBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(25))),
                       ),

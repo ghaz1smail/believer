@@ -21,7 +21,7 @@ class _AdminCategoriesState extends State<AdminCategories> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarCustom(title: widget.category.titleEn, action: {
-        'icon': Icons.add,
+        'title': 'add',
         'function': () async {
           await Navigator.push(
               context,
@@ -69,7 +69,10 @@ class _AdminCategoriesState extends State<AdminCategories> {
                           ? Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Image.asset('assets/images/no_result.png'),
+                                Image.asset(
+                                  'assets/images/empty_data.png',
+                                  height: 150,
+                                ),
                                 const SizedBox(
                                   height: 20,
                                 ),
@@ -82,32 +85,40 @@ class _AdminCategoriesState extends State<AdminCategories> {
                               itemCount: result.length,
                               itemBuilder: (context, index) {
                                 CategoryModel category = result.toList()[index];
-                                return ListTile(
-                                  contentPadding: const EdgeInsets.all(10),
-                                  leading: ClipRRect(
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(10)),
-                                    child: CachedNetworkImage(
-                                      imageUrl: category.url,
-                                      width: 75,
-                                      height: 75,
-                                      fit: BoxFit.cover,
+                                return Card(
+                                  shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(25))),
+                                  child: ListTile(
+                                    leading: widget.category.id.isEmpty
+                                        ? ClipRRect(
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(10)),
+                                            child: CachedNetworkImage(
+                                              imageUrl: category.url,
+                                              width: 75,
+                                              height: 75,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          )
+                                        : null,
+                                    onTap: () async {
+                                      await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                CategoryDetails(
+                                              category: category,
+                                              catId: widget.category.id,
+                                            ),
+                                          ));
+                                      setState(() {});
+                                    },
+                                    title: Text(
+                                      category.titleEn,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
-                                  ),
-                                  onTap: () async {
-                                    await Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => CategoryDetails(
-                                            category: category,
-                                            catId: widget.category.id,
-                                          ),
-                                        ));
-                                    setState(() {});
-                                  },
-                                  title: Text(
-                                    category.titleEn,
-                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 );
                               },

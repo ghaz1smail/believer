@@ -1,3 +1,4 @@
+import 'package:believer/controller/app_localization.dart';
 import 'package:believer/controller/my_app.dart';
 import 'package:believer/cubit/user_cubit.dart';
 import 'package:believer/models/product_model.dart';
@@ -49,9 +50,10 @@ class _WishListState extends State<WishList> {
                               const SizedBox(
                                 height: 10,
                               ),
-                              const Text(
-                                'No favorite products yet',
-                                style: TextStyle(fontWeight: FontWeight.w500),
+                              Text(
+                                'noFavorites'.tr(context),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w500),
                               )
                             ],
                           ),

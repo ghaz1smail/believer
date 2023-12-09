@@ -11,6 +11,7 @@ import 'package:believer/views/widgets/edit_text.dart';
 import 'package:believer/views/widgets/payment_bottom_sheet.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cryptlib_2_0/cryptlib_2_0.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -39,7 +40,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           .doc(userCubit.cartList.entries.toList()[i].key)
           .update({
         'stock': FieldValue.increment(
-            -userCubit.cartList.entries.toList()[i].value.count)
+            -userCubit.cartList.entries.toList()[i].value.count),
+        'seller': FieldValue.increment(1)
       });
     }
 
@@ -60,8 +62,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         'name': auth.userData.address!.first.name,
       },
       'walletData': {
-        'number': auth.userData.wallet!.first.number,
-        'name': auth.userData.address!.first.name,
+        'number': CryptLib.instance.encryptPlainTextWithRandomIV(
+            auth.userData.wallet!.first.number, "number"),
       },
       'orderList': userCubit.cartList.entries
           .map((e) => {
@@ -305,8 +307,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         function: () {},
                         controller: code,
                         validator: (v) => '',
-                        hint: 'promo'.tr(context),
-                        title: 'promo'.tr(context)),
+                        hint: '',
+                        title: 'promo'),
                   ),
                   Container(
                       padding: const EdgeInsets.symmetric(

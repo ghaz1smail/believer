@@ -18,8 +18,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   dio: ^5.3.3
   lottie: ^2.7.0
-  syncfusion_flutter_charts: ^23.2.4
-  share_plus: ^6.3.4
+  share_plus: ^7.2.1
   url_launcher: ^6.2.1
   fluttertoast: ^8.2.4
   firebase_core: ^2.21.0
@@ -37,11 +36,13 @@ dependencies:
   icons_plus: ^4.0.0
   carousel_slider: ^4.2.1
   flutter_stripe: ^9.5.0+1
-  hl_image_picker: ^1.2.8
+  image_pickers: ^2.0.4+7
   ticket_widget: ^1.0.2
   salomon_bottom_bar: ^3.3.2
   flutter_credit_card: ^4.0.1
   cryptlib_2_0: ^0.0.3
+  file_picker: ^6.1.1
+  csv: ^5.1.1
 
 dev_dependencies:
   flutter_test:

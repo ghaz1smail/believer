@@ -23,7 +23,7 @@ class _AdminBannersState extends State<AdminBanners> {
       appBar: AppBarCustom(
         title: 'Banners',
         action: {
-          'icon': Icons.add,
+          'title': 'add',
           'function': () async {
             await Navigator.push(
                 context,
@@ -66,7 +66,10 @@ class _AdminBannersState extends State<AdminBanners> {
                           ? Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Image.asset('assets/images/no_result.png'),
+                                Image.asset(
+                                  'assets/images/empty_data.png',
+                                  height: 150,
+                                ),
                                 const SizedBox(
                                   height: 20,
                                 ),

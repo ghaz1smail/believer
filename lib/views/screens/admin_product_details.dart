@@ -9,7 +9,7 @@ import 'package:believer/views/widgets/edit_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:hl_image_picker/hl_image_picker.dart';
+import 'package:image_pickers/image_pickers.dart';
 
 class AdminProductDetails extends StatefulWidget {
   const AdminProductDetails({super.key, required this.product});
@@ -22,7 +22,8 @@ class AdminProductDetails extends StatefulWidget {
 class _AdminProductDetailsState extends State<AdminProductDetails> {
   bool loading = false;
   GlobalKey<FormState> key = GlobalKey();
-  final List<HLPickerItem> selectedImages = [];
+
+  List url = [], selectedImages = [];
   String cat = '', mainCat = '';
   TextEditingController tar = TextEditingController(),
       ten = TextEditingController(),
@@ -84,42 +85,44 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
     return results;
   }
 
-  update() async {
+  submit() async {
     if (!key.currentState!.validate()) {
       return;
     }
     setState(() {
       loading = true;
     });
-    var id = DateTime.now().millisecondsSinceEpoch.toString();
-    List media = widget.product.media ?? [];
+    var id = DateTime.now();
 
     for (var e in selectedImages) {
-      if (!media.contains(e.id)) {
+      if (!e.toString().startsWith('http')) {
         var id2 = DateTime.now().millisecondsSinceEpoch.toString();
-        final ref =
-            await firebaseStorage.ref('products/$id2').putFile(File(e.path));
+        final ref = await firebaseStorage.ref('products/$id2').putFile(File(e));
 
-        media.add(await ref.ref.getDownloadURL());
+        url.add(await ref.ref.getDownloadURL());
       }
     }
 
     if (widget.product.id.isEmpty) {
-      final link = await staticFunctions.generateLink(id, 'product');
-      await firestore.collection('products').doc(id).set({
+      final link = await staticFunctions.generateLink(
+          id.millisecondsSinceEpoch.toString(), 'product');
+      await firestore
+          .collection('products')
+          .doc(id.millisecondsSinceEpoch.toString())
+          .set({
         'id': id,
-        'timestamp': DateTime.now().toIso8601String(),
+        'timestamp': id,
         'link': link,
         'titleAr': tar.text,
         'titleEn': ten.text,
         'descriptionAr': dar.text,
         'descriptionEn': den.text,
         'favorites': [],
-        'category': cat.split('%')[1],
-        'mainCategory': mainCat.split('%')[1],
+        'category': cat.isEmpty ? '' : cat.split('%')[1],
+        'mainCategory': mainCat.isEmpty ? '' : mainCat.split('%')[1],
         'dicount': 0,
         'seller': 0,
-        'media': media,
+        'media': url,
         'extra': [],
         'rate': [],
         'price': double.parse(price.text),
@@ -131,11 +134,11 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
         'titleEn': ten.text,
         'descriptionAr': dar.text,
         'descriptionEn': den.text,
-        'media': media,
+        'media': url,
         'category': cat.split('%')[1],
         'mainCategory': mainCat.split('%')[1],
         'price': double.parse(price.text),
-        'stock': int.parse(stock.text)
+        'stock': int.parse(stock.text),
       });
     }
 
@@ -143,23 +146,18 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
   }
 
   _openPicker() async {
-    try {
-      final images = await HLImagePicker().openPicker(
-        selectedIds: selectedImages.map((e) => e.id).toList(),
-        pickerOptions: const HLPickerOptions(
-          mediaType: MediaType.image,
-          compressQuality: 0,
-          compressFormat: CompressFormat.png,
-          maxSelectedAssets: 5,
-        ),
-      );
-      for (var element in images) {
-        setState(() {
-          selectedImages.add(element);
-        });
-      }
-    } catch (e) {
-      debugPrint(e.toString());
+    List<Media> listImagePaths = await ImagePickers.pickerPaths(
+      galleryMode: GalleryMode.image,
+      showGif: false,
+      showCamera: true,
+      selectCount: 5 - selectedImages.length,
+      uiConfig: UIConfig(uiThemeColor: primaryColor),
+    );
+
+    for (var element in listImagePaths) {
+      setState(() {
+        selectedImages.add(element.path.toString());
+      });
     }
   }
 
@@ -167,17 +165,9 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
   void initState() {
     if (widget.product.id.isNotEmpty) {
       for (var e in widget.product.media!) {
-        selectedImages.add(HLPickerItem(
-            id: e,
-            path: e,
-            name: e,
-            mimeType: 'image',
-            size: 0,
-            width: 100,
-            height: 100,
-            type: 'image'));
+        selectedImages.add(e);
+        url.add(e);
       }
-
       tar.text = widget.product.titleAr;
       ten.text = widget.product.titleEn;
       dar.text = widget.product.descriptionAr;
@@ -196,8 +186,8 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
           title: widget.product.titleEn,
           loading: loading,
           action: {
-            'icon': widget.product.id.isEmpty ? Icons.add : Icons.edit,
-            'function': update
+            'title': widget.product.id.isEmpty ? 'add' : 'update',
+            'function': submit
           }),
       body: Padding(
           padding: const EdgeInsets.all(10),
@@ -218,7 +208,7 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
                   ),
                   itemBuilder: (context, index) {
                     String imageFile = index != selectedImages.length
-                        ? selectedImages[index].path
+                        ? selectedImages[index].toString()
                         : '';
 
                     return GestureDetector(
@@ -237,9 +227,7 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
                                 ClipRRect(
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(20)),
-                                  child: imageFile.startsWith(
-                                    'https',
-                                  )
+                                  child: imageFile.startsWith('https')
                                       ? CachedNetworkImage(
                                           imageUrl: imageFile,
                                           height: 125,
@@ -258,6 +246,9 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
                                       setState(() {
                                         selectedImages.removeAt(index);
                                       });
+                                      if (imageFile.startsWith('https')) {
+                                        url.removeAt(index);
+                                      }
                                     },
                                     icon: const Icon(
                                       Icons.delete,

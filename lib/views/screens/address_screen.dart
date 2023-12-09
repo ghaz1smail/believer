@@ -20,7 +20,7 @@ class _AddressScreenState extends State<AddressScreen> {
       appBar: AppBarCustom(
         title: 'address'.tr(context),
         action: {
-          'icon': Icons.add,
+          'title': 'add',
           'function': () async {
             await Navigator.push(
                 context,

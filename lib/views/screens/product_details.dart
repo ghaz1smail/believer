@@ -1,3 +1,4 @@
+import 'package:believer/controller/app_localization.dart';
 import 'package:believer/controller/my_app.dart';
 import 'package:believer/cubit/user_cubit.dart';
 import 'package:believer/models/product_model.dart';
@@ -226,18 +227,17 @@ class _ProductDetailsState extends State<ProductDetails> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Text(
+                          locale.locale == 'ar'
+                              ? widget.product.titleAr
+                              : widget.product.titleEn,
+                          style: const TextStyle(fontSize: 18),
+                        ),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              widget.product.titleEn,
-                              style: const TextStyle(fontSize: 18),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
                             Container(
                               padding: const EdgeInsets.all(10),
+                              margin: const EdgeInsets.symmetric(vertical: 10),
                               decoration: BoxDecoration(
                                   color: Colors.red.shade100,
                                   borderRadius: const BorderRadius.all(
@@ -247,20 +247,35 @@ class _ProductDetailsState extends State<ProductDetails> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    'AED ${widget.product.price.toStringAsFixed(2)}',
-                                    style: const TextStyle(fontSize: 14),
+                                    '${'AED'.tr(context)} ${widget.product.price.toStringAsFixed(2)}',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        decoration: widget.product.discount == 0
+                                            ? null
+                                            : TextDecoration.lineThrough),
                                   ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  if (widget.product.discount != 0)
+                                    Text(
+                                      (widget.product.price -
+                                              (widget.product.price *
+                                                  (widget.product.discount /
+                                                      100)))
+                                          .toStringAsFixed(2),
+                                    ),
                                 ],
                               ),
                             ),
                           ],
                         ),
                         if (widget.product.descriptionEn.isNotEmpty)
-                          const Padding(
-                            padding: EdgeInsets.only(top: 10, bottom: 10),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10, bottom: 10),
                             child: Text(
-                              'Description',
-                              style: TextStyle(
+                              'description'.tr(context),
+                              style: const TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold),
                             ),
                           ),

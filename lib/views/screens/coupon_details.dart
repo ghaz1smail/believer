@@ -1,6 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 
-
 import 'package:believer/controller/my_app.dart';
 import 'package:believer/models/coupon_model.dart';
 import 'package:believer/views/widgets/app_bar.dart';
@@ -91,7 +90,7 @@ class _CouponDetailsState extends State<CouponDetails> {
         title: widget.coupon.code,
         action: {
           'function': update,
-          'icon': widget.coupon.id.isEmpty ? Icons.add : Icons.edit
+          'title': widget.coupon.id.isEmpty ? 'add' : 'update'
         },
         loading: loading,
       ),
@@ -111,6 +110,9 @@ class _CouponDetailsState extends State<CouponDetails> {
                 },
                 hint: 'New year discount',
                 title: 'Title in English'),
+            const SizedBox(
+              height: 20,
+            ),
             EditText(
                 function: () {},
                 controller: titleAr,
@@ -122,6 +124,9 @@ class _CouponDetailsState extends State<CouponDetails> {
                 },
                 hint: 'خصم بمناسبة السنة الجديدة',
                 title: 'Title in Arabic'),
+            const SizedBox(
+              height: 10,
+            ),
             PickDate(
               function: (c) {
                 setState(() {
@@ -129,6 +134,9 @@ class _CouponDetailsState extends State<CouponDetails> {
                 });
               },
               date: endDate,
+            ),
+            const SizedBox(
+              height: 10,
             ),
             EditText(
                 function: () {},
@@ -141,6 +149,9 @@ class _CouponDetailsState extends State<CouponDetails> {
                 },
                 hint: '50',
                 title: 'Discount percent'),
+            const SizedBox(
+              height: 20,
+            ),
             EditText(
                 function: () {},
                 controller: max,
@@ -152,6 +163,9 @@ class _CouponDetailsState extends State<CouponDetails> {
                 },
                 hint: '100',
                 title: 'Max dicount'),
+            const SizedBox(
+              height: 20,
+            ),
             EditText(
                 function: () {},
                 controller: code,
@@ -163,6 +177,9 @@ class _CouponDetailsState extends State<CouponDetails> {
                 },
                 hint: 'NEWYEAR',
                 title: 'Coupon code'),
+            const SizedBox(
+              height: 20,
+            ),
             EditText(
                 function: () {},
                 controller: descriptionEn,
@@ -174,6 +191,9 @@ class _CouponDetailsState extends State<CouponDetails> {
                 },
                 hint: '',
                 title: 'Description in English'),
+            const SizedBox(
+              height: 20,
+            ),
             EditText(
                 function: () {},
                 controller: descriptionAr,

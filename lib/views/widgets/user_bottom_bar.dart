@@ -1,3 +1,4 @@
+import 'package:believer/controller/app_localization.dart';
 import 'package:believer/cubit/user_cubit.dart';
 import 'package:believer/views/screens/user_screen.dart';
 import 'package:flutter/material.dart';
@@ -30,19 +31,19 @@ class _UserBottomBarState extends State<UserBottomBar> {
               items: [
                 SalomonBottomBarItem(
                   icon: const Icon(Icons.home),
-                  title: const Text("Home"),
+                  title: Text("home".tr(context)),
                 ),
                 SalomonBottomBarItem(
                   icon: const Icon(Icons.search),
-                  title: const Text("Search"),
+                  title: Text("search".tr(context)),
                 ),
                 SalomonBottomBarItem(
                   icon: const Icon(Icons.favorite_border),
-                  title: const Text("Favorites"),
+                  title: Text("favorites".tr(context)),
                 ),
                 SalomonBottomBarItem(
                   icon: const Icon(Icons.person),
-                  title: const Text("Profile"),
+                  title: Text("profile".tr(context)),
                 ),
               ],
             );

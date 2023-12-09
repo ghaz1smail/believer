@@ -1,4 +1,3 @@
-
 import 'package:believer/controller/my_app.dart';
 import 'package:believer/models/coupon_model.dart';
 import 'package:believer/views/screens/coupon_details.dart';
@@ -23,7 +22,7 @@ class _AdminCouponsState extends State<AdminCoupons> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarCustom(title: 'Coupons', action: {
-        'icon': Icons.add,
+        'title': 'add',
         'function': () async {
           await Navigator.push(
               context,
@@ -61,17 +60,17 @@ class _AdminCouponsState extends State<AdminCoupons> {
                     ),
                     Expanded(
                       child: result.isEmpty
-                          ? const Column(
+                          ? Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(
-                                  Icons.description,
-                                  size: 100,
+                                Image.asset(
+                                  'assets/images/empty_data.png',
+                                  height: 150,
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 20,
                                 ),
-                                Text('No data found')
+                                const Text('No data found')
                               ],
                             )
                           : ListView.builder(
@@ -105,8 +104,8 @@ class _AdminCouponsState extends State<AdminCoupons> {
                                         Text(
                                           coupon.titleEn,
                                           style: const TextStyle(
-                                            fontSize: 16,
-                                          ),
+                                              fontSize: 16,
+                                              color: Colors.white),
                                         ),
                                         const SizedBox(
                                           height: 15,
@@ -115,17 +114,18 @@ class _AdminCouponsState extends State<AdminCoupons> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
-                                            const Icon(BoxIcons.bxs_offer),
+                                            const Icon(BoxIcons.bxs_offer,
+                                                color: Colors.white),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
                                             Text(
                                               '${coupon.discount}%',
                                               style: const TextStyle(
-                                                fontSize: 16,
-                                              ),
+                                                  fontSize: 16,
+                                                  color: Colors.white),
                                             ),
                                           ],
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
                                         ),
                                         Row(
                                           mainAxisAlignment:
@@ -135,6 +135,7 @@ class _AdminCouponsState extends State<AdminCoupons> {
                                               coupon.code,
                                               style: const TextStyle(
                                                   fontSize: 18,
+                                                  color: Colors.white,
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             IconButton(
@@ -142,10 +143,9 @@ class _AdminCouponsState extends State<AdminCoupons> {
                                                 Clipboard.setData(ClipboardData(
                                                     text: coupon.code));
                                               },
-                                              icon: const Icon(
-                                                Icons.copy,
-                                                size: 20,
-                                              ),
+                                              icon: const Icon(Icons.copy,
+                                                  size: 15,
+                                                  color: Colors.white),
                                             )
                                           ],
                                         ),

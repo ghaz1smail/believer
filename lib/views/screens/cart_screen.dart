@@ -1,3 +1,4 @@
+import 'package:believer/controller/app_localization.dart';
 import 'package:believer/controller/my_app.dart';
 import 'package:believer/cubit/user_cubit.dart';
 import 'package:believer/models/cart_model.dart';
@@ -22,9 +23,9 @@ class _CartScreenState extends State<CartScreen> {
     return BlocBuilder<UserCubit, UserState>(
       builder: (context, state) {
         return Scaffold(
-            appBar: const AppBarCustom(
-              action: {},
-              title: 'Cart',
+            appBar: AppBarCustom(
+              action: const {},
+              title: 'cart'.tr(context),
             ),
             bottomNavigationBar: userCubit.cartList.isEmpty
                 ? null
@@ -40,12 +41,12 @@ class _CartScreenState extends State<CartScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  'Subtotal (${userCubit.totalCartCount()} items)',
+                                  '${'subtotal'.tr(context)} (${userCubit.totalCartCount()} ${'items'.tr(context)})',
                                   style: const TextStyle(
                                       fontWeight: FontWeight.w600),
                                 ),
                                 Text(
-                                  'AED ${userCubit.totalCartPrice().toStringAsFixed(2)}',
+                                  '${'AED'.tr(context)} ${userCubit.totalCartPrice().toStringAsFixed(2)}',
                                 )
                               ],
                             ),
@@ -63,9 +64,9 @@ class _CartScreenState extends State<CartScreen> {
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(25))),
                                 color: primaryColor,
-                                child: const Text(
-                                  'Checkout',
-                                  style: TextStyle(
+                                child: Text(
+                                  'CHECKOUT'.tr(context),
+                                  style: const TextStyle(
                                     fontSize: 18,
                                     color: Colors.white,
                                   ),
@@ -91,9 +92,10 @@ class _CartScreenState extends State<CartScreen> {
                             const SizedBox(
                               height: 10,
                             ),
-                            const Text(
-                              'Your cart is empty',
-                              style: TextStyle(fontWeight: FontWeight.w500),
+                            Text(
+                              'emptyCart'.tr(context),
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.w500),
                             )
                           ],
                         )
@@ -124,9 +126,13 @@ class _CartScreenState extends State<CartScreen> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      cart.productData!.titleEn,
-                                      overflow: TextOverflow.ellipsis,
+                                    Expanded(
+                                      child: Text(
+                                        locale.locale == 'ar'
+                                            ? cart.productData!.titleAr
+                                            : cart.productData!.titleEn,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ),
                                     IconButton(
                                         onPressed: () {
@@ -150,7 +156,7 @@ class _CartScreenState extends State<CartScreen> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      'AED ${cart.productData!.price}',
+                                      '${'AED'.tr(context)} ${cart.productData!.price}',
                                       style: const TextStyle(
                                           color: Colors.black,
                                           fontWeight: FontWeight.w500),

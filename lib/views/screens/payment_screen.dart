@@ -23,7 +23,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       appBar: AppBarCustom(
         title: 'paymentMethod'.tr(context),
         action: {
-          'icon': Icons.add,
+          'title': 'add',
           'function': () async {
             await staticWidgets.showBottom(
                 context, const BottomSheetPayment(), 0.8, 0.9);

@@ -48,9 +48,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
                       const SizedBox(
                         height: 10,
                       ),
-                      const Text(
-                        'No orders yet',
-                        style: TextStyle(fontWeight: FontWeight.w500),
+                      Text(
+                        'noOrders'.tr(context),
+                        style: const TextStyle(fontWeight: FontWeight.w500),
                       )
                     ],
                   ),

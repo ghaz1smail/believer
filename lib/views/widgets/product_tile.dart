@@ -1,3 +1,4 @@
+import 'package:believer/controller/app_localization.dart';
 import 'package:believer/controller/my_app.dart';
 import 'package:believer/cubit/user_cubit.dart';
 import 'package:believer/models/product_model.dart';
@@ -128,11 +129,15 @@ class _ProductTileState extends State<ProductTile> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        widget.product.titleEn,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontWeight: FontWeight.w500),
+                      Expanded(
+                        child: Text(
+                          locale.locale == 'ar'
+                              ? widget.product.titleAr
+                              : widget.product.titleEn,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(fontWeight: FontWeight.w500),
+                        ),
                       ),
                       widget.product.id.isNotEmpty
                           ? StreamBuilder(
@@ -180,12 +185,29 @@ class _ProductTileState extends State<ProductTile> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 3),
-                  child: Row(
-                    children: [
-                      Text(
-                        'AED ${widget.product.price.toStringAsFixed(2)}',
-                      ),
-                    ],
+                  child: FittedBox(
+                    fit: BoxFit.cover,
+                    child: Row(
+                      children: [
+                        Text(
+                          '${'AED'.tr(context)} ${widget.product.price.toStringAsFixed(2)}',
+                          style: TextStyle(
+                              decoration: widget.product.discount == 0
+                                  ? null
+                                  : TextDecoration.lineThrough),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        if (widget.product.discount != 0)
+                          Text(
+                            (widget.product.price -
+                                    (widget.product.price *
+                                        (widget.product.discount / 100)))
+                                .toStringAsFixed(2),
+                          ),
+                      ],
+                    ),
                   ),
                 )
               ],

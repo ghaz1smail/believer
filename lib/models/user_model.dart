@@ -93,13 +93,16 @@ class WalletModel {
   });
   factory WalletModel.fromJson(Map json) {
     return WalletModel(
-      date: CryptLib.instance
-          .decryptCipherTextWithRandomIV(json['date'] ?? '', "date"),
+      date: json['date'] == null
+          ? ''
+          : CryptLib.instance
+              .decryptCipherTextWithRandomIV(json['date'], "date"),
       name: json['name'] ?? '',
       number: CryptLib.instance
           .decryptCipherTextWithRandomIV(json['number'] ?? '', "number"),
-      cvv: CryptLib.instance
-          .decryptCipherTextWithRandomIV(json['cvv'] ?? '', "cvv"),
+      cvv: json['cvv'] == null
+          ? ''
+          : CryptLib.instance.decryptCipherTextWithRandomIV(json['cvv'], "cvv"),
     );
   }
 }

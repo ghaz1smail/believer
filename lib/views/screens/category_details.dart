@@ -7,7 +7,8 @@ import 'package:believer/views/widgets/app_bar.dart';
 import 'package:believer/views/widgets/edit_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:hl_image_picker/hl_image_picker.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_pickers/image_pickers.dart';
 
 class CategoryDetails extends StatefulWidget {
   const CategoryDetails({super.key, required this.category, this.catId = ''});
@@ -20,12 +21,12 @@ class CategoryDetails extends StatefulWidget {
 
 class _CategoryDetailsState extends State<CategoryDetails> {
   GlobalKey<FormState> key = GlobalKey();
-  final List<HLPickerItem> imageFile = [];
+  String imageFile = '';
   bool loading = false;
   TextEditingController ar = TextEditingController(),
       en = TextEditingController();
 
-  updateData() async {
+  submit() async {
     if (!key.currentState!.validate()) {
       return;
     }
@@ -33,11 +34,11 @@ class _CategoryDetailsState extends State<CategoryDetails> {
       loading = true;
     });
     var id = DateTime.now().millisecondsSinceEpoch.toString(), url = '';
-    if (imageFile.isNotEmpty) {
+    if (imageFile.isNotEmpty && widget.catId.isEmpty) {
       final ref = await firebaseStorage
           .ref(
               'categories/${widget.category.id.isEmpty ? id : widget.category.id}')
-          .putFile(File(imageFile.first.path));
+          .putFile(File(imageFile));
 
       url = await ref.ref.getDownloadURL();
     }
@@ -45,14 +46,18 @@ class _CategoryDetailsState extends State<CategoryDetails> {
     if (widget.category.id.isEmpty) {
       final link = await staticFunctions.generateLink(id, 'category');
       if (widget.catId.isEmpty) {
-        await firestore.collection('categories').doc(id).set({
-          'id': id,
-          'timestamp': DateTime.now().toIso8601String(),
-          'link': link,
-          'titleAr': ar.text,
-          'titleEn': en.text,
-          'url': url.isEmpty ? widget.category.url : url
-        });
+        if (imageFile.isNotEmpty) {
+          await firestore.collection('categories').doc(id).set({
+            'id': id,
+            'timestamp': DateTime.now().toIso8601String(),
+            'link': link,
+            'titleAr': ar.text,
+            'titleEn': en.text,
+            'url': url.isEmpty ? widget.category.url : url
+          });
+        } else {
+          Fluttertoast.showToast(msg: 'Please add image');
+        }
       } else {
         await firestore
             .collection('categories')
@@ -65,7 +70,6 @@ class _CategoryDetailsState extends State<CategoryDetails> {
           'link': link,
           'titleAr': ar.text,
           'titleEn': en.text,
-          'url': url.isEmpty ? widget.category.url : url
         });
       }
     } else {
@@ -87,7 +91,6 @@ class _CategoryDetailsState extends State<CategoryDetails> {
             .update({
           'titleAr': ar.text,
           'titleEn': en.text,
-          'url': url.isEmpty ? widget.category.url : url
         });
       }
     }
@@ -98,22 +101,17 @@ class _CategoryDetailsState extends State<CategoryDetails> {
   }
 
   _openPicker() async {
-    try {
-      final images = await HLImagePicker().openPicker(
-        pickerOptions: const HLPickerOptions(
-          mediaType: MediaType.image,
-          compressFormat: CompressFormat.png,
-          compressQuality: 0,
-          maxSelectedAssets: 1,
-        ),
-      );
+    List<Media> listImagePaths = await ImagePickers.pickerPaths(
+      galleryMode: GalleryMode.image,
+      showGif: false,
+      showCamera: true,
+      compressSize: 0,
+      uiConfig: UIConfig(uiThemeColor: primaryColor),
+    );
 
-      setState(() {
-        imageFile.add(images.first);
-      });
-    } catch (e) {
-      debugPrint(e.toString());
-    }
+    setState(() {
+      imageFile = listImagePaths.first.path.toString();
+    });
   }
 
   @override
@@ -132,8 +130,8 @@ class _CategoryDetailsState extends State<CategoryDetails> {
       appBar: AppBarCustom(
         title: widget.category.titleEn,
         action: {
-          'function': updateData,
-          'icon': widget.category.id.isEmpty ? Icons.add : Icons.edit
+          'function': submit,
+          'title': widget.category.id.isEmpty ? 'add' : 'update'
         },
         loading: loading,
       ),
@@ -144,43 +142,44 @@ class _CategoryDetailsState extends State<CategoryDetails> {
             key: key,
             child: Column(
               children: [
-                GestureDetector(
-                  onTap: () {
-                    _openPicker();
-                  },
-                  child: SizedBox(
-                    height: 100,
-                    width: 100,
-                    child: ClipRRect(
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(100)),
-                      child: imageFile.isEmpty
-                          ? widget.category.id.isEmpty
-                              ? Container(
-                                  decoration: BoxDecoration(
-                                      border: Border.all(),
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(100))),
-                                  child: const Icon(
-                                    Icons.photo,
-                                    size: 50,
-                                  ))
-                              : CachedNetworkImage(
-                                  imageUrl: widget.category.url,
-                                  fit: BoxFit.fill,
-                                )
-                          : Image.file(
-                              File(imageFile.first.path),
-                              fit: BoxFit.fill,
-                            ),
+                if (widget.catId.isEmpty)
+                  GestureDetector(
+                    onTap: () {
+                      _openPicker();
+                    },
+                    child: SizedBox(
+                      height: 100,
+                      width: 100,
+                      child: ClipRRect(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(100)),
+                        child: imageFile.isEmpty
+                            ? widget.category.id.isEmpty
+                                ? Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(),
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(100))),
+                                    child: const Icon(
+                                      Icons.photo,
+                                      size: 50,
+                                    ))
+                                : CachedNetworkImage(
+                                    imageUrl: widget.category.url,
+                                    fit: BoxFit.fill,
+                                  )
+                            : Image.file(
+                                File(imageFile),
+                                fit: BoxFit.fill,
+                              ),
+                      ),
                     ),
                   ),
-                ),
                 const SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
                 EditText(
-                  function: updateData,
+                  function: submit,
                   controller: en,
                   validator: (p0) {
                     if (p0!.isEmpty) {
@@ -195,7 +194,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                   height: 20,
                 ),
                 EditText(
-                  function: updateData,
+                  function: submit,
                   controller: ar,
                   validator: (p0) {
                     if (p0!.isEmpty) {

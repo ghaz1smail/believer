@@ -3,6 +3,7 @@ import 'package:believer/controller/my_app.dart';
 import 'package:believer/cubit/auth_cubit.dart';
 import 'package:believer/views/screens/splash_screen.dart';
 import 'package:believer/views/widgets/app_bar.dart';
+import 'package:believer/views/widgets/delete_account.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,26 +42,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 );
               },
             ),
-          if (auth.userData.uid.isNotEmpty)
-            if (firebaseAuth.currentUser?.providerData.first.providerId ==
-                'password')
-              ListTile(
-                title: Text(
-                  'changeEmail'.tr(context),
-                ),
-                onTap: () {},
-                leading: const Icon(Icons.email),
-              ),
-          if (auth.userData.uid.isNotEmpty)
-            if (firebaseAuth.currentUser?.providerData.first.providerId ==
-                'password')
-              ListTile(
-                title: Text(
-                  'changePass'.tr(context),
-                ),
-                onTap: () {},
-                leading: const Icon(Icons.password),
-              ),
+          // if (auth.userData.uid.isNotEmpty)
+          //   if (firebaseAuth.currentUser?.providerData.first.providerId ==
+          //       'password')
+          //     ListTile(
+          //       title: Text(
+          //         'changeEmail'.tr(context),
+          //       ),
+          //       onTap: () {},
+          //       leading: const Icon(Icons.email),
+          //     ),
+          // if (auth.userData.uid.isNotEmpty)
+          //   if (firebaseAuth.currentUser?.providerData.first.providerId ==
+          //       'password')
+          //     ListTile(
+          //       title: Text(
+          //         'changePass'.tr(context),
+          //       ),
+          //       onTap: () {},
+          //       leading: const Icon(Icons.password),
+          //     ),
           ListTile(
             title: Text(
               'changeLang'.tr(context),
@@ -80,7 +81,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 'deleteAccount'.tr(context),
                 style: const TextStyle(color: Colors.red),
               ),
-              onTap: () {},
+              onTap: () {
+                staticWidgets.showBottom(
+                    context, const BottomSheetDeleteAccount(), 0.4, 0.5);
+              },
               leading: const Icon(
                 Icons.person_remove,
                 color: Colors.red,

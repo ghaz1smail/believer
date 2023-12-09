@@ -1,3 +1,4 @@
+import 'package:believer/controller/app_localization.dart';
 import 'package:believer/controller/my_app.dart';
 import 'package:believer/models/category_model.dart';
 import 'package:believer/models/product_model.dart';
@@ -122,9 +123,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           const SizedBox(
                             height: 10,
                           ),
-                          const Text(
-                            'No products available',
-                            style: TextStyle(fontWeight: FontWeight.w500),
+                          Text(
+                            'noProducts'.tr(context),
+                            style: const TextStyle(fontWeight: FontWeight.w500),
                           )
                         ],
                       );
