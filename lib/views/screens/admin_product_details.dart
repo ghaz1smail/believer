@@ -120,7 +120,7 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
         'favorites': [],
         'category': cat.isEmpty ? '' : cat.split('%')[1],
         'mainCategory': mainCat.isEmpty ? '' : mainCat.split('%')[1],
-        'dicount': 0,
+        'discount': 0,
         'seller': 0,
         'media': url,
         'extra': [],
@@ -138,6 +138,7 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
         'category': cat.split('%')[1],
         'mainCategory': mainCat.split('%')[1],
         'price': double.parse(price.text),
+        // 'discount': double.parse(price.text),
         'stock': int.parse(stock.text),
       });
     }

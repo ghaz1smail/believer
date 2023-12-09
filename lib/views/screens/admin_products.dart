@@ -61,7 +61,7 @@ class _AdminProductsState extends State<AdminProducts> {
             'descriptionEn': data.split(',')[4].trim(),
             'stock': int.parse(data.split(',')[5].trim()),
             'media': [data.split(',')[6].trim()],
-            'dicount': double.parse(data.split(',')[7].trim()),
+            'discount': double.parse(data.split(',')[7].trim()),
             'favorites': [],
             'category': '',
             'mainCategory': '',

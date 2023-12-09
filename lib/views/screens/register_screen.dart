@@ -195,7 +195,10 @@ class _RegisterScreenState extends State<RegisterScreen>
                                     style: ButtonStyle(
                                         overlayColor: MaterialStateProperty.all(
                                             Colors.red.shade100)),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      staticFunctions.urlLauncher(Uri.parse(
+                                          'https://sites.google.com/view/believergoods/home'));
+                                    },
                                     child: Text(
                                       'term'.tr(context),
                                       style: TextStyle(
