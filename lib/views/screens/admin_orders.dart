@@ -31,7 +31,7 @@ class _AdminOrdersState extends State<AdminOrders> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarCustom(
-        title: 'Orders',
+        title: 'orders',
         action: {
           'title': 'filter',
           'function': () {

@@ -110,11 +110,12 @@
         "titleEn":"Title in English",
         "descriptionEn":"Description in English",
         "descriptionAr":"Description in Arabic",
-        "discountP":"Discount percent"    ,
-        "max":"Max dicount"    ,
-        "code":"Coupon codet"    ,
-      
-       
+        "discountP":"Discount percent",
+        "max":"Max dicount",
+        "code":"Coupon code",
+        "out":"Out of stock",
+        "addTo":"Add to cart",
+     
        "update":"Update"    
        
 }

@@ -30,6 +30,7 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
       dar = TextEditingController(),
       den = TextEditingController(),
       stock = TextEditingController(),
+      discount = TextEditingController(text: '0'),
       price = TextEditingController();
 
   Future<List<CategoryModel>> fetchCategories() async {
@@ -120,12 +121,12 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
         'favorites': [],
         'category': cat.isEmpty ? '' : cat.split('%')[1],
         'mainCategory': mainCat.isEmpty ? '' : mainCat.split('%')[1],
-        'discount': 0,
         'seller': 0,
         'media': url,
         'extra': [],
         'rate': [],
         'price': double.parse(price.text),
+        'discount': double.parse(discount.text),
         'stock': int.parse(stock.text)
       });
     } else {
@@ -138,7 +139,7 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
         'category': cat.split('%')[1],
         'mainCategory': mainCat.split('%')[1],
         'price': double.parse(price.text),
-        // 'discount': double.parse(price.text),
+        'discount': double.parse(discount.text),
         'stock': int.parse(stock.text),
       });
     }
@@ -173,6 +174,7 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
       ten.text = widget.product.titleEn;
       dar.text = widget.product.descriptionAr;
       den.text = widget.product.descriptionEn;
+      discount.text = widget.product.discount.toStringAsFixed(2);
       price.text = widget.product.price.toStringAsFixed(2);
       stock.text = widget.product.stock.toString();
     }
@@ -408,6 +410,21 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
                     hint: '100',
                     number: true,
                     title: 'price'),
+                const SizedBox(
+                  height: 20,
+                ),
+                EditText(
+                    function: () {},
+                    controller: discount,
+                    validator: (p0) {
+                      if (p0!.isEmpty) {
+                        return 'Please enter product discount percent';
+                      }
+                      return null;
+                    },
+                    hint: '50',
+                    number: true,
+                    title: 'discountP'),
                 const SizedBox(
                   height: 20,
                 ),

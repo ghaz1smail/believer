@@ -26,7 +26,7 @@ class _AdminReviewsState extends State<AdminReviews> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarCustom(
-        title: 'Reviews',
+        title: 'reviews',
         action: {
           'title': 'filter',
           'function': () {

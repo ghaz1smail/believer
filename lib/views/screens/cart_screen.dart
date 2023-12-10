@@ -2,6 +2,7 @@ import 'package:believer/controller/app_localization.dart';
 import 'package:believer/controller/my_app.dart';
 import 'package:believer/cubit/user_cubit.dart';
 import 'package:believer/models/cart_model.dart';
+import 'package:believer/views/screens/product_details.dart';
 import 'package:believer/views/screens/splash_screen.dart';
 import 'package:believer/views/screens/user_screen.dart';
 import 'package:believer/views/widgets/app_bar.dart';
@@ -120,6 +121,14 @@ class _CartScreenState extends State<CartScreen> {
                               child: ListTile(
                                 contentPadding:
                                     const EdgeInsets.symmetric(horizontal: 10),
+                                onTap: () async {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ProductDetails(
+                                            product: cart.productData!),
+                                      ));
+                                },
                                 leading: ClipRRect(
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(5)),

@@ -4,6 +4,7 @@ import 'package:believer/models/cart_model.dart';
 import 'package:believer/models/coupon_model.dart';
 import 'package:believer/models/order_model.dart';
 import 'package:believer/views/screens/order_details.dart';
+import 'package:believer/views/screens/product_details.dart';
 import 'package:believer/views/screens/splash_screen.dart';
 import 'package:believer/views/screens/user_screen.dart';
 import 'package:believer/views/widgets/app_bar.dart';
@@ -105,11 +106,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       children: [
                         Text(
                           '${'subtotal'.tr(context)}:',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              decoration: couponData.id.isNotEmpty
-                                  ? TextDecoration.lineThrough
-                                  : null),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         Text(
                             '${'AED'.tr(context)} ${userCubit.totalCartPrice().toStringAsFixed(2)}',
@@ -120,11 +119,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       children: [
                         Text(
                           '${'deliveryFee'.tr(context)}:',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              decoration: couponData.id.isNotEmpty
-                                  ? TextDecoration.lineThrough
-                                  : null),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         Text('${'AED'.tr(context)} 25',
                             style: const TextStyle()),
@@ -134,11 +131,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       children: [
                         Text(
                           '${'discount'.tr(context)}:',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              decoration: couponData.id.isNotEmpty
-                                  ? TextDecoration.lineThrough
-                                  : null),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         Text(
                             '-${'AED'.tr(context)} ${(((userCubit.totalCartPrice() * (couponData.discount / 100)) > couponData.max ? couponData.max : (userCubit.totalCartPrice() * (couponData.discount / 100)))).toStringAsFixed(2)}',
@@ -222,6 +217,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   return SizedBox(
                     width: 275,
                     child: ListTile(
+                      onTap: () async {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  ProductDetails(product: cart.productData!),
+                            ));
+                      },
                       leading: ClipRRect(
                         borderRadius:
                             const BorderRadius.all(Radius.circular(10)),

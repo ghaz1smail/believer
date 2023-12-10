@@ -135,7 +135,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                 child: widget.product.stock == 0
                     ? Align(
                         child: Text(
-                          'Out of stock',
+                          'out'.tr(context),
                           style: TextStyle(
                               fontSize: 20,
                               color: primaryColor,
@@ -172,7 +172,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                             shape: const RoundedRectangleBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(100))),
-                            child: const Text('Add to cart'),
+                            child: Text('addTo'.tr(context)),
                           )
                         ],
                       ),
