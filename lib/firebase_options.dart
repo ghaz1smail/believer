@@ -66,12 +66,12 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBV_HczZWdeA9x6tdspGoVD9A8sXT0RBEg',
-    appId: '1:777828898569:ios:c0feb8fc893fc531b5a5d8',
+    appId: '1:777828898569:ios:3c24661abb8d707cb5a5d8',
     messagingSenderId: '777828898569',
     projectId: 'believercomma',
     storageBucket: 'believercomma.appspot.com',
     androidClientId: '777828898569-k8hs3kslohvv639ahd91il6eqe32fkql.apps.googleusercontent.com',
-    iosClientId: '777828898569-srdvep9lqv7lfbefc82gn8cqvr1ldbkq.apps.googleusercontent.com',
-    iosBundleId: 'com.comma.believergoods',
+    iosClientId: '777828898569-gfqanbkbeuc2tjc02526lmes7kdf9eqm.apps.googleusercontent.com',
+    iosBundleId: 'com.comma.believer',
   );
 }

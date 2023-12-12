@@ -1,4 +1,4 @@
-package com.comma.believer
+package com.comma.believergoods
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -14,6 +14,50 @@
       },
       "oauth_client": [
         {
+          "client_id": "777828898569-k8hs3kslohvv639ahd91il6eqe32fkql.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.comma.believer",
+            "certificate_hash": "392bb5c77a31e1aa7c7065323ca1c3eafadc8959"
+          }
+        },
+        {
+          "client_id": "777828898569-nt0prf2u1dvltugg3k5128ckvgvhq04a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5_vY9MWglILO4MsgggWwv14AAS_gS6Ps"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "777828898569-nt0prf2u1dvltugg3k5128ckvgvhq04a.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "777828898569-gfqanbkbeuc2tjc02526lmes7kdf9eqm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.comma.believer"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:777828898569:android:e7d38617d6b1496fb5a5d8",
+        "android_client_info": {
+          "package_name": "com.comma.believergoods"
+        }
+      },
+      "oauth_client": [
+        {
           "client_id": "777828898569-nt0prf2u1dvltugg3k5128ckvgvhq04a.apps.googleusercontent.com",
           "client_type": 3
         }

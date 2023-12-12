@@ -66,10 +66,10 @@ class StaticFunctions {
         'domainUriPrefix': 'https://believergoods.page.link',
         'link': 'https://www.believer.com?screen=/$route/$id',
         'androidInfo': {
-          'androidPackageName': 'com.comma.believer',
+          'androidPackageName': 'com.comma.believergoods',
         },
         'iosInfo': {
-          'iosBundleId': 'com.comma.believer',
+          'iosBundleId': 'com.comma.believergoods',
         },
       },
       'suffix': {
