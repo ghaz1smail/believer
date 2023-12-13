@@ -1,6 +1,7 @@
 import 'package:believer/controller/my_app.dart';
 import 'package:believer/models/cart_model.dart';
 import 'package:believer/models/product_model.dart';
+import 'package:believer/views/screens/splash_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -60,7 +61,7 @@ class UserCubit extends Cubit<UserState> {
   }
 
   favoriteStatus(ProductModel product) async {
-    if (firebaseAuth.currentUser!.isAnonymous) {
+    if (auth.userData.uid.isEmpty) {
       navigatorKey.currentState?.pushReplacementNamed('register');
       Fluttertoast.showToast(msg: 'Please sign in first');
     } else {

@@ -35,7 +35,10 @@ class _SplashScreenState extends State<SplashScreen> {
             Text(
               'believer'.tr(context),
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-            )
+            ),
+            const SizedBox(
+              height: 20,
+            ),
           ],
         ),
       ),

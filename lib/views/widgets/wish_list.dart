@@ -32,7 +32,9 @@ class _WishListState extends State<WishList> {
                 },
                 child: FutureBuilder(
                   future: firestore.collection('products').where('favorites',
-                      arrayContainsAny: [firebaseAuth.currentUser!.uid]).get(),
+                      arrayContainsAny: [
+                        firebaseAuth.currentUser?.uid ?? ''
+                      ]).get(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       List<ProductModel> data = snapshot.data!.docs

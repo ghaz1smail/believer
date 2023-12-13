@@ -115,7 +115,7 @@
         "code":"Coupon code",
         "out":"Out of stock",
         "addTo":"Add to cart",
-     
+        "filter":"Filter"  ,
        "update":"Update"    
        
 }

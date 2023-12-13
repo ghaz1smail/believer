@@ -13,6 +13,7 @@ class AdminReviews extends StatefulWidget {
 
 class _AdminReviewsState extends State<AdminReviews> {
   int filterx = 0;
+  var rating = 0;
   TextEditingController controller = TextEditingController();
 
   filter(x) {
@@ -127,11 +128,13 @@ class _AdminReviewsState extends State<AdminReviews> {
                   List<ReviewModel> data = snapshot.data!.docs
                       .map((e) => ReviewModel.fromJson(e.data()))
                       .toList();
-
-                  var rating =
-                      (data.map((value) => value.rate).reduce((a, b) => a + b) /
-                              data.length)
-                          .round();
+                  if (data.isNotEmpty) {
+                    rating = (data
+                                .map((value) => value.rate)
+                                .reduce((a, b) => a + b) /
+                            data.length)
+                        .round();
+                  }
 
                   Iterable<ReviewModel> result = filterx == 0
                       ? data

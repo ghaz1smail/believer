@@ -59,7 +59,7 @@ class _CartScreenState extends State<CartScreen> {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 20),
                                 onPressed: () {
-                                  if (firebaseAuth.currentUser!.isAnonymous) {
+                                  if (auth.userData.uid.isEmpty) {
                                     Fluttertoast.showToast(
                                         msg: 'pleaseFirst'.tr(context));
                                     auth.logOut();

@@ -71,8 +71,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   checkUser() async {
     if (firebaseAuth.currentUser != null) {
-      if (firebaseAuth.currentUser!.isAnonymous ||
-          firebaseAuth.currentUser!.uid == staticData.adminUID) {
+      if (firebaseAuth.currentUser!.uid == staticData.adminUID) {
         await Future.delayed(const Duration(seconds: 3));
       } else {
         final stopwatch = Stopwatch()..start();

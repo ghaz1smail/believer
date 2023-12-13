@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:believer/controller/app_localization.dart';
 import 'package:believer/controller/my_app.dart';
 import 'package:believer/cubit/auth_cubit.dart';
@@ -212,34 +214,35 @@ class _RegisterScreenState extends State<RegisterScreen>
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          InkWell(
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(100)),
-                              onTap: () {
-                                auth.appleSignIn();
-                              },
-                              child: Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 10),
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 5),
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      border: Border.all(color: Colors.grey),
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(100))),
-                                  child: Row(
-                                    children: [
-                                      Logo(
-                                        Logos.apple,
-                                        size: 20,
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text('apple'.tr(context))
-                                    ],
-                                  ))),
+                          if (Platform.isIOS)
+                            InkWell(
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(100)),
+                                onTap: () {
+                                  auth.appleSignIn();
+                                },
+                                child: Container(
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 10),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 5),
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        border: Border.all(color: Colors.grey),
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(100))),
+                                    child: Row(
+                                      children: [
+                                        Logo(
+                                          Logos.apple,
+                                          size: 20,
+                                        ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text('apple'.tr(context))
+                                      ],
+                                    ))),
                           InkWell(
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(100)),
@@ -277,7 +280,6 @@ class _RegisterScreenState extends State<RegisterScreen>
                       Align(
                         child: InkWell(
                           onTap: () async {
-                            await firebaseAuth.signInAnonymously();
                             navigatorKey.currentState
                                 ?.pushReplacementNamed('user');
                           },

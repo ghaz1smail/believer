@@ -2,9 +2,10 @@ import 'package:believer/controller/app_localization.dart';
 import 'package:believer/controller/my_app.dart';
 import 'package:believer/cubit/user_cubit.dart';
 import 'package:believer/models/product_model.dart';
+import 'package:believer/views/screens/full_screen.dart';
 import 'package:believer/views/screens/user_screen.dart';
 import 'package:believer/views/widgets/counter.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:believer/views/widgets/network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -191,11 +192,21 @@ class _ProductDetailsState extends State<ProductDetails> {
                     },
                     scrollDirection: Axis.horizontal,
                     itemCount: widget.product.media!.length,
-                    itemBuilder: (context, index) => CachedNetworkImage(
-                      imageUrl: widget.product.media![index],
-                      width: dWidth,
-                      fit: BoxFit.cover,
-                    ),
+                    itemBuilder: (context, index) => GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => FullScreen(
+                                    url: widget.product.media![index]),
+                              ));
+                        },
+                        child: NImage(
+                          url: widget.product.media![index],
+                          h: 250,
+                          fit: BoxFit.none,
+                          w: dWidth,
+                        )),
                   ),
                 ),
                 const SizedBox(

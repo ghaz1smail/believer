@@ -28,7 +28,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
         onRefresh: () async {
           setState(() {});
         },
-        child: ListView(
+        child: Column(
           children: [
             const SizedBox(
               height: 10,
@@ -48,7 +48,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     return const SizedBox();
                   }
                   return SizedBox(
-                    height: 50,
+                    height: 40,
                     width: dWidth,
                     child: ListView.builder(
                         itemCount: data.length,
@@ -78,7 +78,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   );
                 }
                 return SizedBox(
-                  height: 50,
+                  height: 40,
                   width: dWidth,
                   child: ListView.builder(
                     itemCount: 5,
@@ -103,32 +103,47 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 );
               },
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 15, right: 15, top: 20),
-              child: FutureBuilder(
-                future: firestore
-                    .collection('products')
-                    .where('mainCategory', isEqualTo: widget.category.id)
-                    .get(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    List<ProductModel> data = snapshot.data!.docs
-                        .map((doc) => ProductModel.fromJson(doc.data()))
-                        .toList();
-                    if (data.isEmpty) {
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset('assets/images/empty_pro.png'),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            'noProducts'.tr(context),
-                            style: const TextStyle(fontWeight: FontWeight.w500),
-                          )
-                        ],
-                      );
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 15, right: 15, top: 20),
+                child: FutureBuilder(
+                  future: firestore
+                      .collection('products')
+                      .where('mainCategory', isEqualTo: widget.category.id)
+                      .get(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      List<ProductModel> data = snapshot.data!.docs
+                          .map((doc) => ProductModel.fromJson(doc.data()))
+                          .toList();
+                      if (data.isEmpty) {
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset('assets/images/empty_pro.png'),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              'noProducts'.tr(context),
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                        );
+                      }
+                      return GridView.builder(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 15,
+                                  mainAxisSpacing: 15,
+                                  childAspectRatio: 0.7),
+                          itemCount: data.length,
+                          itemBuilder: (context, index) {
+                            ProductModel product = data[index];
+                            return ProductTile(product: product);
+                          });
                     }
                     return GridView.builder(
                         physics: const NeverScrollableScrollPhysics(),
@@ -138,28 +153,14 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 crossAxisCount: 2,
                                 crossAxisSpacing: 15,
                                 mainAxisSpacing: 15,
-                                childAspectRatio: 0.65),
-                        itemCount: data.length,
-                        itemBuilder: (context, index) {
-                          ProductModel product = data[index];
-                          return ProductTile(product: product);
-                        });
-                  }
-                  return GridView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 15,
-                              mainAxisSpacing: 15,
-                              childAspectRatio: 0.65),
-                      itemCount: 6,
-                      itemBuilder: (context, index) => Shimmers(
-                          child: ProductTile(
-                              product:
-                                  ProductModel(favorites: [], media: []))));
-                },
+                                childAspectRatio: 0.7),
+                        itemCount: 6,
+                        itemBuilder: (context, index) => Shimmers(
+                            child: ProductTile(
+                                product:
+                                    ProductModel(favorites: [], media: []))));
+                  },
+                ),
               ),
             )
           ],

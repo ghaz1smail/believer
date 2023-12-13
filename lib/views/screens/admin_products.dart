@@ -46,29 +46,33 @@ class _AdminProductsState extends State<AdminProducts> {
           var id = DateTime.now();
           final link = await staticFunctions.generateLink(
               id.millisecondsSinceEpoch.toString(), 'product');
-
-          await firestore
-              .collection('products')
-              .doc(id.millisecondsSinceEpoch.toString())
-              .set({
-            'id': id.millisecondsSinceEpoch.toString(),
-            'timestamp': id.toIso8601String(),
-            'link': link,
-            'titleEn': data.split(',')[0].trim(),
-            'titleAr': data.split(',')[1].trim(),
-            'price': double.parse(data.split(',')[2].trim()),
-            'descriptionAr': data.split(',')[3].trim(),
-            'descriptionEn': data.split(',')[4].trim(),
-            'stock': int.parse(data.split(',')[5].trim()),
-            'media': [data.split(',')[6].trim()],
-            'discount': double.parse(data.split(',')[7].trim()),
-            'favorites': [],
-            'category': '',
-            'mainCategory': '',
-            'seller': 0,
-            'extra': [],
-            'rate': [],
-          });
+          try {
+            await firestore
+                .collection('products')
+                .doc(id.millisecondsSinceEpoch.toString())
+                .set({
+              'id': id.millisecondsSinceEpoch.toString(),
+              'timestamp': id.toIso8601String(),
+              'link': link,
+              'titleEn': data.split(',')[0].trim(),
+              'titleAr': data.split(',')[1].trim(),
+              'price': double.parse(data.split(',')[2].trim()),
+              'descriptionAr': data.split(',')[3].trim(),
+              'descriptionEn': data.split(',')[4].trim(),
+              'stock': int.parse(data.split(',')[5].trim()),
+              'media': [data.split(',')[6].trim()],
+              'discount': double.parse(data.split(',')[7].trim()),
+              'favorites': [],
+              'category': '',
+              'mainCategory': '',
+              'seller': 0,
+              'extra': [],
+              'rate': [],
+            });
+            setState(() {});
+          } catch (e) {
+            setState(() {});
+          }
         }
       }
     }

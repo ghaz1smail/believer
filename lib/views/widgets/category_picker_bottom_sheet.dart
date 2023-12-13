@@ -46,7 +46,7 @@ class _CategoryPickerBottomSheetState extends State<CategoryPickerBottomSheet> {
             },
           ),
           result.isEmpty
-              ? const Icon(Icons.abc)
+              ? const Icon(Icons.search_off)
               : Flexible(
                   child: ListView.builder(
                   itemCount: result.length,

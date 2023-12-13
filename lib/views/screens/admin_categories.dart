@@ -79,9 +79,7 @@ class _AdminCategoriesState extends State<AdminCategories> {
                                 const Text('No data found')
                               ],
                             )
-                          : ListView.separated(
-                              separatorBuilder: (context, index) =>
-                                  const Divider(),
+                          : ListView.builder(
                               itemCount: result.length,
                               itemBuilder: (context, index) {
                                 CategoryModel category = result.toList()[index];

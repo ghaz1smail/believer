@@ -136,8 +136,8 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
         'descriptionAr': dar.text,
         'descriptionEn': den.text,
         'media': url,
-        'category': cat.split('%')[1],
-        'mainCategory': mainCat.split('%')[1],
+        'category': cat.isEmpty ? '' : cat.split('%')[1],
+        'mainCategory': mainCat.isEmpty ? '' : mainCat.split('%')[1],
         'price': double.parse(price.text),
         'discount': double.parse(discount.text),
         'stock': int.parse(stock.text),
@@ -313,7 +313,7 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
                                       });
                                     }),
                                 0.5,
-                                0.75);
+                                0.9);
                           },
                           child: Container(
                             width: dWidth,
@@ -351,7 +351,7 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
                                       });
                                     }),
                                 0.5,
-                                0.75);
+                                0.9);
                           },
                           child: Container(
                             width: dWidth,
@@ -374,9 +374,6 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
                     function: () {},
                     controller: den,
                     validator: (p0) {
-                      if (p0!.isEmpty) {
-                        return 'Please enter product descrition in English';
-                      }
                       return null;
                     },
                     hint: 'storage 64',
@@ -388,9 +385,6 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
                     function: () {},
                     controller: dar,
                     validator: (p0) {
-                      if (p0!.isEmpty) {
-                        return 'Please enter product descrition in Arabic';
-                      }
                       return null;
                     },
                     hint: 'مساحة ٦٤',

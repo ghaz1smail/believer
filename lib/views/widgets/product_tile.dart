@@ -3,6 +3,7 @@ import 'package:believer/controller/my_app.dart';
 import 'package:believer/cubit/user_cubit.dart';
 import 'package:believer/models/product_model.dart';
 import 'package:believer/views/screens/product_details.dart';
+import 'package:believer/views/screens/splash_screen.dart';
 import 'package:believer/views/screens/user_screen.dart';
 import 'package:believer/views/widgets/icon_badge.dart';
 import 'package:believer/views/widgets/network_image.dart';
@@ -38,13 +39,7 @@ class _ProductTileState extends State<ProductTile> {
                 borderRadius: const BorderRadius.all(Radius.circular(10))),
             child: Column(
               children: [
-                Container(
-                  padding: const EdgeInsets.all(1),
-                  decoration: BoxDecoration(
-                      border: Border.all(width: 0.4, color: Colors.black26),
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(10))),
-                  margin: const EdgeInsets.only(bottom: 5),
+                SizedBox(
                   height: 175,
                   child: GridTile(
                       footer: widget.product.stock == 0
@@ -107,21 +102,16 @@ class _ProductTileState extends State<ProductTile> {
                                 ),
                               ),
                             ),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: primaryColor,
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(10))),
-                        height: 100,
-                        width: 100,
-                        child: widget.product.media!.isNotEmpty
-                            ? ClipRRect(
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(10)),
-                                child: NImage(
-                                    url: widget.product.media![0], h: 100))
-                            : const SizedBox(),
-                      )),
+                      child: widget.product.media!.isNotEmpty
+                          ? ClipRRect(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(10)),
+                              child: NImage(
+                                url: widget.product.media![0],
+                                h: 100,
+                                w: dWidth,
+                              ))
+                          : const SizedBox()),
                 ),
                 Padding(
                   padding:
@@ -139,47 +129,60 @@ class _ProductTileState extends State<ProductTile> {
                           style: const TextStyle(fontWeight: FontWeight.w500),
                         ),
                       ),
-                      widget.product.id.isNotEmpty
-                          ? StreamBuilder(
-                              stream: firestore
-                                  .collection('products')
-                                  .doc(widget.product.id)
-                                  .snapshots(),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasData) {
-                                  ProductModel product = ProductModel.fromJson(
-                                      snapshot.data!.data() as Map);
-                                  return InkWell(
-                                    onTap: () async {
-                                      await userCubit.favoriteStatus(product);
-                                    },
-                                    child: Icon(
-                                      product.favorites!.contains(
-                                              firebaseAuth.currentUser!.uid)
-                                          ? Icons.favorite
-                                          : Icons.favorite_border,
-                                      color: Colors.red,
-                                      size: 18,
-                                    ),
-                                  );
-                                }
+                      auth.userData.uid.isEmpty
+                          ? InkWell(
+                              onTap: () async {
+                                await userCubit.favoriteStatus(widget.product);
+                              },
+                              child: const Icon(
+                                Icons.favorite_border,
+                                color: Colors.red,
+                                size: 18,
+                              ),
+                            )
+                          : widget.product.id.isNotEmpty
+                              ? StreamBuilder(
+                                  stream: firestore
+                                      .collection('products')
+                                      .doc(widget.product.id)
+                                      .snapshots(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData) {
+                                      ProductModel product =
+                                          ProductModel.fromJson(
+                                              snapshot.data!.data() as Map);
+                                      return InkWell(
+                                        onTap: () async {
+                                          await userCubit
+                                              .favoriteStatus(product);
+                                        },
+                                        child: Icon(
+                                          product.favorites!.contains(
+                                                  firebaseAuth.currentUser!.uid)
+                                              ? Icons.favorite
+                                              : Icons.favorite_border,
+                                          color: Colors.red,
+                                          size: 18,
+                                        ),
+                                      );
+                                    }
 
-                                return InkWell(
-                                  onTap: () async {
-                                    await userCubit
-                                        .favoriteStatus(widget.product);
-                                  },
-                                  child: Icon(
-                                    widget.product.favorites!.contains(
-                                            firebaseAuth.currentUser!.uid)
-                                        ? Icons.favorite
-                                        : Icons.favorite_border,
-                                    color: Colors.red,
-                                    size: 18,
-                                  ),
-                                );
-                              })
-                          : const SizedBox(),
+                                    return InkWell(
+                                      onTap: () async {
+                                        await userCubit
+                                            .favoriteStatus(widget.product);
+                                      },
+                                      child: Icon(
+                                        widget.product.favorites!.contains(
+                                                firebaseAuth.currentUser!.uid)
+                                            ? Icons.favorite
+                                            : Icons.favorite_border,
+                                        color: Colors.red,
+                                        size: 18,
+                                      ),
+                                    );
+                                  })
+                              : const SizedBox(),
                     ],
                   ),
                 ),

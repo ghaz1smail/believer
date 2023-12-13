@@ -187,7 +187,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                     }
                     return null;
                   },
-                  hint: 'Offers',
+                  hint: 'Clothes',
                   title: 'titleEn',
                 ),
                 const SizedBox(
@@ -202,7 +202,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                     }
                     return null;
                   },
-                  hint: 'عروض',
+                  hint: 'ملابس',
                   title: 'titleAr',
                 ),
                 const SizedBox(

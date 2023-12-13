@@ -12,6 +12,7 @@ if (localPropertiesFile.exists()) {
     }
 }
 
+
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
     flutterVersionCode = '1'
@@ -27,6 +28,8 @@ if (flutterVersionName == null) {
    if (keystorePropertiesFile.exists()) {
        keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
    }
+   
+   
 
 android {
     namespace "com.comma.believergoods"
@@ -63,12 +66,15 @@ android {
            storePassword keystoreProperties['storePassword']
        }
    }
+   
    buildTypes {
        release {
            signingConfig signingConfigs.release
        }
    }
+   
 }
+
 
 flutter {
     source '../..'
