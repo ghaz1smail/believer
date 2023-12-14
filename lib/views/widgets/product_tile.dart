@@ -158,7 +158,7 @@ class _ProductTileState extends State<ProductTile> {
                                         },
                                         child: Icon(
                                           product.favorites!.contains(
-                                                  firebaseAuth.currentUser!.uid)
+                                                  firebaseAuth.currentUser?.uid)
                                               ? Icons.favorite
                                               : Icons.favorite_border,
                                           color: Colors.red,

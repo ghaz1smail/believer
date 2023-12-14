@@ -93,19 +93,19 @@
     },
     {
       "name": "cloud_firestore",
-      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/cloud_firestore-4.13.5",
+      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/cloud_firestore-4.13.6",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "cloud_firestore_platform_interface",
-      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/cloud_firestore_platform_interface-6.0.9",
+      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/cloud_firestore_platform_interface-6.0.10",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "cloud_firestore_web",
-      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/cloud_firestore_web-3.8.9",
+      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/cloud_firestore_web-3.8.10",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -189,19 +189,19 @@
     },
     {
       "name": "firebase_auth",
-      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/firebase_auth-4.15.2",
+      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/firebase_auth-4.15.3",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "firebase_auth_platform_interface",
-      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/firebase_auth_platform_interface-7.0.8",
+      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/firebase_auth_platform_interface-7.0.9",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "firebase_auth_web",
-      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/firebase_auth_web-5.8.11",
+      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/firebase_auth_web-5.8.12",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -237,25 +237,25 @@
     },
     {
       "name": "firebase_messaging",
-      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/firebase_messaging-14.7.8",
+      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/firebase_messaging-14.7.9",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "firebase_messaging_platform_interface",
-      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/firebase_messaging_platform_interface-4.5.17",
+      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/firebase_messaging_platform_interface-4.5.18",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "firebase_messaging_web",
-      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/firebase_messaging_web-3.5.17",
+      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/firebase_messaging_web-3.5.18",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "firebase_storage",
-      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/firebase_storage-11.5.5",
+      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/firebase_storage-11.5.6",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -314,12 +314,6 @@
       "languageVersion": "2.19"
     },
     {
-      "name": "flutter_stripe",
-      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/flutter_stripe-9.6.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.17"
-    },
-    {
       "name": "flutter_svg",
       "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/flutter_svg-2.0.9",
       "packageUri": "lib/",
@@ -344,12 +338,6 @@
       "languageVersion": "2.12"
     },
     {
-      "name": "freezed_annotation",
-      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/freezed_annotation-2.4.1",
-      "packageUri": "lib/",
-      "languageVersion": "2.17"
-    },
-    {
       "name": "glob",
       "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/glob-2.1.2",
       "packageUri": "lib/",
@@ -357,13 +345,13 @@
     },
     {
       "name": "google_identity_services_web",
-      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/google_identity_services_web-0.3.0+1",
+      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/google_identity_services_web-0.3.0+2",
       "packageUri": "lib/",
       "languageVersion": "3.2"
     },
     {
       "name": "google_sign_in",
-      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/google_sign_in-6.2.0",
+      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/google_sign_in-6.2.1",
       "packageUri": "lib/",
       "languageVersion": "3.2"
     },
@@ -387,7 +375,7 @@
     },
     {
       "name": "google_sign_in_web",
-      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/google_sign_in_web-0.12.3",
+      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/google_sign_in_web-0.12.3+1",
       "packageUri": "lib/",
       "languageVersion": "3.2"
     },
@@ -411,7 +399,7 @@
     },
     {
       "name": "image_pickers",
-      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/image_pickers-2.0.4+7",
+      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/image_pickers-2.0.4+8",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -424,12 +412,6 @@
     {
       "name": "js",
       "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/js-0.6.7",
-      "packageUri": "lib/",
-      "languageVersion": "2.19"
-    },
-    {
-      "name": "json_annotation",
-      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/json_annotation-4.8.1",
       "packageUri": "lib/",
       "languageVersion": "2.19"
     },
@@ -716,24 +698,6 @@
       "languageVersion": "2.18"
     },
     {
-      "name": "stripe_android",
-      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/stripe_android-9.6.0+2",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "stripe_ios",
-      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/stripe_ios-9.6.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "stripe_platform_interface",
-      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/stripe_platform_interface-9.6.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.17"
-    },
-    {
       "name": "synchronized",
       "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/synchronized-3.1.0",
       "packageUri": "lib/",
@@ -783,9 +747,9 @@
     },
     {
       "name": "url_launcher_linux",
-      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/url_launcher_linux-3.1.0",
+      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/url_launcher_linux-3.1.1",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "url_launcher_macos",
@@ -807,13 +771,13 @@
     },
     {
       "name": "url_launcher_windows",
-      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/url_launcher_windows-3.1.0",
+      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/url_launcher_windows-3.1.1",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "uuid",
-      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/uuid-4.2.1",
+      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/uuid-4.2.2",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
@@ -884,7 +848,7 @@
       "languageVersion": "3.1"
     }
   ],
-  "generated": "2023-12-13T13:56:35.456132Z",
+  "generated": "2023-12-14T10:29:57.234852Z",
   "generator": "pub",
-  "generatorVersion": "3.2.2"
+  "generatorVersion": "3.2.3"
 }

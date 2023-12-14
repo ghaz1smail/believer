@@ -29,7 +29,6 @@ if (flutterVersionName == null) {
        keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
    }
    
-   
 
 android {
     namespace "com.comma.believergoods"
