@@ -58,7 +58,7 @@ class _OrderDetailsState extends State<OrderDetails> {
       ),
       bottomNavigationBar: SafeArea(
         child: Container(
-            height: 140,
+            height: 100,
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             decoration: const BoxDecoration(
                 border: Border(top: BorderSide(color: Colors.grey))),
@@ -71,18 +71,6 @@ class _OrderDetailsState extends State<OrderDetails> {
                     Text('${'subtotal'.tr(context)}:'),
                     Text(
                       '${'AED'.tr(context)} ${order.total.toStringAsFixed(2)}',
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('${'deliveryFee'.tr(context)}:'),
-                    Text(
-                      '${'AED'.tr(context)} ${order.delivery}',
                     ),
                   ],
                 ),
@@ -108,7 +96,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                   children: [
                     Text('${'total'.tr(context)}:'),
                     Text(
-                      '${'AED'.tr(context)} ${(order.total - (order.total * (order.discount / 100)) + order.delivery).toStringAsFixed(2)}',
+                      '${'AED'.tr(context)} ${(order.total - (order.total * (order.discount / 100))).toStringAsFixed(2)}',
                     ),
                   ],
                 ),

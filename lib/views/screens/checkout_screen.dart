@@ -93,8 +93,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     return Scaffold(
       bottomNavigationBar: SafeArea(
         child: Container(
-            height: 200,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+            height: 175,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             decoration: const BoxDecoration(
                 color: Colors.white,
                 border: Border(top: BorderSide(color: Colors.grey))),
@@ -112,18 +112,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         ),
                         Text(
                             '${'AED'.tr(context)} ${userCubit.totalCartPrice().toStringAsFixed(2)}',
-                            style: const TextStyle()),
-                      ]),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          '${'deliveryFee'.tr(context)}:',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text('${'AED'.tr(context)} 25',
                             style: const TextStyle()),
                       ]),
                   Row(
@@ -152,7 +140,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                 : null),
                       ),
                       Text(
-                          '${'AED'.tr(context)} ${(userCubit.totalCartPrice() - ((userCubit.totalCartPrice() * (couponData.discount / 100)) > couponData.max ? couponData.max : (userCubit.totalCartPrice() * (couponData.discount / 100))) + 25).toStringAsFixed(2)}'),
+                          '${'AED'.tr(context)} ${(userCubit.totalCartPrice() - ((userCubit.totalCartPrice() * (couponData.discount / 100)) > couponData.max ? couponData.max : (userCubit.totalCartPrice() * (couponData.discount / 100)))).toStringAsFixed(2)}'),
                     ],
                   ),
                   const SizedBox(
@@ -170,13 +158,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                 });
 
                                 await ordering();
-
-                                // await staticFunctions.makePayment(
-                                //     (userCubit.totalCartPrice() -
-                                //         ((userCubit.totalCartPrice() *
-                                //             (couponData.discount / 100))) +
-                                //         25.0),
-                                //     ordering);
                               } else {
                                 staticWidgets.showBottom(context,
                                     const BottomSheetPayment(), 0.85, 0.9);

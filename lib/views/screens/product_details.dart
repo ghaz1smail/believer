@@ -17,16 +17,8 @@ class ProductDetails extends StatefulWidget {
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
-  bool favorite = false;
   final PageController _pageController = PageController();
   int _activePage = 0, count = 1;
-
-  @override
-  void initState() {
-    favorite =
-        widget.product.favorites!.contains(firebaseAuth.currentUser!.uid);
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
