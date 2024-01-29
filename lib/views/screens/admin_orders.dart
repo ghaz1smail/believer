@@ -198,7 +198,7 @@ class _AdminOrdersState extends State<AdminOrders> {
                                 ),
                                 subtitle: Text(DateFormat(
                                         'dd/MM/yyyy hh:mm a', locale.locale)
-                                    .format(order.timestamp!)),
+                                    .format(DateTime.parse(order.timestamp))),
                                 trailing: Icon(
                                   order.status == 'inProgress'
                                       ? Icons.update

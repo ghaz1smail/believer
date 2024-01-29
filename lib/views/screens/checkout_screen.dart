@@ -1,3 +1,4 @@
+// ignore_for_file: use_build_context_synchronously
 import 'package:believer/controller/app_localization.dart';
 import 'package:believer/controller/my_app.dart';
 import 'package:believer/models/cart_model.dart';
@@ -9,10 +10,10 @@ import 'package:believer/views/screens/splash_screen.dart';
 import 'package:believer/views/screens/user_screen.dart';
 import 'package:believer/views/widgets/app_bar.dart';
 import 'package:believer/views/widgets/edit_text.dart';
-import 'package:believer/views/widgets/payment_bottom_sheet.dart';
+import 'package:believer/views/widgets/web_viewer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cryptlib_2_0/cryptlib_2_0.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -26,66 +27,135 @@ class CheckoutScreen extends StatefulWidget {
 class _CheckoutScreenState extends State<CheckoutScreen> {
   bool makeOrder = false, loading = false;
   CouponModel couponData = CouponModel();
+  String url = '';
   TextEditingController code = TextEditingController();
+  String invoiceID = '';
 
-  ordering() async {
-    Fluttertoast.showToast(msg: 'orderPlaced'.tr(context));
-    var id = DateTime.now(), numbbers = 0;
-    await firestore.collection('orders').get().then((value) {
-      numbbers = value.size;
+  Future<bool> makePayment(number) async {
+    String url = '';
+    var headers = {
+      'Accept': 'application/json, text/plain, */*',
+      'Accept-Language': 'en-US,en;q=0.9',
+      'Cache-Control': 'no-cache',
+      'Connection': 'keep-alive',
+      'Cookie': 'ASP.NET_SessionId=lzepj3eheeitu2yz5azhfcb2',
+      'Origin': 'https://ipg.comtrust.ae',
+      'Pragma': 'no-cache',
+      'Referer': 'https://ipg.comtrust.ae/MerchantEx/eInvoice/Generate',
+      'Sec-Fetch-Dest': 'empty',
+      'Sec-Fetch-Mode': 'cors',
+      'Sec-Fetch-Site': 'same-origin',
+    };
+    var datax = FormData.fromMap({
+      'data':
+          '{"Customer":"ALROWAEAREFRIGERATOR","Store":"0000","Terminal":"0000","OrderID":"${number.toString()}","OrderName":"${auth.userData.name}","OrderInfo":"","Amount":"${userCubit.totalCartPrice()}","PartialPaymentMinAmount":0,"AllowPartialPayment":false,"Currency":"AED","EffectiveStartDateTime":${DateTime.now().toUtc().toIso8601String()},"ExpiryDateTime":"${DateTime.now().add(const Duration(hours: 1)).toUtc().toIso8601String()}","MaxNumberOfInvoices":"","InvoiceType":"Once","CardHolderName":"","CardHolderEmail":"","CardHolderMobile":"","UserName":"ALROW_Hyan","Password":"Mariwansaeb@1987","BatchUploadData":"","MerchantMessage":"","CaptureData":"Auto","RegisterForRecurrence":""}',
+      'Uploadfile': 'undefined',
+      'forceProcess': 'false'
     });
 
-    for (int i = 0; i < userCubit.cartList.entries.length; i++) {
-      await firestore
-          .collection('products')
-          .doc(userCubit.cartList.entries.toList()[i].key)
-          .update({
-        'stock': FieldValue.increment(
-            -userCubit.cartList.entries.toList()[i].value.count),
-        'seller': FieldValue.increment(1)
+    var dio = Dio();
+    var response = await dio.request(
+      'https://ipg.comtrust.ae/MerchantEx/eInvoice/ProcessGenerateEInvoice',
+      options: Options(
+        method: 'POST',
+        headers: headers,
+      ),
+      data: datax,
+    );
+
+    if (response.statusCode == 200) {
+      setState(() {
+        url = response.data['InvoiceURL'];
+        invoiceID = response.data['InvoiceNumber'];
+      });
+
+      if (url.isNotEmpty) {
+        await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => WebViewer(
+                url: url,
+              ),
+            ));
+        return userCubit.done;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  ordering() async {
+    var id = DateTime.now(), numbers = 0, done = false;
+
+    await firestore.collection('orders').get().then((value) {
+      numbers = value.size;
+    });
+
+    done = await makePayment(numbers);
+
+    if (done) {
+      userCubit.changeDone(false);
+      Fluttertoast.showToast(msg: 'orderPlaced'.tr(context));
+
+      for (int i = 0; i < userCubit.cartList.entries.length; i++) {
+        await firestore
+            .collection('products')
+            .doc(userCubit.cartList.entries.toList()[i].key)
+            .update({
+          'stock': FieldValue.increment(
+              -userCubit.cartList.entries.toList()[i].value.count),
+          'seller': FieldValue.increment(1)
+        });
+      }
+
+      var data = {
+        'number': numbers + 1,
+        'uid': firebaseAuth.currentUser!.uid,
+        'total': userCubit.totalCartPrice(),
+        'discount': couponData.discount,
+        'delivery': 25,
+        'rated': false,
+        'status': 'inProgress',
+        'name': auth.userData.name,
+        'timestamp': id.toIso8601String(),
+        'addressData': {
+          'address': auth.userData.address!.first.address,
+          'phone': auth.userData.address!.first.phone,
+          'label': auth.userData.address!.first.label,
+          'name': auth.userData.address!.first.name,
+        },
+        // 'walletData': {
+        //   'number': CryptLib.instance.encryptPlainTextWithRandomIV(
+        //       auth.userData.wallet!.first.number, "number"),
+        // },
+        'orderList': userCubit.cartList.entries
+            .map((e) => {
+                  'id': e.key,
+                  'titleEn': e.value.productData!.titleEn,
+                  'titleAr': e.value.productData!.titleAr,
+                  'price': e.value.productData!.price,
+                  'discount': e.value.productData!.discount,
+                  'media': [e.value.productData!.media!.first],
+                  'count': e.value.count,
+                })
+            .toList()
+      };
+      firestore
+          .collection('orders')
+          .doc(id.millisecondsSinceEpoch.toString())
+          .set(data);
+      navigatorKey.currentState?.pushReplacement(MaterialPageRoute(
+        builder: (context) => OrderDetails(order: OrderModel.fromJson(data)),
+      ));
+      userCubit.clearCart();
+    } else {
+      Fluttertoast.showToast(msg: 'Payment failed');
+      setState(() {
+        makeOrder = false;
       });
     }
-
-    var data = {
-      'number': numbbers + 1,
-      'uid': firebaseAuth.currentUser!.uid,
-      'total': userCubit.totalCartPrice(),
-      'discount': couponData.discount,
-      'delivery': 25,
-      'rated': false,
-      'status': 'inProgress',
-      'name': auth.userData.name,
-      'timestamp': id.toIso8601String(),
-      'addressData': {
-        'address': auth.userData.address!.first.address,
-        'phone': auth.userData.address!.first.phone,
-        'label': auth.userData.address!.first.label,
-        'name': auth.userData.address!.first.name,
-      },
-      'walletData': {
-        'number': CryptLib.instance.encryptPlainTextWithRandomIV(
-            auth.userData.wallet!.first.number, "number"),
-      },
-      'orderList': userCubit.cartList.entries
-          .map((e) => {
-                'id': e.key,
-                'titleEn': e.value.productData!.titleEn,
-                'titleAr': e.value.productData!.titleAr,
-                'price': e.value.productData!.price,
-                'discount': e.value.productData!.discount,
-                'media': [e.value.productData!.media!.first],
-                'count': e.value.count,
-              })
-          .toList()
-    };
-    firestore
-        .collection('orders')
-        .doc(id.millisecondsSinceEpoch.toString())
-        .set(data);
-    navigatorKey.currentState?.pushReplacement(MaterialPageRoute(
-      builder: (context) => OrderDetails(order: OrderModel.fromJson(data)),
-    ));
-    userCubit.clearCart();
   }
 
   @override
@@ -152,16 +222,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           onPressed: () async {
                             if (auth.userData.address!.isNotEmpty) {
-                              if (auth.userData.wallet!.isNotEmpty) {
-                                setState(() {
-                                  makeOrder = true;
-                                });
+                              // if (auth.userData.wallet!.isNotEmpty) {
+                              setState(() {
+                                makeOrder = true;
+                              });
 
-                                await ordering();
-                              } else {
-                                staticWidgets.showBottom(context,
-                                    const BottomSheetPayment(), 0.85, 0.9);
-                              }
+                              await ordering();
+                              // } else {
+                              //   staticWidgets.showBottom(context,
+                              //       const BottomSheetPayment(), 0.85, 0.9);
+                              // }
                             } else {
                               Fluttertoast.showToast(
                                   msg: 'pleaseAddress'.tr(context));

@@ -25,7 +25,7 @@ class _OrderDetailsState extends State<OrderDetails> {
   fetch() async {
     await firestore
         .collection('orders')
-        .doc(order.timestamp!.millisecondsSinceEpoch.toString())
+        .doc(order.timestamp)
         .get()
         .then((value) {
       order = OrderModel.fromJson(value.data() as Map);
@@ -173,7 +173,7 @@ class _OrderDetailsState extends State<OrderDetails> {
             ),
             Text(
               DateFormat('EE, dd/MM/yyyy hh:mm a', locale.locale)
-                  .format(order.timestamp!),
+                  .format(DateTime.parse(order.timestamp)),
             ),
             const Divider(
               color: Colors.grey,
@@ -238,13 +238,8 @@ class _OrderDetailsState extends State<OrderDetails> {
                 firebaseAuth.currentUser!.uid != staticData.adminUID)
               MaterialButton(
                 onPressed: () async {
-                  await staticWidgets.showBottom(
-                      context,
-                      BottomSheetReview(
-                        id: order.timestamp!.millisecondsSinceEpoch.toString(),
-                      ),
-                      0.5,
-                      0.75);
+                  await staticWidgets.showBottom(context,
+                      BottomSheetReview(id: order.timestamp), 0.5, 0.75);
                   fetch();
                 },
                 color: primaryColor,

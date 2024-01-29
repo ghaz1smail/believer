@@ -14,6 +14,7 @@ import 'package:believer/views/screens/admin_reviews.dart';
 import 'package:believer/views/screens/admin_screen.dart';
 import 'package:believer/views/screens/categories_screen.dart';
 import 'package:believer/views/screens/checkout_screen.dart';
+import 'package:believer/views/screens/delete_account_screen.dart';
 import 'package:believer/views/screens/notification_screen.dart';
 import 'package:believer/views/screens/orders_screen.dart';
 import 'package:believer/views/screens/payment_screen.dart';
@@ -104,6 +105,7 @@ class MyApp extends StatelessWidget {
               return supportedLocales.first;
             },
             routes: {
+              'delete': (context) => const DeleteAccountScreen(),
               'register': (context) => const RegisterScreen(),
               'user': (context) => const UserScreen(),
               'payment': (context) => const PaymentScreen(),

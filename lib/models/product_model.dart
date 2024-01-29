@@ -5,7 +5,7 @@ class ProductModel {
   final int stock;
   final int count;
   final int seller;
-  final DateTime? timestamp;
+  final String timestamp;
   final String link;
   final List? favorites;
   final String descriptionAr;
@@ -22,7 +22,7 @@ class ProductModel {
       {this.id = '',
       this.titleEn = '',
       this.titleAr = '',
-      this.timestamp,
+      this.timestamp = '',
       this.favorites,
       this.link = '',
       this.descriptionAr = '',
@@ -43,9 +43,7 @@ class ProductModel {
         titleEn: json['titleEn'] ?? '',
         titleAr: json['titleAr'] ?? '',
         id: json['id'] ?? '',
-        timestamp: DateTime.parse(
-            json['timestamp'] ?? DateTime.now().toIso8601String()),
-        link: json['link'] ?? '',
+        timestamp: json['timestamp'] ?? '',
         category: json['category'] ?? '',
         mainCategory: json['mainCategory'] ?? '',
         media: json['media'] ?? [],

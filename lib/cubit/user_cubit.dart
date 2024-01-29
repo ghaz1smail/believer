@@ -13,6 +13,11 @@ class UserCubit extends Cubit<UserState> {
 
   int selectedIndex = 0;
   Map<String, CartModel> cartList = {};
+  bool done = false;
+
+  changeDone(x) {
+    done = x;
+  }
 
   clearCart() {
     cartList.clear();

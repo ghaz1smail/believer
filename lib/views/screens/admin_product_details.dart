@@ -111,7 +111,7 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
           .collection('products')
           .doc(id.millisecondsSinceEpoch.toString())
           .set({
-        'id': id,
+        'id': id.millisecondsSinceEpoch.toString(),
         'timestamp': id,
         'link': link,
         'titleAr': tar.text,

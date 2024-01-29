@@ -75,7 +75,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                       title: Text('${'orderNo'.tr(context)}. ${order.number}'),
                       subtitle: Text(
                           DateFormat('dd/MM/yyyy hh:mm a', locale.locale)
-                              .format(order.timestamp!)),
+                              .format(DateTime.parse(order.timestamp))),
                       trailing: Icon(
                         order.status == 'inProgress'
                             ? Icons.update

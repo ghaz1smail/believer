@@ -10,7 +10,7 @@ class OrderModel {
   final double discount;
   final double delivery;
   final bool rated;
-  final DateTime? timestamp;
+  final String timestamp;
   final AddressModel? addressData;
   final WalletModel? walletData;
   final List<ProductModel>? orderList;
@@ -20,7 +20,7 @@ class OrderModel {
       this.total = 0,
       this.discount = 0,
       this.delivery = 0,
-      this.timestamp,
+      this.timestamp = '',
       this.name = '',
       this.uid = '',
       this.status = '',
@@ -40,10 +40,9 @@ class OrderModel {
         uid: data['uid'] ?? '',
         rated: data['rated'] ?? false,
         status: data['status'],
-        timestamp: DateTime.parse(
-            data['timestamp'] ?? DateTime.now().toIso8601String()),
+        timestamp: data['timestamp'] ?? '',
         addressData: AddressModel.fromJson(data['addressData'] as Map),
-        walletData: WalletModel.fromJson(data['walletData'] as Map),
+        // walletData: WalletModel.fromJson(data['walletData'] as Map),
         orderList: d.map((e) => ProductModel.fromJson(e as Map)).toList());
   }
 }

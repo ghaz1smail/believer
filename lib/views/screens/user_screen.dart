@@ -1,5 +1,6 @@
 import 'package:believer/controller/app_localization.dart';
 import 'package:believer/cubit/user_cubit.dart';
+import 'package:believer/views/screens/settings_screen.dart';
 import 'package:believer/views/screens/splash_screen.dart';
 import 'package:believer/views/widgets/home.dart';
 import 'package:believer/views/widgets/icon_badge.dart';
@@ -7,6 +8,7 @@ import 'package:believer/views/widgets/profile.dart';
 import 'package:believer/views/widgets/search.dart';
 import 'package:believer/views/widgets/user_bottom_bar.dart';
 import 'package:believer/views/widgets/wish_list.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -20,6 +22,26 @@ class UserScreen extends StatefulWidget {
 }
 
 class _UserScreenState extends State<UserScreen> {
+  fetchData() async {
+    FirebaseDynamicLinks.instance.onLink.listen((dynamicLinkData) async {
+      if (dynamicLinkData.link.toString().contains('delete')) {
+        await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const SettingsScreen(
+                  // delete: true,
+                  ),
+            ));
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    fetchData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<UserCubit, UserState>(

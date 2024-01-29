@@ -16,7 +16,7 @@ class _BottomSheetStatusState extends State<BottomSheetStatus> {
   update(x) async {
     firestore
         .collection('orders')
-        .doc(widget.order.timestamp!.millisecondsSinceEpoch.toString())
+        .doc(widget.order.timestamp)
         .update({'status': x});
     Navigator.pop(context);
   }
