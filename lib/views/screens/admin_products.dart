@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:believer/controller/my_app.dart';
+import 'package:believer/get_initial.dart';
 import 'package:believer/models/product_model.dart';
 import 'package:believer/views/screens/admin_product_details.dart';
 import 'package:believer/views/widgets/app_bar.dart';
@@ -44,8 +43,7 @@ class _AdminProductsState extends State<AdminProducts> {
         for (int i = 1; i < csvData.length; i++) {
           var data = csvData[i].join(', ');
           var id = DateTime.now();
-          final link = await staticFunctions.generateLink(
-              id.millisecondsSinceEpoch.toString(), 'product');
+
           try {
             await firestore
                 .collection('products')
@@ -53,7 +51,7 @@ class _AdminProductsState extends State<AdminProducts> {
                 .set({
               'id': id.millisecondsSinceEpoch.toString(),
               'timestamp': id.toIso8601String(),
-              'link': link,
+              'link': '',
               'titleEn': data.split(',')[0].trim(),
               'titleAr': data.split(',')[1].trim(),
               'price': double.parse(data.split(',')[2].trim()),
@@ -85,7 +83,7 @@ class _AdminProductsState extends State<AdminProducts> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        backgroundColor: primaryColor,
+        backgroundColor: appConstant.primaryColor,
         onPressed: () {
           importExcel();
         },

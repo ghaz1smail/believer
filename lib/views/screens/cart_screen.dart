@@ -1,17 +1,16 @@
-import 'package:believer/controller/app_localization.dart';
+import 'package:believer/controller/auth_controller.dart';
 import 'package:believer/controller/my_app.dart';
-import 'package:believer/cubit/user_cubit.dart';
+import 'package:believer/controller/user_controller.dart';
+import 'package:believer/get_initial.dart';
 import 'package:believer/models/cart_model.dart';
 import 'package:believer/views/screens/product_details.dart';
-import 'package:believer/views/screens/splash_screen.dart';
-import 'package:believer/views/screens/user_screen.dart';
 import 'package:believer/views/widgets/app_bar.dart';
 import 'package:believer/views/widgets/counter.dart';
 import 'package:believer/views/widgets/remove_cart.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -21,20 +20,23 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
+  AuthController auth = Get.find<AuthController>();
+
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<UserCubit, UserState>(
-      builder: (context, state) {
+    return GetBuilder(
+      init: UserController(),
+      builder: (userCubit) {
         return Scaffold(
             appBar: AppBarCustom(
               action: const {},
-              title: 'cart'.tr(context),
+              title: 'cart'.tr,
             ),
             bottomNavigationBar: userCubit.cartList.isEmpty
                 ? null
                 : SafeArea(
                     child: Container(
-                      width: dWidth,
+                      width: Get.width,
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       height: 100,
                       child: Column(
@@ -44,12 +46,12 @@ class _CartScreenState extends State<CartScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  '${'subtotal'.tr(context)} (${userCubit.totalCartCount()} ${'items'.tr(context)})',
+                                  '${'subtotal'.tr} (${userCubit.totalCartCount()} ${'items'.tr})',
                                   style: const TextStyle(
                                       fontWeight: FontWeight.w600),
                                 ),
                                 Text(
-                                  '${'AED'.tr(context)} ${userCubit.totalCartPrice().toStringAsFixed(2)}',
+                                  '${'AED'.tr} ${userCubit.totalCartPrice().toStringAsFixed(2)}',
                                 )
                               ],
                             ),
@@ -61,20 +63,20 @@ class _CartScreenState extends State<CartScreen> {
                                 onPressed: () {
                                   if (auth.userData.uid.isEmpty) {
                                     Fluttertoast.showToast(
-                                        msg: 'pleaseFirst'.tr(context));
+                                        msg: 'pleaseFirst'.tr);
                                     auth.logOut();
                                   } else {
                                     Navigator.pushNamed(context, 'checkout');
                                   }
                                 },
                                 height: 45,
-                                minWidth: dWidth,
+                                minWidth: Get.width,
                                 shape: const RoundedRectangleBorder(
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(25))),
-                                color: primaryColor,
+                                color: appConstant.primaryColor,
                                 child: Text(
-                                  'CHECKOUT'.tr(context),
+                                  'CHECKOUT'.tr,
                                   style: const TextStyle(
                                     fontSize: 18,
                                     color: Colors.white,
@@ -86,8 +88,8 @@ class _CartScreenState extends State<CartScreen> {
                     ),
                   ),
             body: Container(
-                width: dWidth,
-                height: dHeight,
+                width: Get.width,
+                height: Get.height,
                 color: Colors.white,
                 child: Center(
                   child: userCubit.cartList.isEmpty
@@ -102,7 +104,7 @@ class _CartScreenState extends State<CartScreen> {
                               height: 10,
                             ),
                             Text(
-                              'emptyCart'.tr(context),
+                              'emptyCart'.tr,
                               style:
                                   const TextStyle(fontWeight: FontWeight.w500),
                             )
@@ -145,7 +147,7 @@ class _CartScreenState extends State<CartScreen> {
                                   children: [
                                     Expanded(
                                       child: Text(
-                                        locale.locale == 'ar'
+                                        Get.locale!.languageCode == 'ar'
                                             ? cart.productData!.titleAr
                                             : cart.productData!.titleEn,
                                         overflow: TextOverflow.ellipsis,
@@ -173,7 +175,7 @@ class _CartScreenState extends State<CartScreen> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      '${'AED'.tr(context)} ${cart.productData!.price}',
+                                      '${'AED'.tr} ${cart.productData!.price}',
                                       style: const TextStyle(
                                           color: Colors.black,
                                           fontWeight: FontWeight.w500),

@@ -1,6 +1,6 @@
-import 'package:believer/controller/app_localization.dart';
-import 'package:believer/controller/my_app.dart';
+import 'package:believer/get_initial.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class EditText extends StatefulWidget {
   const EditText(
@@ -31,12 +31,12 @@ class _EditTextState extends State<EditText> {
     return TextFormField(
         keyboardType: widget.number ? TextInputType.number : null,
         obscureText: !showPass && widget.secure,
-        cursorColor: primaryColor,
+        cursorColor: appConstant.primaryColor,
         onFieldSubmitted: (value) => widget.function(),
         decoration: InputDecoration(
             hintText: widget.hint,
-            labelStyle: TextStyle(color: primaryColor),
-            labelText: widget.title.tr(context),
+            labelStyle: TextStyle(color: appConstant.primaryColor),
+            labelText: widget.title.tr,
             suffixIcon: widget.secure
                 ? IconButton(
                     onPressed: () {
@@ -46,7 +46,7 @@ class _EditTextState extends State<EditText> {
                     },
                     icon: Icon(
                       showPass ? Icons.visibility : Icons.visibility_off,
-                      color: primaryColor,
+                      color: appConstant.primaryColor,
                     ))
                 : null,
             border: const OutlineInputBorder(

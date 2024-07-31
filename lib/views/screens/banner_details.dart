@@ -1,6 +1,5 @@
-// ignore_for_file: use_build_context_synchronously
 import 'dart:io';
-import 'package:believer/controller/my_app.dart';
+import 'package:believer/get_initial.dart';
 import 'package:believer/models/banner_model.dart';
 import 'package:believer/views/widgets/app_bar.dart';
 import 'package:believer/views/widgets/edit_text.dart';
@@ -9,6 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:image_pickers/image_pickers.dart';
 
 class BannnerDetails extends StatefulWidget {
@@ -44,11 +44,10 @@ class _BannnerDetailsState extends State<BannnerDetails> {
 
     if (widget.banner.id.isEmpty) {
       if (imageFile.isNotEmpty) {
-        final link = await staticFunctions.generateLink(id, 'banner');
         await firestore.collection('banners').doc(id).set({
           'id': id,
           'timestamp': DateTime.now().toIso8601String(),
-          'link': link,
+          'link': '',
           'titleAr': ar.text,
           'titleEn': en.text,
           'url': url.isEmpty ? widget.banner.url : url
@@ -67,7 +66,7 @@ class _BannnerDetailsState extends State<BannnerDetails> {
     setState(() {
       loading = false;
     });
-    Navigator.pop(context);
+    Get.back();
   }
 
   _openPicker() async {
@@ -76,7 +75,7 @@ class _BannnerDetailsState extends State<BannnerDetails> {
       showGif: false,
       showCamera: true,
       compressSize: 0,
-      uiConfig: UIConfig(uiThemeColor: primaryColor),
+      uiConfig: UIConfig(uiThemeColor: appConstant.primaryColor),
     );
 
     setState(() {
@@ -134,7 +133,7 @@ class _BannnerDetailsState extends State<BannnerDetails> {
                                 placeholder: (context, url) => Shimmers(
                                     child: Container(
                                   height: 175,
-                                  width: dWidth,
+                                  width: Get.width,
                                   color: Colors.orangeAccent,
                                 )),
                               )
@@ -188,7 +187,7 @@ class _BannnerDetailsState extends State<BannnerDetails> {
                             .collection('banners')
                             .doc(widget.banner.id)
                             .delete();
-                        Navigator.pop(context);
+                        Get.back();
                       },
                       icon: const Icon(
                         Icons.delete,

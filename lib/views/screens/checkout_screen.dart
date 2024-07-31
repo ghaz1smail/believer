@@ -1,21 +1,20 @@
-// ignore_for_file: use_build_context_synchronously
-import 'package:believer/controller/app_localization.dart';
-import 'package:believer/controller/my_app.dart';
+import 'package:believer/controller/auth_controller.dart';
+import 'package:believer/controller/user_controller.dart';
+import 'package:believer/get_initial.dart';
 import 'package:believer/models/cart_model.dart';
 import 'package:believer/models/coupon_model.dart';
 import 'package:believer/models/order_model.dart';
 import 'package:believer/views/screens/order_details.dart';
 import 'package:believer/views/screens/product_details.dart';
-import 'package:believer/views/screens/splash_screen.dart';
-import 'package:believer/views/screens/user_screen.dart';
 import 'package:believer/views/widgets/app_bar.dart';
 import 'package:believer/views/widgets/edit_text.dart';
 import 'package:believer/views/widgets/web_viewer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dio/dio.dart';
+// import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 
 class CheckoutScreen extends StatefulWidget {
   const CheckoutScreen({super.key});
@@ -30,57 +29,20 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   String url = '';
   TextEditingController code = TextEditingController();
   String invoiceID = '';
+  UserController userCubit = Get.find<UserController>();
+
+  AuthController auth = Get.find<AuthController>();
 
   Future<bool> makePayment(number) async {
-    String url = '';
-    var headers = {
-      'Accept': 'application/json, text/plain, */*',
-      'Accept-Language': 'en-US,en;q=0.9',
-      'Cache-Control': 'no-cache',
-      'Connection': 'keep-alive',
-      'Cookie': 'ASP.NET_SessionId=lzepj3eheeitu2yz5azhfcb2',
-      'Origin': 'https://ipg.comtrust.ae',
-      'Pragma': 'no-cache',
-      'Referer': 'https://ipg.comtrust.ae/MerchantEx/eInvoice/Generate',
-      'Sec-Fetch-Dest': 'empty',
-      'Sec-Fetch-Mode': 'cors',
-      'Sec-Fetch-Site': 'same-origin',
-    };
-    var datax = FormData.fromMap({
-      'data':
-          '{"Customer":"ALROWAEAREFRIGERATOR","Store":"0000","Terminal":"0000","OrderID":"${number.toString()}","OrderName":"${auth.userData.name}","OrderInfo":"","Amount":"${userCubit.totalCartPrice()}","PartialPaymentMinAmount":0,"AllowPartialPayment":false,"Currency":"AED","EffectiveStartDateTime":${DateTime.now().toUtc().toIso8601String()},"ExpiryDateTime":"${DateTime.now().add(const Duration(hours: 1)).toUtc().toIso8601String()}","MaxNumberOfInvoices":"","InvoiceType":"Once","CardHolderName":"","CardHolderEmail":"","CardHolderMobile":"","UserName":"ALROW_Hyan","Password":"Mariwansaeb@1987","BatchUploadData":"","MerchantMessage":"","CaptureData":"Auto","RegisterForRecurrence":""}',
-      'Uploadfile': 'undefined',
-      'forceProcess': 'false'
-    });
-
-    var dio = Dio();
-    var response = await dio.request(
-      'https://ipg.comtrust.ae/MerchantEx/eInvoice/ProcessGenerateEInvoice',
-      options: Options(
-        method: 'POST',
-        headers: headers,
-      ),
-      data: datax,
-    );
-
-    if (response.statusCode == 200) {
-      setState(() {
-        url = response.data['InvoiceURL'];
-        invoiceID = response.data['InvoiceNumber'];
-      });
-
-      if (url.isNotEmpty) {
-        await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => WebViewer(
-                url: url,
-              ),
-            ));
-        return userCubit.done;
-      } else {
-        return false;
-      }
+    if (url.isNotEmpty) {
+      await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => WebViewer(
+              url: url,
+            ),
+          ));
+      return userCubit.done;
     } else {
       return false;
     }
@@ -97,7 +59,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
     if (done) {
       userCubit.changeDone(false);
-      Fluttertoast.showToast(msg: 'orderPlaced'.tr(context));
+      Fluttertoast.showToast(msg: 'orderPlaced'.tr);
 
       for (int i = 0; i < userCubit.cartList.entries.length; i++) {
         await firestore
@@ -146,9 +108,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           .collection('orders')
           .doc(id.millisecondsSinceEpoch.toString())
           .set(data);
-      navigatorKey.currentState?.pushReplacement(MaterialPageRoute(
-        builder: (context) => OrderDetails(order: OrderModel.fromJson(data)),
-      ));
+      Get.off(() => OrderDetails(order: OrderModel.fromJson(data)));
+
       userCubit.clearCart();
     } else {
       Fluttertoast.showToast(msg: 'Payment failed');
@@ -175,26 +136,26 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '${'subtotal'.tr(context)}:',
+                          '${'subtotal'.tr}:',
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
-                            '${'AED'.tr(context)} ${userCubit.totalCartPrice().toStringAsFixed(2)}',
+                            '${'AED'.tr} ${userCubit.totalCartPrice().toStringAsFixed(2)}',
                             style: const TextStyle()),
                       ]),
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '${'discount'.tr(context)}:',
+                          '${'discount'.tr}:',
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
-                            '-${'AED'.tr(context)} ${(((userCubit.totalCartPrice() * (couponData.discount / 100)) > couponData.max ? couponData.max : (userCubit.totalCartPrice() * (couponData.discount / 100)))).toStringAsFixed(2)}',
+                            '-${'AED'.tr} ${(((userCubit.totalCartPrice() * (couponData.discount / 100)) > couponData.max ? couponData.max : (userCubit.totalCartPrice() * (couponData.discount / 100)))).toStringAsFixed(2)}',
                             style: const TextStyle()),
                       ]),
                   const Divider(),
@@ -202,7 +163,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '${'total'.tr(context)}:',
+                        '${'total'.tr}:',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             decoration: couponData.id.isNotEmpty
@@ -210,7 +171,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                 : null),
                       ),
                       Text(
-                          '${'AED'.tr(context)} ${(userCubit.totalCartPrice() - ((userCubit.totalCartPrice() * (couponData.discount / 100)) > couponData.max ? couponData.max : (userCubit.totalCartPrice() * (couponData.discount / 100)))).toStringAsFixed(2)}'),
+                          '${'AED'.tr} ${(userCubit.totalCartPrice() - ((userCubit.totalCartPrice() * (couponData.discount / 100)) > couponData.max ? couponData.max : (userCubit.totalCartPrice() * (couponData.discount / 100)))).toStringAsFixed(2)}'),
                     ],
                   ),
                   const SizedBox(
@@ -233,23 +194,22 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               //       const BottomSheetPayment(), 0.85, 0.9);
                               // }
                             } else {
-                              Fluttertoast.showToast(
-                                  msg: 'pleaseAddress'.tr(context));
+                              Fluttertoast.showToast(msg: 'pleaseAddress'.tr);
                             }
                           },
                           height: 45,
-                          minWidth: dWidth,
+                          minWidth: Get.width,
                           shape: const RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(20))),
-                          color: primaryColor,
+                          color: appConstant.primaryColor,
                           textColor: Colors.white,
-                          child: Text('placeOrder'.tr(context)),
+                          child: Text('placeOrder'.tr),
                         ),
                 ])),
       ),
       appBar: AppBarCustom(
-        title: 'CHECKOUT'.tr(context),
+        title: 'CHECKOUT'.tr,
         action: const {},
       ),
       body: Padding(
@@ -259,7 +219,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           children: [
             SizedBox(
               height: 100,
-              width: dWidth,
+              width: Get.width,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: userCubit.cartList.length,
@@ -292,7 +252,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       ),
                       visualDensity: const VisualDensity(vertical: 4),
                       subtitle: Text(
-                        '${'AED'.tr(context)} ${cart.productData!.price}  x${cart.count}',
+                        '${'AED'.tr} ${cart.productData!.price}  x${cart.count}',
                         style: const TextStyle(
                             color: Colors.black, fontWeight: FontWeight.w500),
                       ),
@@ -309,7 +269,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     child: MaterialButton(
                       minWidth: 0,
                       height: 25,
-                      color: primaryColor,
+                      color: appConstant.primaryColor,
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       onPressed: () async {
                         await Navigator.pushNamed(context, 'address');
@@ -318,7 +278,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(25))),
                       child: Text(
-                        'addNew'.tr(context),
+                        'addNew'.tr,
                         style:
                             const TextStyle(fontSize: 12, color: Colors.white),
                       ),
@@ -328,7 +288,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     contentPadding: EdgeInsets.zero,
                     leading: Icon(
                       Icons.location_on,
-                      color: primaryColor,
+                      color: appConstant.primaryColor,
                     ),
                     title: Text(auth.userData.address!.first.name),
                     subtitle: Text(auth.userData.address!.first.address),
@@ -340,11 +300,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         await Navigator.pushNamed(context, 'address');
                         setState(() {});
                       },
-                      color: primaryColor,
+                      color: appConstant.primaryColor,
                       shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(25))),
                       child: Text(
-                        'change'.tr(context),
+                        'change'.tr,
                         style:
                             const TextStyle(fontSize: 12, color: Colors.white),
                       ),
@@ -375,7 +335,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               shape: const RoundedRectangleBorder(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(100))),
-                              backgroundColor: primaryColor,
+                              backgroundColor: appConstant.primaryColor,
                               mini: true,
                               onPressed: () async {
                                 setState(() {
@@ -397,13 +357,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                         if (couponData.endTime!
                                             .isBefore(DateTime.now())) {
                                           Fluttertoast.showToast(
-                                              msg: 'expired'.tr(context));
+                                              msg: 'expired'.tr);
                                           couponData = CouponModel();
                                         }
                                       } else {
                                         couponData = CouponModel();
                                         Fluttertoast.showToast(
-                                            msg: 'noCode'.tr(context));
+                                            msg: 'noCode'.tr);
                                       }
                                     });
                                 setState(() {
@@ -423,7 +383,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 title: Text(couponData.titleEn),
                 trailing: Text('${couponData.discount}%'),
                 subtitle: Text(
-                    '${'upTo'.tr(context)} ${couponData.max.toStringAsFixed(2)} ${'AED'.tr(context)}'),
+                    '${'upTo'.tr} ${couponData.max.toStringAsFixed(2)} ${'AED'.tr}'),
               ),
           ],
         ),

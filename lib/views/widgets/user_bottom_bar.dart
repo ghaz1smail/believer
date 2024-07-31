@@ -1,8 +1,6 @@
-import 'package:believer/controller/app_localization.dart';
-import 'package:believer/cubit/user_cubit.dart';
-import 'package:believer/views/screens/user_screen.dart';
+import 'package:believer/controller/user_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 class UserBottomBar extends StatefulWidget {
@@ -21,8 +19,9 @@ class _UserBottomBarState extends State<UserBottomBar> {
         decoration: const BoxDecoration(
             color: Colors.white,
             border: Border(top: BorderSide(color: Colors.grey))),
-        child: BlocBuilder<UserCubit, UserState>(
-          builder: (context, state) {
+        child: GetBuilder(
+          init: UserController(),
+          builder: (userCubit) {
             return SalomonBottomBar(
               currentIndex: userCubit.selectedIndex,
               onTap: (i) {
@@ -31,19 +30,19 @@ class _UserBottomBarState extends State<UserBottomBar> {
               items: [
                 SalomonBottomBarItem(
                   icon: const Icon(Icons.home),
-                  title: Text("home".tr(context)),
+                  title: Text("home".tr),
                 ),
                 SalomonBottomBarItem(
                   icon: const Icon(Icons.search),
-                  title: Text("search".tr(context)),
+                  title: Text("search".tr),
                 ),
                 SalomonBottomBarItem(
                   icon: const Icon(Icons.favorite_border),
-                  title: Text("favorites".tr(context)),
+                  title: Text("favorites".tr),
                 ),
                 SalomonBottomBarItem(
                   icon: const Icon(Icons.person),
-                  title: Text("profile".tr(context)),
+                  title: Text("profile".tr),
                 ),
               ],
             );

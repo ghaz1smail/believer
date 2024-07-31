@@ -1,4 +1,4 @@
-import 'package:believer/controller/my_app.dart';
+import 'package:believer/get_initial.dart';
 import 'package:believer/models/banner_model.dart';
 import 'package:believer/views/screens/banner_details.dart';
 import 'package:believer/views/widgets/app_bar.dart';
@@ -6,6 +6,7 @@ import 'package:believer/views/widgets/shimmer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class AdminBanners extends StatefulWidget {
   const AdminBanners({super.key});
@@ -99,7 +100,7 @@ class _AdminBannersState extends State<AdminBanners> {
                                       children: [
                                         SizedBox(
                                           height: 200,
-                                          width: dWidth,
+                                          width: Get.width,
                                           child: ClipRRect(
                                             borderRadius:
                                                 const BorderRadius.all(
@@ -111,7 +112,7 @@ class _AdminBannersState extends State<AdminBanners> {
                                                   Shimmers(
                                                       child: Container(
                                                 height: 175,
-                                                width: dWidth,
+                                                width: Get.width,
                                                 color: Colors.orangeAccent,
                                               )),
                                             ),

@@ -1,14 +1,12 @@
-// ignore_for_file: use_build_context_synchronously
-import 'package:believer/controller/app_localization.dart';
-import 'package:believer/controller/my_app.dart';
+import 'package:believer/controller/auth_controller.dart';
+import 'package:believer/get_initial.dart';
 import 'package:believer/models/user_model.dart';
-import 'package:believer/views/screens/splash_screen.dart';
 import 'package:believer/views/widgets/app_bar.dart';
 import 'package:believer/views/widgets/edit_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 
 class AddressDetails extends StatefulWidget {
   const AddressDetails({super.key, required this.address, required this.index});
@@ -25,6 +23,7 @@ class _AddressDetailsState extends State<AddressDetails> {
   TextEditingController name = TextEditingController(),
       phone = TextEditingController(),
       address = TextEditingController();
+  AuthController auth = Get.find<AuthController>();
 
   submit(delete) async {
     if (!key.currentState!.validate()) {
@@ -91,7 +90,7 @@ class _AddressDetailsState extends State<AddressDetails> {
     setState(() {
       loading = false;
     });
-    Navigator.pop(context);
+    Get.back();
   }
 
   @override
@@ -127,7 +126,7 @@ class _AddressDetailsState extends State<AddressDetails> {
                 controller: name,
                 validator: (p) {
                   if (p!.isEmpty) {
-                    return 'pleaseAddressName'.tr(context);
+                    return 'pleaseAddressName'.tr;
                   }
                   return null;
                 },
@@ -141,7 +140,7 @@ class _AddressDetailsState extends State<AddressDetails> {
                 controller: address,
                 validator: (p) {
                   if (p!.isEmpty) {
-                    return 'pleaseYourAddress'.tr(context);
+                    return 'pleaseYourAddress'.tr;
                   }
                   return null;
                 },
@@ -156,7 +155,7 @@ class _AddressDetailsState extends State<AddressDetails> {
                 controller: phone,
                 validator: (p) {
                   if (p!.isEmpty) {
-                    return 'pleasephone'.tr(context);
+                    return 'pleasephone'.tr;
                   }
                   return null;
                 },
@@ -165,7 +164,7 @@ class _AddressDetailsState extends State<AddressDetails> {
             const SizedBox(
               height: 20,
             ),
-            Text('label'.tr(context)),
+            Text('label'.tr),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -181,7 +180,7 @@ class _AddressDetailsState extends State<AddressDetails> {
                         borderRadius: BorderRadius.all(Radius.circular(25))),
                     side: const BorderSide(color: Colors.grey),
                     label: Text(
-                      'homes'.tr(context),
+                      'homes'.tr,
                     ),
                     backgroundColor:
                         label == 'home' ? Colors.red.shade100 : Colors.white,
@@ -201,7 +200,7 @@ class _AddressDetailsState extends State<AddressDetails> {
                     shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(25))),
                     side: const BorderSide(color: Colors.grey),
-                    label: Text('work'.tr(context)),
+                    label: Text('work'.tr),
                     backgroundColor:
                         label == 'work' ? Colors.red.shade100 : Colors.white,
                   ),
@@ -242,10 +241,10 @@ class _AddressDetailsState extends State<AddressDetails> {
                           });
                           await auth.getUserData();
 
-                          Navigator.pop(context);
+                          Get.back();
                         },
                         child: Text(
-                          'makeDefualt'.tr(context),
+                          'makeDefualt'.tr,
                           style: const TextStyle(color: Colors.black),
                         )),
                   TextButton(
@@ -253,7 +252,7 @@ class _AddressDetailsState extends State<AddressDetails> {
                         submit(true);
                       },
                       child: Text(
-                        'deleteAddress'.tr(context),
+                        'deleteAddress'.tr,
                         style: const TextStyle(color: Colors.red),
                       )),
                 ],

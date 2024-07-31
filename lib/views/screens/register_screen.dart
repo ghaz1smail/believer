@@ -1,13 +1,11 @@
 import 'dart:io';
-
-import 'package:believer/controller/app_localization.dart';
+import 'package:believer/controller/auth_controller.dart';
 import 'package:believer/controller/my_app.dart';
-import 'package:believer/cubit/auth_cubit.dart';
-import 'package:believer/views/screens/splash_screen.dart';
+import 'package:believer/get_initial.dart';
 import 'package:believer/views/widgets/edit_text.dart';
 import 'package:believer/views/widgets/forgot_bottom_sheet.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:icons_plus/icons_plus.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -33,8 +31,9 @@ class _RegisterScreenState extends State<RegisterScreen>
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        body: BlocBuilder<AuthCubit, AuthState>(
-          builder: (context, state) {
+        body: GetBuilder(
+          init: AuthController(),
+          builder: (auth) {
             signIn = _tabController.index == 0;
             return Form(
               key: auth.key,
@@ -64,19 +63,19 @@ class _RegisterScreenState extends State<RegisterScreen>
                           Padding(
                             padding: const EdgeInsets.all(10),
                             child: Text(
-                              'signIn'.tr(context),
+                              'signIn'.tr,
                               style: const TextStyle(color: Colors.black),
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.all(10),
                             child: Text(
-                              'createAcc'.tr(context),
+                              'createAcc'.tr,
                               style: const TextStyle(color: Colors.black),
                             ),
                           )
                         ],
-                        indicatorColor: primaryColor,
+                        indicatorColor: appConstant.primaryColor,
                         indicatorWeight: 4,
                         indicatorSize: TabBarIndicatorSize.tab,
                       ),
@@ -91,7 +90,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                             controller: auth.name,
                             validator: (value) {
                               if (value!.isEmpty) {
-                                return 'pleaseName'.tr(context);
+                                return 'pleaseName'.tr;
                               }
                               return null;
                             },
@@ -106,7 +105,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                           controller: auth.email,
                           validator: (value) {
                             if (!value!.contains('@') && !value.contains('.')) {
-                              return 'pleaseEmail'.tr(context);
+                              return 'pleaseEmail'.tr;
                             }
                             return null;
                           },
@@ -122,7 +121,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                           controller: auth.password,
                           validator: (value) {
                             if (value!.length < 8) {
-                              return 'pleasePassword'.tr(context);
+                              return 'pleasePassword'.tr;
                             }
                             return null;
                           },
@@ -133,24 +132,22 @@ class _RegisterScreenState extends State<RegisterScreen>
                           horizontal: 20, vertical: 10),
                       child: Align(
                         child: MaterialButton(
-                          minWidth: dWidth,
+                          minWidth: Get.width,
                           height: 50,
                           onPressed: () async {
-                            auth.auth(context, signIn);
+                            auth.auth(signIn);
                           },
                           shape: const RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(25))),
-                          color: primaryColor,
-                          child: state is LoadingState
+                          color: appConstant.primaryColor,
+                          child: auth.loading
                               ? const CircularProgressIndicator(
                                   color: Colors.white,
                                   strokeWidth: 2,
                                 )
                               : Text(
-                                  signIn
-                                      ? 'signIn'.tr(context)
-                                      : 'signUp'.tr(context),
+                                  signIn ? 'signIn'.tr : 'signUp'.tr,
                                   style: const TextStyle(
                                       fontSize: 18, color: Colors.white),
                                 ),
@@ -163,16 +160,16 @@ class _RegisterScreenState extends State<RegisterScreen>
                             margin: const EdgeInsets.only(bottom: 50),
                             child: TextButton(
                                 style: ButtonStyle(
-                                    overlayColor: MaterialStateProperty.all(
+                                    overlayColor: WidgetStateProperty.all(
                                         Colors.red.shade50)),
                                 onPressed: () {
                                   staticWidgets.showBottom(context,
                                       const BottomSheetForgot(), 0.4, 0.5);
                                 },
                                 child: Text(
-                                  'forgot'.tr(context),
+                                  'forgot'.tr,
                                   style: TextStyle(
-                                    color: primaryColor,
+                                    color: appConstant.primaryColor,
                                   ),
                                 )),
                           )
@@ -187,30 +184,30 @@ class _RegisterScreenState extends State<RegisterScreen>
                                   onChanged: (v) {
                                     auth.agreeTerm();
                                   },
-                                  activeColor: primaryColor,
+                                  activeColor: appConstant.primaryColor,
                                 ),
                                 Text(
-                                  'agree'.tr(context),
+                                  'agree'.tr,
                                   style: const TextStyle(fontSize: 16),
                                 ),
                                 TextButton(
                                     style: ButtonStyle(
-                                        overlayColor: MaterialStateProperty.all(
+                                        overlayColor: WidgetStateProperty.all(
                                             Colors.red.shade100)),
                                     onPressed: () {
                                       staticFunctions.urlLauncher(Uri.parse(
                                           'https://sites.google.com/view/believergoods/home'));
                                     },
                                     child: Text(
-                                      'term'.tr(context),
+                                      'term'.tr,
                                       style: TextStyle(
                                           fontSize: 16,
-                                          color: primaryColor,
+                                          color: appConstant.primaryColor,
                                           decoration: TextDecoration.underline),
                                     ))
                               ],
                             )),
-                    if (signIn && state is! LoadingState)
+                    if (signIn && !auth.loading)
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -233,14 +230,14 @@ class _RegisterScreenState extends State<RegisterScreen>
                                             Radius.circular(100))),
                                     child: Row(
                                       children: [
-                                        Logo(
-                                          Logos.apple,
+                                        Brand(
+                                          Brands.apple_logo,
                                           size: 20,
                                         ),
                                         const SizedBox(
                                           width: 10,
                                         ),
-                                        Text('apple'.tr(context))
+                                        Text('apple'.tr)
                                       ],
                                     ))),
                           InkWell(
@@ -261,14 +258,14 @@ class _RegisterScreenState extends State<RegisterScreen>
                                           Radius.circular(100))),
                                   child: Row(
                                     children: [
-                                      Logo(
-                                        Logos.google,
+                                      Brand(
+                                        Brands.google,
                                         size: 20,
                                       ),
                                       const SizedBox(
                                         width: 10,
                                       ),
-                                      Text('google'.tr(context))
+                                      Text('google'.tr)
                                     ],
                                   ))),
                         ],
@@ -276,17 +273,16 @@ class _RegisterScreenState extends State<RegisterScreen>
                     const SizedBox(
                       height: 20,
                     ),
-                    if (state is! LoadingState)
+                    if (!auth.loading)
                       Align(
                         child: InkWell(
                           onTap: () async {
-                            navigatorKey.currentState
-                                ?.pushReplacementNamed('user');
+                            Get.offNamed('user');
                           },
                           splashColor: Colors.red.shade100,
-                          child: Text('skip'.tr(context),
+                          child: Text('skip'.tr,
                               style: TextStyle(
-                                color: primaryColor,
+                                color: appConstant.primaryColor,
                               )),
                         ),
                       ),

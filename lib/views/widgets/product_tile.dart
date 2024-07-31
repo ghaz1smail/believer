@@ -1,14 +1,12 @@
-import 'package:believer/controller/app_localization.dart';
-import 'package:believer/controller/my_app.dart';
-import 'package:believer/cubit/user_cubit.dart';
+import 'package:believer/controller/auth_controller.dart';
+import 'package:believer/controller/user_controller.dart';
+import 'package:believer/get_initial.dart';
 import 'package:believer/models/product_model.dart';
 import 'package:believer/views/screens/product_details.dart';
-import 'package:believer/views/screens/splash_screen.dart';
-import 'package:believer/views/screens/user_screen.dart';
 import 'package:believer/views/widgets/icon_badge.dart';
 import 'package:believer/views/widgets/network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:icons_plus/icons_plus.dart';
 
 class ProductTile extends StatefulWidget {
@@ -22,8 +20,9 @@ class ProductTile extends StatefulWidget {
 class _ProductTileState extends State<ProductTile> {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<UserCubit, UserState>(
-      builder: (context, state) {
+    return GetBuilder(
+      init: UserController(),
+      builder: (userCubit) {
         return GestureDetector(
           onTap: () {
             Navigator.push(
@@ -77,7 +76,7 @@ class _ProductTileState extends State<ProductTile> {
                                       children: [
                                         Icon(
                                           LineAwesome.cart_arrow_down_solid,
-                                          color: primaryColor,
+                                          color: appConstant.primaryColor,
                                           size: 20,
                                         ),
                                         if (userCubit.cartList
@@ -109,7 +108,7 @@ class _ProductTileState extends State<ProductTile> {
                               child: NImage(
                                 url: widget.product.media![0],
                                 h: 100,
-                                w: dWidth,
+                                w: Get.width,
                               ))
                           : const SizedBox()),
                 ),
@@ -121,7 +120,7 @@ class _ProductTileState extends State<ProductTile> {
                     children: [
                       Expanded(
                         child: Text(
-                          locale.locale == 'ar'
+                          Get.locale!.languageCode == 'ar'
                               ? widget.product.titleAr
                               : widget.product.titleEn,
                           maxLines: 1,
@@ -129,7 +128,7 @@ class _ProductTileState extends State<ProductTile> {
                           style: const TextStyle(fontWeight: FontWeight.w500),
                         ),
                       ),
-                      auth.userData.uid.isEmpty
+                      Get.find<AuthController>().userData.uid.isEmpty
                           ? InkWell(
                               onTap: () async {
                                 await userCubit.favoriteStatus(widget.product);
@@ -193,7 +192,7 @@ class _ProductTileState extends State<ProductTile> {
                     child: Row(
                       children: [
                         Text(
-                          '${'AED'.tr(context)} ${widget.product.price.toStringAsFixed(2)}',
+                          '${'AED'.tr} ${widget.product.price.toStringAsFixed(2)}',
                           style: TextStyle(
                               decoration: widget.product.discount == 0
                                   ? null

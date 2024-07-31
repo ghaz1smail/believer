@@ -1,12 +1,12 @@
-import 'package:believer/controller/app_localization.dart';
+import 'package:believer/controller/auth_controller.dart';
+import 'package:believer/controller/language_controller.dart';
 import 'package:believer/controller/my_app.dart';
-import 'package:believer/cubit/auth_cubit.dart';
-import 'package:believer/views/screens/splash_screen.dart';
+import 'package:believer/get_initial.dart';
 import 'package:believer/views/widgets/app_bar.dart';
 import 'package:believer/views/widgets/delete_account.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -21,18 +21,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       appBar: AppBarCustom(
         action: const {},
-        title: 'settings'.tr(context),
+        title: 'settings'.tr,
       ),
       body: Column(
         children: [
-          if (auth.userData.uid.isNotEmpty)
-            BlocBuilder<AuthCubit, AuthState>(
-              builder: (context, state) {
+          if (Get.find<AuthController>().userData.uid.isNotEmpty)
+            GetBuilder(
+              init: AuthController(),
+              builder: (auth) {
                 return SwitchListTile(
                   value: auth.notification,
-                  activeColor: primaryColor,
+                  activeColor: appConstant.primaryColor,
                   title: Text(
-                    'notifications'.tr(context),
+                    'notifications'.tr,
                   ),
                   onChanged: (value) {
                     HapticFeedback.lightImpact();
@@ -42,43 +43,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 );
               },
             ),
-          // if (auth.userData.uid.isNotEmpty)
-          //   if (firebaseAuth.currentUser?.providerData.first.providerId ==
-          //       'password')
-          //     ListTile(
-          //       title: Text(
-          //         'changeEmail'.tr(context),
-          //       ),
-          //       onTap: () {},
-          //       leading: const Icon(Icons.email),
-          //     ),
-          // if (auth.userData.uid.isNotEmpty)
-          //   if (firebaseAuth.currentUser?.providerData.first.providerId ==
-          //       'password')
-          //     ListTile(
-          //       title: Text(
-          //         'changePass'.tr(context),
-          //       ),
-          //       onTap: () {},
-          //       leading: const Icon(Icons.password),
-          //     ),
           ListTile(
             title: Text(
-              'changeLang'.tr(context),
+              'changeLang'.tr,
             ),
             onTap: () {
-              if (locale.locale == 'ar') {
-                locale.changeLanguage('en');
+              if (Get.locale!.languageCode == 'ar') {
+                Get.find<LanguageController>().changeLanguage('en');
               } else {
-                locale.changeLanguage('ar');
+                Get.find<LanguageController>().changeLanguage('ar');
               }
             },
             leading: const Icon(Icons.language),
           ),
-          if (auth.userData.uid.isNotEmpty)
+          if (Get.find<AuthController>().userData.uid.isNotEmpty)
             ListTile(
               title: Text(
-                'deleteAccount'.tr(context),
+                'deleteAccount'.tr,
                 style: const TextStyle(color: Colors.red),
               ),
               onTap: () {

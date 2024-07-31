@@ -1,10 +1,10 @@
-import 'package:believer/controller/app_localization.dart';
-import 'package:believer/controller/my_app.dart';
+import 'package:believer/get_initial.dart';
 import 'package:believer/models/category_model.dart';
 import 'package:believer/views/screens/category_screen.dart';
 import 'package:believer/views/widgets/app_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class CategoriesScreen extends StatefulWidget {
   const CategoriesScreen({super.key});
@@ -20,7 +20,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       backgroundColor: Colors.white,
       appBar: AppBarCustom(
         action: const {},
-        title: 'categories'.tr(context),
+        title: 'categories'.tr,
       ),
       body: FutureBuilder(
         future: firestore.collection('categories').get(),
@@ -41,7 +41,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                     const SizedBox(
                       height: 20,
                     ),
-                    Text('noData'.tr(context))
+                    Text('noData'.tr)
                   ],
                 ),
               );
@@ -74,7 +74,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                               height: 75,
                               width: 75,
                               decoration: BoxDecoration(
-                                border: Border.all(color: primaryColor),
+                                border:
+                                    Border.all(color: appConstant.primaryColor),
                                 borderRadius: const BorderRadius.all(
                                     Radius.circular(100)),
                               ),

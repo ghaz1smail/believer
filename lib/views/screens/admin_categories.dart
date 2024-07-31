@@ -1,4 +1,4 @@
-import 'package:believer/controller/my_app.dart';
+import 'package:believer/get_initial.dart';
 import 'package:believer/models/category_model.dart';
 import 'package:believer/views/screens/category_details.dart';
 import 'package:believer/views/widgets/app_bar.dart';

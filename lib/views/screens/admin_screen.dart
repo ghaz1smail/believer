@@ -1,4 +1,4 @@
-import 'package:believer/controller/my_app.dart';
+import 'package:believer/get_initial.dart';
 import 'package:believer/models/order_model.dart';
 import 'package:believer/views/widgets/admin_drawer.dart';
 import 'package:believer/views/widgets/shimmer.dart';
@@ -37,7 +37,7 @@ class _AdminScreenState extends State<AdminScreen> {
         body: Padding(
           padding: const EdgeInsets.all(20),
           child: RefreshIndicator(
-            color: primaryColor,
+            color: appConstant.primaryColor,
             onRefresh: () async {
               setState(() {});
             },

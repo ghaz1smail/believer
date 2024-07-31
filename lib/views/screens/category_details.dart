@@ -1,6 +1,5 @@
-// ignore_for_file: use_build_context_synchronously
 import 'dart:io';
-import 'package:believer/controller/my_app.dart';
+import 'package:believer/get_initial.dart';
 import 'package:believer/models/category_model.dart';
 import 'package:believer/views/screens/admin_categories.dart';
 import 'package:believer/views/widgets/app_bar.dart';
@@ -8,6 +7,7 @@ import 'package:believer/views/widgets/edit_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:image_pickers/image_pickers.dart';
 
 class CategoryDetails extends StatefulWidget {
@@ -44,13 +44,12 @@ class _CategoryDetailsState extends State<CategoryDetails> {
     }
 
     if (widget.category.id.isEmpty) {
-      final link = await staticFunctions.generateLink(id, 'category');
       if (widget.catId.isEmpty) {
         if (imageFile.isNotEmpty) {
           await firestore.collection('categories').doc(id).set({
             'id': id,
             'timestamp': DateTime.now().toIso8601String(),
-            'link': link,
+            'link': '',
             'titleAr': ar.text,
             'titleEn': en.text,
             'url': url.isEmpty ? widget.category.url : url
@@ -67,7 +66,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
             .set({
           'id': id,
           'timestamp': DateTime.now().toIso8601String(),
-          'link': link,
+          'link': '',
           'titleAr': ar.text,
           'titleEn': en.text,
         });
@@ -97,7 +96,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
     setState(() {
       loading = false;
     });
-    Navigator.pop(context);
+    Get.back();
   }
 
   _openPicker() async {
@@ -106,7 +105,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
       showGif: false,
       showCamera: true,
       compressSize: 0,
-      uiConfig: UIConfig(uiThemeColor: primaryColor),
+      uiConfig: UIConfig(uiThemeColor: appConstant.primaryColor),
     );
 
     setState(() {
@@ -249,7 +248,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                                   .delete();
                             }
 
-                            Navigator.pop(context);
+                            Get.back();
                           },
                           icon: const Icon(
                             Icons.delete,

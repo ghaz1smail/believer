@@ -1,11 +1,10 @@
-import 'package:believer/controller/app_localization.dart';
-import 'package:believer/controller/my_app.dart';
+import 'package:believer/get_initial.dart';
 import 'package:believer/models/order_model.dart';
 import 'package:believer/views/screens/order_details.dart';
 import 'package:believer/views/widgets/app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:icons_plus/icons_plus.dart';
-// ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 
 class OrdersScreen extends StatefulWidget {
@@ -21,10 +20,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
     return Scaffold(
       appBar: AppBarCustom(
         action: const {},
-        title: 'myOrders'.tr(context),
+        title: 'myOrders'.tr,
       ),
       body: RefreshIndicator(
-        color: primaryColor,
+        color: appConstant.primaryColor,
         onRefresh: () async {
           setState(() {});
         },
@@ -49,7 +48,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                         height: 10,
                       ),
                       Text(
-                        'noOrders'.tr(context),
+                        'noOrders'.tr,
                         style: const TextStyle(fontWeight: FontWeight.w500),
                       )
                     ],
@@ -72,15 +71,14 @@ class _OrdersScreenState extends State<OrdersScreen> {
                             ));
                         setState(() {});
                       },
-                      title: Text('${'orderNo'.tr(context)}. ${order.number}'),
-                      subtitle: Text(
-                          DateFormat('dd/MM/yyyy hh:mm a', locale.locale)
-                              .format(DateTime.parse(order.timestamp))),
+                      title: Text('${'orderNo'.tr}. ${order.number}'),
+                      subtitle: Text(DateFormat('dd/MM/yyyy hh:mm a')
+                          .format(DateTime.parse(order.timestamp))),
                       trailing: Icon(
                         order.status == 'inProgress'
                             ? Icons.update
                             : order.status == 'cancel'
-                                ? Iconsax.box_remove
+                                ? Iconsax.box_remove_bold
                                 : order.status == 'inDelivery'
                                     ? Icons.delivery_dining_sharp
                                     : Bootstrap.box2_fill,

@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:believer/views/screens/user_screen.dart';
+import 'package:believer/controller/user_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebViewer extends StatefulWidget {
@@ -52,7 +53,8 @@ class _WebViewerState extends State<WebViewer> {
                       ? data.toString()
                       : jsonDecode(data).toString();
                   if (text.contains('Invoice ID')) {
-                    userCubit.changeDone(text.contains('Successful'));
+                    Get.find<UserController>()
+                        .changeDone(text.contains('Successful'));
 
                     Navigator.pop(context);
                   }

@@ -1,5 +1,5 @@
-import 'package:believer/controller/app_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:icons_plus/icons_plus.dart';
 
 class StaticData {
@@ -19,26 +19,26 @@ class StaticData {
 
     if (elapsedDuration.inDays >= 365) {
       final years = (elapsedDuration.inDays / 365).floor();
-      return '$years${years > 1 ? ' ${'years'.tr(context)}' : ' ${'year'.tr(context)}'}';
+      return '$years${years > 1 ? ' ${'years'.tr}' : ' ${'year'.tr}'}';
     } else if (elapsedDuration.inDays >= 30) {
       final months = (elapsedDuration.inDays / 30.44).floor();
-      return '$months${months > 1 ? ' ${'months'.tr(context)}' : ' ${'month'.tr(context)}'}';
+      return '$months${months > 1 ? ' ${'months'.tr}' : ' ${'month'.tr}'}';
     } else if (elapsedDuration.inDays >= 7) {
       final weeks = (elapsedDuration.inDays / 7).floor();
-      return '$weeks${weeks > 1 ? ' ${'weekss'.tr(context)}' : ' ${'weeks'.tr(context)}'}';
+      return '$weeks${weeks > 1 ? ' ${'weekss'.tr}' : ' ${'weeks'.tr}'}';
     } else if (elapsedDuration.inDays > 0) {
-      return '${elapsedDuration.inDays}${elapsedDuration.inDays > 1 ? ' ${'days'.tr(context)}' : ' ${'day'.tr(context)}'}';
+      return '${elapsedDuration.inDays}${elapsedDuration.inDays > 1 ? ' ${'days'.tr}' : ' ${'day'.tr}'}';
     } else if (elapsedDuration.inHours > 0) {
-      return '${elapsedDuration.inHours}${'h'.tr(context)}';
+      return '${elapsedDuration.inHours}${'h'.tr}';
     } else if (elapsedDuration.inMinutes > 0) {
-      return '${elapsedDuration.inMinutes}${'m'.tr(context)}';
+      return '${elapsedDuration.inMinutes}${'m'.tr}';
     } else {
-      return '${elapsedDuration.inSeconds}${'s'.tr(context)}';
+      return '${elapsedDuration.inSeconds}${'s'.tr}';
     }
   }
 
   List<Map> bottomBar = [
-    {'home': Iconsax.home_2},
+    {'home': Iconsax.home_2_bold},
     {'wishlist': IonIcons.heart_half},
     {'cart': EvaIcons.shopping_bag},
     {'profile': Icons.person},

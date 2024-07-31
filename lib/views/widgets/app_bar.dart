@@ -1,5 +1,5 @@
-import 'package:believer/controller/app_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
   const AppBarCustom(
@@ -34,7 +34,7 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
                         action['function']();
                       },
                       child: Chip(
-                        label: Text(action['title'].toString().tr(context)),
+                        label: Text(action['title'].toString().tr),
                         padding: EdgeInsets.zero,
                         shape: const RoundedRectangleBorder(
                             borderRadius:

@@ -1,5 +1,4 @@
-import 'package:believer/controller/app_localization.dart';
-import 'package:believer/controller/my_app.dart';
+import 'package:believer/get_initial.dart';
 import 'package:believer/models/category_model.dart';
 import 'package:believer/models/product_model.dart';
 import 'package:believer/views/screens/sub_category_screen.dart';
@@ -7,6 +6,7 @@ import 'package:believer/views/widgets/app_bar.dart';
 import 'package:believer/views/widgets/product_tile.dart';
 import 'package:believer/views/widgets/shimmer.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class CategoryScreen extends StatefulWidget {
   const CategoryScreen({super.key, required this.category});
@@ -49,7 +49,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   }
                   return SizedBox(
                     height: 40,
-                    width: dWidth,
+                    width: Get.width,
                     child: ListView.builder(
                         itemCount: data.length,
                         scrollDirection: Axis.horizontal,
@@ -79,7 +79,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 }
                 return SizedBox(
                   height: 40,
-                  width: dWidth,
+                  width: Get.width,
                   child: ListView.builder(
                     itemCount: 5,
                     scrollDirection: Axis.horizontal,
@@ -125,7 +125,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                               height: 10,
                             ),
                             Text(
-                              'noProducts'.tr(context),
+                              'noProducts'.tr,
                               style:
                                   const TextStyle(fontWeight: FontWeight.w500),
                             ),

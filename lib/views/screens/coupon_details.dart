@@ -1,11 +1,10 @@
-// ignore_for_file: use_build_context_synchronously
-
-import 'package:believer/controller/my_app.dart';
+import 'package:believer/get_initial.dart';
 import 'package:believer/models/coupon_model.dart';
 import 'package:believer/views/widgets/app_bar.dart';
 import 'package:believer/views/widgets/edit_text.dart';
 import 'package:believer/views/widgets/pick_date.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class CouponDetails extends StatefulWidget {
   const CouponDetails({super.key, required this.coupon});
@@ -37,11 +36,10 @@ class _CouponDetailsState extends State<CouponDetails> {
     var id = DateTime.now().millisecondsSinceEpoch.toString();
 
     if (widget.coupon.id.isEmpty) {
-      final link = await staticFunctions.generateLink(id, 'coupon');
       await firestore.collection('coupons').doc(id).set({
         'id': id,
         'timestamp': DateTime.now().toIso8601String(),
-        'link': link,
+        'link': '',
         'titleAr': titleAr.text,
         'titleEn': titleEn.text,
         'descriptionAr': descriptionAr.text,
@@ -64,7 +62,7 @@ class _CouponDetailsState extends State<CouponDetails> {
       });
     }
 
-    Navigator.pop(context);
+    Get.back();
   }
 
   @override
@@ -219,7 +217,7 @@ class _CouponDetailsState extends State<CouponDetails> {
                             .collection('coupons')
                             .doc(widget.coupon.id)
                             .delete();
-                        Navigator.pop(context);
+                        Get.back();
                       },
                       icon: const Icon(
                         Icons.delete,

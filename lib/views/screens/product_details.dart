@@ -1,13 +1,12 @@
-import 'package:believer/controller/app_localization.dart';
 import 'package:believer/controller/my_app.dart';
-import 'package:believer/cubit/user_cubit.dart';
+import 'package:believer/controller/user_controller.dart';
+import 'package:believer/get_initial.dart';
 import 'package:believer/models/product_model.dart';
 import 'package:believer/views/screens/full_screen.dart';
-import 'package:believer/views/screens/user_screen.dart';
 import 'package:believer/views/widgets/counter.dart';
 import 'package:believer/views/widgets/network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 
 class ProductDetails extends StatefulWidget {
   const ProductDetails({super.key, required this.product});
@@ -22,8 +21,9 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<UserCubit, UserState>(
-      builder: (context, state) {
+    return GetBuilder(
+      init: UserController(),
+      builder: (userCubit) {
         return Scaffold(
             appBar: AppBar(
               leading: Padding(
@@ -79,7 +79,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                             return IconButton(
                               icon: Icon(
                                 product.favorites!
-                                        .contains(firebaseAuth.currentUser!.uid)
+                                        .contains(firebaseAuth.currentUser?.uid)
                                     ? Icons.favorite
                                     : Icons.favorite_border,
                                 color: Colors.red,
@@ -94,7 +94,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                           return IconButton(
                             icon: Icon(
                               widget.product.favorites!
-                                      .contains(firebaseAuth.currentUser!.uid)
+                                      .contains(firebaseAuth.currentUser?.uid)
                                   ? Icons.favorite
                                   : Icons.favorite_border,
                               color: Colors.red,
@@ -128,10 +128,10 @@ class _ProductDetailsState extends State<ProductDetails> {
                 child: widget.product.stock == 0
                     ? Align(
                         child: Text(
-                          'out'.tr(context),
+                          'out'.tr,
                           style: TextStyle(
                               fontSize: 20,
-                              color: primaryColor,
+                              color: appConstant.primaryColor,
                               fontWeight: FontWeight.w500),
                         ),
                       )
@@ -159,13 +159,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                               userCubit.addToCart(widget.product, count);
                               Navigator.pop(context);
                             },
-                            color: primaryColor,
-                            minWidth: dWidth / 2,
+                            color: appConstant.primaryColor,
+                            minWidth: Get.width / 2,
                             textColor: Colors.white,
                             shape: const RoundedRectangleBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(100))),
-                            child: Text('addTo'.tr(context)),
+                            child: Text('addTo'.tr),
                           )
                         ],
                       ),
@@ -197,7 +197,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                           url: widget.product.media![index],
                           h: 250,
                           fit: BoxFit.none,
-                          w: dWidth,
+                          w: Get.width,
                         )),
                   ),
                 ),
@@ -219,7 +219,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                               child: CircleAvatar(
                                 radius: 4,
                                 backgroundColor: _activePage == index
-                                    ? primaryColor
+                                    ? appConstant.primaryColor
                                     : Colors.grey,
                               ),
                             ),
@@ -231,7 +231,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          locale.locale == 'ar'
+                          Get.locale!.languageCode == 'ar'
                               ? widget.product.titleAr
                               : widget.product.titleEn,
                           style: const TextStyle(fontSize: 18),
@@ -250,7 +250,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    '${'AED'.tr(context)} ${widget.product.price.toStringAsFixed(2)}',
+                                    '${'AED'.tr} ${widget.product.price.toStringAsFixed(2)}',
                                     style: TextStyle(
                                         fontSize: 14,
                                         decoration: widget.product.discount == 0
@@ -277,7 +277,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                           Padding(
                             padding: const EdgeInsets.only(top: 10, bottom: 10),
                             child: Text(
-                              'description'.tr(context),
+                              'description'.tr,
                               style: const TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold),
                             ),

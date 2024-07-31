@@ -1,11 +1,12 @@
-import 'package:believer/controller/app_localization.dart';
+import 'package:believer/controller/auth_controller.dart';
 import 'package:believer/controller/my_app.dart';
+import 'package:believer/get_initial.dart';
 import 'package:believer/models/user_model.dart';
-import 'package:believer/views/screens/splash_screen.dart';
 import 'package:believer/views/widgets/app_bar.dart';
 import 'package:believer/views/widgets/payment_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
+import 'package:get/get.dart';
 
 class PaymentScreen extends StatefulWidget {
   const PaymentScreen({super.key});
@@ -16,11 +17,12 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
   bool loading = false;
+  AuthController auth = Get.find<AuthController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarCustom(
-        title: 'paymentMethod'.tr(context),
+        title: 'paymentMethod'.tr,
         action: {
           'title': 'add',
           'function': () async {
@@ -31,7 +33,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         },
       ),
       body: RefreshIndicator(
-        color: primaryColor,
+        color: appConstant.primaryColor,
         onRefresh: () async {
           await auth.getUserData();
           setState(() {});
@@ -53,7 +55,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           height: 10,
                         ),
                         Text(
-                          'noPayment'.tr(context),
+                          'noPayment'.tr,
                           style: const TextStyle(fontWeight: FontWeight.w500),
                         )
                       ],
@@ -70,11 +72,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 2, horizontal: 5),
                                 decoration: BoxDecoration(
-                                    color: primaryColor,
+                                    color: appConstant.primaryColor,
                                     borderRadius: const BorderRadius.all(
                                         Radius.circular(10))),
                                 child: Text(
-                                  'default'.tr(context),
+                                  'default'.tr,
                                   style: const TextStyle(
                                       fontSize: 10, color: Colors.white),
                                 )),
@@ -121,7 +123,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                   height: 125,
                                   isSwipeGestureEnabled: false,
                                   isChipVisible: false,
-                                  cardBgColor: primaryColor,
+                                  cardBgColor: appConstant.primaryColor,
                                   enableFloatingCard: true,
                                   cardNumber: e.number,
                                   expiryDate: e.date,

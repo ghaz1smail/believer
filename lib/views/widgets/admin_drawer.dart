@@ -1,7 +1,8 @@
+import 'package:believer/controller/auth_controller.dart';
 import 'package:believer/models/category_model.dart';
 import 'package:believer/views/screens/admin_categories.dart';
-import 'package:believer/views/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class AdminDrawer extends StatelessWidget {
   const AdminDrawer({super.key});
@@ -55,7 +56,7 @@ class AdminDrawer extends StatelessWidget {
             style: TextStyle(color: Colors.red),
           ),
           onTap: () {
-            auth.logOut();
+            Get.find<AuthController>().logOut();
           },
         ),
       ],

@@ -1,10 +1,10 @@
-import 'package:believer/controller/app_localization.dart';
-import 'package:believer/controller/my_app.dart';
+import 'package:believer/controller/auth_controller.dart';
+import 'package:believer/get_initial.dart';
 import 'package:believer/models/user_model.dart';
 import 'package:believer/views/screens/address_details.dart';
-import 'package:believer/views/screens/splash_screen.dart';
 import 'package:believer/views/widgets/app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class AddressScreen extends StatefulWidget {
   const AddressScreen({super.key});
@@ -14,11 +14,13 @@ class AddressScreen extends StatefulWidget {
 }
 
 class _AddressScreenState extends State<AddressScreen> {
+  AuthController auth = Get.find<AuthController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarCustom(
-        title: 'address'.tr(context),
+        title: 'address'.tr,
         action: {
           'title': 'add',
           'function': () async {
@@ -26,7 +28,7 @@ class _AddressScreenState extends State<AddressScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => AddressDetails(
-                    address: AddressModel(name: 'newAddress'.tr(context)),
+                    address: AddressModel(name: 'newAddress'.tr),
                     index: 0,
                   ),
                 ));
@@ -35,7 +37,7 @@ class _AddressScreenState extends State<AddressScreen> {
         },
       ),
       body: RefreshIndicator(
-        color: primaryColor,
+        color: appConstant.primaryColor,
         onRefresh: () async {
           await auth.getUserData();
           setState(() {});
@@ -53,7 +55,7 @@ class _AddressScreenState extends State<AddressScreen> {
                       height: 10,
                     ),
                     Text(
-                      'noAddress'.tr(context),
+                      'noAddress'.tr,
                       style: const TextStyle(fontWeight: FontWeight.w500),
                     )
                   ],
@@ -79,7 +81,7 @@ class _AddressScreenState extends State<AddressScreen> {
                       padding: const EdgeInsets.all(10),
                       margin: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                          border: Border.all(color: primaryColor),
+                          border: Border.all(color: appConstant.primaryColor),
                           borderRadius:
                               const BorderRadius.all(Radius.circular(25))),
                       child: Column(
@@ -101,11 +103,11 @@ class _AddressScreenState extends State<AddressScreen> {
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 2, horizontal: 5),
                                     decoration: BoxDecoration(
-                                        color: primaryColor,
+                                        color: appConstant.primaryColor,
                                         borderRadius: const BorderRadius.all(
                                             Radius.circular(10))),
                                     child: Text(
-                                      'default'.tr(context),
+                                      'default'.tr,
                                       style: const TextStyle(
                                           fontSize: 10, color: Colors.white),
                                     ))
@@ -115,7 +117,7 @@ class _AddressScreenState extends State<AddressScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('address'.tr(context)),
+                              Text('address'.tr),
                               const SizedBox(
                                 width: 10,
                               ),
@@ -130,7 +132,7 @@ class _AddressScreenState extends State<AddressScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('phone'.tr(context)),
+                              Text('phone'.tr),
                               const SizedBox(
                                 width: 10,
                               ),

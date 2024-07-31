@@ -1,12 +1,11 @@
-// ignore_for_file: use_build_context_synchronously
-
-import 'package:believer/controller/app_localization.dart';
+import 'package:believer/controller/auth_controller.dart';
 import 'package:believer/controller/my_app.dart';
-import 'package:believer/views/screens/splash_screen.dart';
+import 'package:believer/get_initial.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cryptlib_2_0/cryptlib_2_0.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
+import 'package:get/get.dart';
 
 class BottomSheetPayment extends StatefulWidget {
   const BottomSheetPayment({super.key});
@@ -16,6 +15,8 @@ class BottomSheetPayment extends StatefulWidget {
 }
 
 class _BottomSheetPaymentState extends State<BottomSheetPayment> {
+  AuthController auth = Get.find<AuthController>();
+
   String cardNumber = '';
   String expiryDate = '';
   String cardHolderName = '';
@@ -53,7 +54,7 @@ class _BottomSheetPaymentState extends State<BottomSheetPayment> {
     setState(() {
       loading = false;
     });
-    Navigator.pop(context);
+    Get.back();
   }
 
   @override
@@ -74,7 +75,7 @@ class _BottomSheetPaymentState extends State<BottomSheetPayment> {
             controller: staticWidgets.scrollController,
             children: [
               CreditCardWidget(
-                cardBgColor: primaryColor,
+                cardBgColor: appConstant.primaryColor,
                 enableFloatingCard: true,
                 cardNumber: cardNumber,
                 expiryDate: expiryDate,
@@ -132,9 +133,9 @@ class _BottomSheetPaymentState extends State<BottomSheetPayment> {
                         shape: const RoundedRectangleBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(25))),
-                        color: primaryColor,
+                        color: appConstant.primaryColor,
                         child: Text(
-                          'submit'.tr(context),
+                          'submit'.tr,
                           style: const TextStyle(
                               fontSize: 18, color: Colors.white),
                         ),

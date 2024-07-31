@@ -1,5 +1,5 @@
-import 'package:believer/controller/app_localization.dart';
 import 'package:believer/controller/my_app.dart';
+import 'package:believer/get_initial.dart';
 import 'package:believer/models/order_model.dart';
 import 'package:believer/models/product_model.dart';
 import 'package:believer/views/screens/product_details.dart';
@@ -8,7 +8,7 @@ import 'package:believer/views/widgets/bottom_sheet_status.dart';
 import 'package:believer/views/widgets/review_bottom_sheet.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-// ignore: depend_on_referenced_packages
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class OrderDetails extends StatefulWidget {
@@ -54,7 +54,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                 }
               }
             : {},
-        title: 'orderDetails'.tr(context),
+        title: 'orderDetails'.tr,
       ),
       bottomNavigationBar: SafeArea(
         child: Container(
@@ -68,9 +68,9 @@ class _OrderDetailsState extends State<OrderDetails> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('${'subtotal'.tr(context)}:'),
+                    Text('${'subtotal'.tr}:'),
                     Text(
-                      '${'AED'.tr(context)} ${order.total.toStringAsFixed(2)}',
+                      '${'AED'.tr} ${order.total.toStringAsFixed(2)}',
                     ),
                   ],
                 ),
@@ -80,8 +80,8 @@ class _OrderDetailsState extends State<OrderDetails> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('${'discount'.tr(context)}:'),
-                    Text('- ${'AED'.tr(context)} ${order.discount}',
+                    Text('${'discount'.tr}:'),
+                    Text('- ${'AED'.tr} ${order.discount}',
                         style: const TextStyle()),
                   ],
                 ),
@@ -94,9 +94,9 @@ class _OrderDetailsState extends State<OrderDetails> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('${'total'.tr(context)}:'),
+                    Text('${'total'.tr}:'),
                     Text(
-                      '${'AED'.tr(context)} ${(order.total - (order.total * (order.discount / 100))).toStringAsFixed(2)}',
+                      '${'AED'.tr} ${(order.total - (order.total * (order.discount / 100))).toStringAsFixed(2)}',
                     ),
                   ],
                 ),
@@ -110,7 +110,7 @@ class _OrderDetailsState extends State<OrderDetails> {
           right: 15,
         ),
         child: RefreshIndicator(
-          color: primaryColor,
+          color: appConstant.primaryColor,
           onRefresh: () async {
             fetch();
           },
@@ -119,7 +119,7 @@ class _OrderDetailsState extends State<OrderDetails> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'orderNumber'.tr(context),
+                  'orderNumber'.tr,
                   style: const TextStyle(
                       fontSize: 18, fontWeight: FontWeight.w500),
                 ),
@@ -136,7 +136,7 @@ class _OrderDetailsState extends State<OrderDetails> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'name'.tr(context),
+                  'name'.tr,
                   style: const TextStyle(
                       fontSize: 18, fontWeight: FontWeight.w500),
                 ),
@@ -150,7 +150,7 @@ class _OrderDetailsState extends State<OrderDetails> {
               color: Colors.grey,
             ),
             Text(
-              'shipping'.tr(context),
+              'shipping'.tr,
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
             ),
             const SizedBox(
@@ -165,14 +165,14 @@ class _OrderDetailsState extends State<OrderDetails> {
               color: Colors.grey,
             ),
             Text(
-              order.status.tr(context),
+              order.status.tr,
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
             ),
             const SizedBox(
               height: 5,
             ),
             Text(
-              DateFormat('EE, dd/MM/yyyy hh:mm a', locale.locale)
+              DateFormat('EE, dd/MM/yyyy hh:mm a')
                   .format(DateTime.parse(order.timestamp)),
             ),
             const Divider(
@@ -180,7 +180,7 @@ class _OrderDetailsState extends State<OrderDetails> {
             ),
             SizedBox(
               height: 100,
-              width: dWidth,
+              width: Get.width,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: order.orderList!.length,
@@ -217,14 +217,14 @@ class _OrderDetailsState extends State<OrderDetails> {
                         ),
                       ),
                       title: Text(
-                        locale.locale == 'ar'
+                        Get.locale!.languageCode == 'ar'
                             ? orderList.titleAr
                             : orderList.titleEn,
                         overflow: TextOverflow.ellipsis,
                       ),
                       visualDensity: const VisualDensity(vertical: 4),
                       subtitle: Text(
-                        '${'AED'.tr(context)} ${orderList.price}  x${orderList.count}',
+                        '${'AED'.tr} ${orderList.price}  x${orderList.count}',
                         style: const TextStyle(
                             color: Colors.black, fontWeight: FontWeight.w500),
                       ),
@@ -242,12 +242,12 @@ class _OrderDetailsState extends State<OrderDetails> {
                       BottomSheetReview(id: order.timestamp), 0.5, 0.75);
                   fetch();
                 },
-                color: primaryColor,
+                color: appConstant.primaryColor,
                 height: 45,
                 textColor: Colors.white,
                 shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(25))),
-                child: Text('reviewOrder'.tr(context)),
+                child: Text('reviewOrder'.tr),
               )
           ]),
         ),

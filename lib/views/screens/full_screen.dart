@@ -1,6 +1,6 @@
-import 'package:believer/controller/my_app.dart';
 import 'package:believer/views/widgets/network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class FullScreen extends StatelessWidget {
   const FullScreen({super.key, required this.url});
@@ -13,8 +13,8 @@ class FullScreen extends StatelessWidget {
       appBar: AppBar(),
       body: NImage(
         url: url,
-        w: dWidth,
-        h: dHeight,
+        w: Get.width,
+        h: Get.height,
         fit: BoxFit.fitWidth,
       ),
     );

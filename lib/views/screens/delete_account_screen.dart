@@ -1,8 +1,8 @@
-import 'package:believer/controller/app_localization.dart';
-import 'package:believer/controller/my_app.dart';
-import 'package:believer/views/screens/splash_screen.dart';
+import 'package:believer/controller/auth_controller.dart';
+import 'package:believer/get_initial.dart';
 import 'package:believer/views/widgets/edit_text.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class DeleteAccountScreen extends StatefulWidget {
   const DeleteAccountScreen({super.key});
@@ -12,6 +12,7 @@ class DeleteAccountScreen extends StatefulWidget {
 }
 
 class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
+  AuthController auth = Get.find<AuthController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +38,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                       controller: auth.email,
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return 'pleaseEmail'.tr(context);
+                          return 'pleaseEmail'.tr;
                         }
                         return null;
                       },
@@ -51,7 +52,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                       controller: auth.password,
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return 'pleasePassword'.tr(context);
+                          return 'pleasePassword'.tr;
                         }
                         return null;
                       },
@@ -66,7 +67,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                         auth.logOut();
                       }
                     },
-                    color: primaryColor,
+                    color: appConstant.primaryColor,
                     child: const Text('Delete'),
                   ),
                 ],
@@ -88,12 +89,12 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                         onPressed: () {
                           auth.logOut();
                         },
-                        color: primaryColor,
+                        color: appConstant.primaryColor,
                         child: const Text('Yes'),
                       ),
                       MaterialButton(
                         onPressed: () {
-                          Navigator.pushReplacementNamed(context, 'user');
+                          Get.offNamed('user');
                         },
                         textColor: Colors.white,
                         color: Colors.red,

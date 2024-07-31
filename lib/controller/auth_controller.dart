@@ -1,21 +1,16 @@
-import 'package:believer/controller/app_localization.dart';
-import 'package:believer/controller/my_app.dart';
+import 'package:believer/controller/user_controller.dart';
+import 'package:believer/get_initial.dart';
 import 'package:believer/models/user_model.dart';
-import 'package:believer/views/screens/user_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-part 'auth_state.dart';
 
-class AuthCubit extends Cubit<AuthState> {
-  AuthCubit() : super(AuthInitial());
-
+class AuthController extends GetxController {
   GlobalKey<FormState> key = GlobalKey();
   final _googleSignIn = GoogleSignIn();
   AuthorizationCredentialAppleID? appleCredential;
@@ -23,24 +18,22 @@ class AuthCubit extends Cubit<AuthState> {
       password = TextEditingController(),
       name = TextEditingController();
   UserModel userData = UserModel();
-  bool agree = false, notification = false;
+  bool agree = false, notification = false, loading = false;
 
   changeNotification(x) async {
-    final prefs = await SharedPreferences.getInstance();
     notification = x;
-    prefs.setBool('notification', x);
+    getStorage.write('notification', x);
     if (x) {
       requestPermission();
     } else {
       firebaseMessaging.deleteToken();
     }
-    emit(AuthInitial());
+    update();
   }
 
   requestPermission() async {
-    SharedPreferences.getInstance().then((value) {
-      notification = value.getBool('notification') ?? true;
-    });
+    notification = getStorage.read('notification') ?? true;
+
     await firebaseMessaging.requestPermission(
         alert: true, badge: true, sound: true);
 
@@ -58,20 +51,20 @@ class AuthCubit extends Cubit<AuthState> {
 
   agreeTerm() {
     agree = !agree;
-    emit(AuthInitial());
+    update();
   }
 
   logOut() async {
-    userCubit.selectedIndex = 0;
+    Get.find<UserController>().selectedIndex = 0;
     _googleSignIn.signOut();
     userData = UserModel();
     await firebaseAuth.signOut();
-    navigatorKey.currentState?.pushReplacementNamed('register');
+    Get.offNamed('register');
   }
 
   checkUser() async {
     if (firebaseAuth.currentUser != null) {
-      if (firebaseAuth.currentUser!.uid == staticData.adminUID) {
+      if (firebaseAuth.currentUser!.uid == appConstant.adminUid) {
         await Future.delayed(const Duration(seconds: 3));
       } else {
         final stopwatch = Stopwatch()..start();
@@ -89,7 +82,7 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   getUserData() async {
-    if (firebaseAuth.currentUser!.uid != staticData.adminUID) {
+    if (firebaseAuth.currentUser!.uid != appConstant.adminUid) {
       try {
         await firestore
             .collection('users')
@@ -110,21 +103,22 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   navigator() async {
-    if (firebaseAuth.currentUser?.uid == staticData.adminUID) {
-      navigatorKey.currentState?.pushReplacementNamed('admin');
+    if (firebaseAuth.currentUser?.uid == appConstant.adminUid) {
+      Get.offNamed('admin');
     } else {
       if (userData.uid.isEmpty) {
-        navigatorKey.currentState?.pushReplacementNamed('register');
+        Get.offNamed('register');
       } else {
         requestPermission();
-        navigatorKey.currentState?.pushReplacementNamed('user');
+        Get.offNamed('user');
       }
     }
   }
 
   Future<void> appleSignIn() async {
     HapticFeedback.lightImpact();
-    emit(LoadingState());
+    loading = true;
+    update();
     try {
       appleCredential = await SignInWithApple.getAppleIDCredential(
         scopes: [
@@ -147,22 +141,26 @@ class AuthCubit extends Cubit<AuthState> {
 
       await navigator();
     } catch (e) {
-      emit(AuthInitial());
+      loading = false;
+      update();
       Fluttertoast.showToast(msg: e.toString());
     }
-    emit(AuthInitial());
+    loading = false;
+    update();
   }
 
   Future<void> googleSignIn() async {
     HapticFeedback.lightImpact();
-    emit(LoadingState());
+    loading = true;
+    update();
     try {
       GoogleSignInAccount? googleSignInAccount;
 
       googleSignInAccount = await _googleSignIn.signIn();
 
       if (googleSignInAccount == null) {
-        emit(AuthInitial());
+        loading = false;
+        update();
         return;
       }
 
@@ -179,11 +177,13 @@ class AuthCubit extends Cubit<AuthState> {
           googleSignInAccount.photoUrl ?? '', googleSignInAccount.email, true);
       await navigator();
     } catch (e) {
-      emit(AuthInitial());
+      loading = false;
+      update();
       Fluttertoast.showToast(msg: e.toString());
     }
 
-    emit(AuthInitial());
+    loading = false;
+    update();
   }
 
   Future<void> createUser(
@@ -216,12 +216,6 @@ class AuthCubit extends Cubit<AuthState> {
           .get()
           .then((value) async {
         if (!value.exists) {
-          var link = await staticFunctions.generateLink(
-              firebaseAuth.currentUser!.uid, 'profile');
-          data.update(
-            'link',
-            (v) => link,
-          );
           firestore
               .collection('users')
               .doc(firebaseAuth.currentUser!.uid)
@@ -232,12 +226,6 @@ class AuthCubit extends Cubit<AuthState> {
         }
       });
     } else {
-      var link = await staticFunctions.generateLink(
-          firebaseAuth.currentUser!.uid, 'profile');
-      data.update(
-        'link',
-        (v) => link,
-      );
       firestore
           .collection('users')
           .doc(firebaseAuth.currentUser!.uid)
@@ -246,11 +234,12 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  auth(context, signIn) async {
+  auth(signIn) async {
     if (!key.currentState!.validate()) {
       return;
     }
-    emit(LoadingState());
+    loading = true;
+    update();
     try {
       if (signIn) {
         await signInAuth();
@@ -258,12 +247,15 @@ class AuthCubit extends Cubit<AuthState> {
         await signUp();
       }
     } on FirebaseAuthException catch (e) {
+      loading = false;
+      update();
       if (e.code == 'email-already-in-use') {
-        Fluttertoast.showToast(msg: e.code.tr(context));
+        Fluttertoast.showToast(msg: e.code.tr);
       }
-      Fluttertoast.showToast(msg: 'invalidCredentials'.tr(context));
+      Fluttertoast.showToast(msg: 'invalidCredentials'.tr);
     }
-    emit(AuthInitial());
+    loading = false;
+    update();
   }
 
   Future<void> signUp() async {
@@ -276,17 +268,14 @@ class AuthCubit extends Cubit<AuthState> {
       name.clear();
       password.clear();
     } else {
-      snackbarKey.currentState?.showSnackBar(const SnackBar(
-        width: 300,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10))),
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        content: Center(
+      Get.showSnackbar(const GetSnackBar(
+        maxWidth: 300,
+        borderRadius: 10,
+        messageText: Center(
             child: Text(
           'Please read the Terms & Conditions and agree with it',
           style: TextStyle(fontSize: 18),
         )),
-        behavior: SnackBarBehavior.floating,
       ));
     }
   }
