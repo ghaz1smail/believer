@@ -1,8 +1,10 @@
+import 'package:believer/controller/auth_controller.dart';
 import 'package:believer/get_initial.dart';
 import 'package:believer/models/order_model.dart';
 import 'package:believer/views/widgets/admin_drawer.dart';
 import 'package:believer/views/widgets/shimmer.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class AdminScreen extends StatefulWidget {
   const AdminScreen({super.key});
@@ -140,6 +142,36 @@ class _AdminScreenState extends State<AdminScreen> {
                         )),
                       );
                     }),
+                GetBuilder(
+                  init: AuthController(),
+                  builder: (auth) {
+                    return Column(
+                      children: [
+                        SwitchListTile(
+                          value: auth.appData!.orders,
+                          onChanged: (e) {
+                            auth.changeOrders();
+                          },
+                          title: const Text('Accept orders?'),
+                        ),
+                        Column(
+                            children: auth.appData!.paymobs!
+                                .map(
+                                  (m) => SwitchListTile(
+                                    value: auth.appData!.paymobs!
+                                        .firstWhere((w) => w.id == m.id)
+                                        .status,
+                                    onChanged: (e) {
+                                      auth.changePaymobs(m.id);
+                                    },
+                                    title: Text(m.name),
+                                  ),
+                                )
+                                .toList()),
+                      ],
+                    );
+                  },
+                )
               ],
             ),
           ),

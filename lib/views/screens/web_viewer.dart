@@ -42,25 +42,29 @@ class _WebViewerState extends State<WebViewer> {
             });
           },
           onUrlChange: (UrlChange change) async {
-            // print('object2' + change.url.toString());
-            if (change.url!
-                .startsWith('https://ipg.comtrust.ae/e/nvoice/Receipt?n=')) {
-              time = Timer.periodic(const Duration(seconds: 1), (timer) {
-                Future future = controller
-                    .runJavaScriptReturningResult("document.body.innerText");
-                future.then((data) {
-                  String text = Platform.isIOS
-                      ? data.toString()
-                      : jsonDecode(data).toString();
-                  if (text.contains('Invoice ID')) {
-                    Get.find<UserController>()
-                        .changeDone(text.contains('Successful'));
+            Get.log(change.url.toString());
+            // if (change.url!
+            //     .contains('https://uae.paymob.com/api/acceptance/post_pay')) {
 
-                    Navigator.pop(context);
-                  }
-                });
-              });
-            }
+            // time = Timer.periodic(const Duration(milliseconds: 500), (timer) {
+            Future future = controller
+                .runJavaScriptReturningResult("document.body.innerText");
+            future.then((data) {
+              String text = Platform.isIOS
+                  ? data.toString()
+                  : jsonDecode(data).toString();
+              Get.log(text);
+              if (text
+                  .toLowerCase()
+                  .removeAllWhitespace
+                  .contains('paymentsuccessful')) {
+                Get.find<UserController>().changeDone(true);
+
+                Get.back();
+              }
+            });
+            // });
+            // }
           },
         ),
       )
@@ -71,7 +75,16 @@ class _WebViewerState extends State<WebViewer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        leading: IconButton(
+            onPressed: () {
+              Get.back();
+            },
+            icon: const Icon(
+              Icons.arrow_back_ios,
+              color: Colors.black,
+            )),
+      ),
       body: SafeArea(
         child: loading
             ? const Center(

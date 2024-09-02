@@ -4,6 +4,7 @@ import 'package:believer/models/user_model.dart';
 import 'package:believer/views/widgets/app_bar.dart';
 import 'package:believer/views/widgets/edit_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -23,16 +24,18 @@ class _AddressDetailsState extends State<AddressDetails> {
   TextEditingController name = TextEditingController(),
       phone = TextEditingController(),
       address = TextEditingController();
-  AuthController auth = Get.find<AuthController>();
+  var auth = Get.find<AuthController>();
 
   submit(delete) async {
-    if (!key.currentState!.validate()) {
-      return;
+    if (!delete) {
+      if (!key.currentState!.validate()) {
+        return;
+      }
     }
     setState(() {
       loading = true;
     });
-
+    String phonex = '+971${phone.text}';
     if (delete) {
       await firestore
           .collection('users')
@@ -41,7 +44,7 @@ class _AddressDetailsState extends State<AddressDetails> {
         'address': FieldValue.arrayRemove([
           {
             'name': widget.address.name,
-            'phone': widget.address.phone,
+            'phone': phonex,
             'address': widget.address.address,
             'label': widget.address.label
           }
@@ -57,7 +60,7 @@ class _AddressDetailsState extends State<AddressDetails> {
                 name: name.text,
                 address: address.text,
                 label: label,
-                phone: phone.text));
+                phone: phonex));
 
         await firestore
             .collection('users')
@@ -80,7 +83,7 @@ class _AddressDetailsState extends State<AddressDetails> {
               'name': name.text,
               'address': address.text,
               'label': label,
-              'phone': phone.text,
+              'phone': phonex
             }
           ])
         });
@@ -98,7 +101,7 @@ class _AddressDetailsState extends State<AddressDetails> {
     if (widget.address.label.isNotEmpty) {
       label = widget.address.label;
       address.text = widget.address.address;
-      phone.text = widget.address.phone;
+      phone.text = widget.address.phone.replaceFirst('+971', '');
       name.text = widget.address.name;
     }
     super.initState();
@@ -110,7 +113,7 @@ class _AddressDetailsState extends State<AddressDetails> {
       appBar: AppBarCustom(
           title: widget.address.name,
           action: {
-            'title': widget.address.label.isEmpty ? 'add' : 'update',
+            'title': 'Add',
             'function': () {
               submit(false);
             },
@@ -121,6 +124,48 @@ class _AddressDetailsState extends State<AddressDetails> {
         child: Form(
           key: key,
           child: Column(children: [
+            Text('label'.tr),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    HapticFeedback.lightImpact();
+                    setState(() {
+                      label = 'home';
+                    });
+                  },
+                  child: Chip(
+                    side: const BorderSide(color: Colors.grey),
+                    label: Text(
+                      'homes'.tr,
+                    ),
+                    backgroundColor:
+                        label == 'home' ? Colors.red.shade200 : Colors.white,
+                  ),
+                ),
+                const SizedBox(
+                  width: 20,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    HapticFeedback.lightImpact();
+                    setState(() {
+                      label = 'work';
+                    });
+                  },
+                  child: Chip(
+                    side: const BorderSide(color: Colors.grey),
+                    label: Text('work'.tr),
+                    backgroundColor:
+                        label == 'work' ? Colors.red.shade200 : Colors.white,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 20,
+            ),
             EditText(
                 function: () {},
                 controller: name,
@@ -149,61 +194,26 @@ class _AddressDetailsState extends State<AddressDetails> {
             const SizedBox(
               height: 20,
             ),
-            EditText(
-                function: () {},
-                number: true,
-                controller: phone,
-                validator: (p) {
-                  if (p!.isEmpty) {
-                    return 'pleasephone'.tr;
-                  }
-                  return null;
-                },
-                hint: '009',
-                title: 'phone'),
-            const SizedBox(
-              height: 20,
-            ),
-            Text('label'.tr),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                GestureDetector(
-                  onTap: () {
-                    HapticFeedback.lightImpact();
-                    setState(() {
-                      label = 'home';
-                    });
-                  },
-                  child: Chip(
-                    shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(25))),
-                    side: const BorderSide(color: Colors.grey),
-                    label: Text(
-                      'homes'.tr,
-                    ),
-                    backgroundColor:
-                        label == 'home' ? Colors.red.shade100 : Colors.white,
-                  ),
-                ),
+                const Text('+971'),
                 const SizedBox(
                   width: 20,
                 ),
-                GestureDetector(
-                  onTap: () {
-                    HapticFeedback.lightImpact();
-                    setState(() {
-                      label = 'work';
-                    });
-                  },
-                  child: Chip(
-                    shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(25))),
-                    side: const BorderSide(color: Colors.grey),
-                    label: Text('work'.tr),
-                    backgroundColor:
-                        label == 'work' ? Colors.red.shade100 : Colors.white,
-                  ),
+                Flexible(
+                  child: EditText(
+                      function: () {},
+                      number: true,
+                      controller: phone,
+                      validator: (p) {
+                        if (p!.length < 9) {
+                          return 'pleasephone'.tr;
+                        }
+                        return null;
+                      },
+                      length: 9,
+                      hint: '123456789',
+                      title: 'phone'),
                 ),
               ],
             ),

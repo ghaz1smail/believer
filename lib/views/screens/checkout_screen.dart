@@ -1,20 +1,22 @@
+import 'dart:convert';
 import 'package:believer/controller/auth_controller.dart';
 import 'package:believer/controller/user_controller.dart';
 import 'package:believer/get_initial.dart';
+import 'package:believer/models/app_data_model.dart';
 import 'package:believer/models/cart_model.dart';
 import 'package:believer/models/coupon_model.dart';
 import 'package:believer/models/order_model.dart';
+import 'package:believer/models/payment_model.dart';
 import 'package:believer/views/screens/order_details.dart';
 import 'package:believer/views/screens/product_details.dart';
+import 'package:believer/views/screens/web_viewer.dart';
 import 'package:believer/views/widgets/app_bar.dart';
-import 'package:believer/views/widgets/edit_text.dart';
-import 'package:believer/views/widgets/web_viewer.dart';
+import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get.dart';
 
 class CheckoutScreen extends StatefulWidget {
   const CheckoutScreen({super.key});
@@ -24,50 +26,87 @@ class CheckoutScreen extends StatefulWidget {
 }
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
+  Paymob? paymob;
   bool makeOrder = false, loading = false;
   CouponModel couponData = CouponModel();
-  String url = '';
   TextEditingController code = TextEditingController();
   String invoiceID = '';
-  UserController userCubit = Get.find<UserController>();
+  var auth = Get.find<AuthController>(),
+      userController = Get.find<UserController>();
 
-  AuthController auth = Get.find<AuthController>();
+  makePayment() async {
+    try {
+      var response = await http.post(
+          Uri.parse('https://uae.paymob.com/api/auth/tokens'),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode(
+              {"username": paymob!.username, "password": "Mariwan@1987"}));
 
-  Future<bool> makePayment(number) async {
-    if (url.isNotEmpty) {
-      await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => WebViewer(
-              url: url,
-            ),
-          ));
-      return userCubit.done;
-    } else {
-      return false;
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        var data = PaymentModel.fromMap(jsonDecode(response.body));
+        try {
+          var request = await http.post(
+              Uri.parse('https://uae.paymob.com/api/ecommerce/payment-links'),
+              headers: {
+                'Accept': 'application/json',
+                'Authorization': 'Bearer ${data.token}',
+              },
+              body: {
+                'amount_cents':
+                    (Get.find<UserController>().totalCartPrice() * 100)
+                        .toStringAsFixed(2),
+                'full_name': auth.userData.name,
+                'email': auth.userData.email,
+                'phone_number': auth.userData.address!.first.phone,
+                'payment_methods': paymob!.id,
+                'payment_link_image': '',
+                'save_selection': 'false',
+                'is_live': 'true'
+              });
+
+          if (request.statusCode == 200 || request.statusCode == 201) {
+            var data2 = PaymentLink.fromJson(jsonDecode(request.body));
+            await Get.to(
+              () => WebViewer(
+                url: data2.clientUrl,
+              ),
+            );
+          } else {}
+        } catch (e) {
+          //
+        }
+      } else {}
+    } catch (e) {
+      //
     }
   }
 
   ordering() async {
     var id = DateTime.now(), numbers = 0, done = false;
 
-    await firestore.collection('orders').get().then((value) {
-      numbers = value.size;
-    });
+    QuerySnapshot querySnapshot = await firestore
+        .collection('orders')
+        .orderBy('number', descending: true)
+        .limit(1)
+        .get();
 
-    done = await makePayment(numbers);
+    numbers = querySnapshot.docs.first.get('number') + 1;
+
+    await makePayment();
+
+    done = userController.done;
 
     if (done) {
-      userCubit.changeDone(false);
+      userController.changeDone(false);
       Fluttertoast.showToast(msg: 'orderPlaced'.tr);
 
-      for (int i = 0; i < userCubit.cartList.entries.length; i++) {
+      for (int i = 0; i < userController.cartList.entries.length; i++) {
         await firestore
             .collection('products')
-            .doc(userCubit.cartList.entries.toList()[i].key)
+            .doc(userController.cartList.entries.toList()[i].key)
             .update({
           'stock': FieldValue.increment(
-              -userCubit.cartList.entries.toList()[i].value.count),
+              -userController.cartList.entries.toList()[i].value.count),
           'seller': FieldValue.increment(1)
         });
       }
@@ -75,12 +114,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       var data = {
         'number': numbers + 1,
         'uid': firebaseAuth.currentUser!.uid,
-        'total': userCubit.totalCartPrice(),
+        'total': userController.totalCartPrice(),
         'discount': couponData.discount,
         'delivery': 25,
         'rated': false,
         'status': 'inProgress',
         'name': auth.userData.name,
+        'invoice': invoiceID,
         'timestamp': id.toIso8601String(),
         'addressData': {
           'address': auth.userData.address!.first.address,
@@ -92,7 +132,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         //   'number': CryptLib.instance.encryptPlainTextWithRandomIV(
         //       auth.userData.wallet!.first.number, "number"),
         // },
-        'orderList': userCubit.cartList.entries
+        'orderList': userController.cartList.entries
             .map((e) => {
                   'id': e.key,
                   'titleEn': e.value.productData!.titleEn,
@@ -108,9 +148,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           .collection('orders')
           .doc(id.millisecondsSinceEpoch.toString())
           .set(data);
-      Get.off(() => OrderDetails(order: OrderModel.fromJson(data)));
+      Get.off(
+        () => OrderDetails(order: OrderModel.fromJson(data)),
+      );
 
-      userCubit.clearCart();
+      userController.clearCart();
     } else {
       Fluttertoast.showToast(msg: 'Payment failed');
       setState(() {
@@ -120,62 +162,52 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   @override
+  void initState() {
+    paymob = auth.appData!.paymobs!.first;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: SafeArea(
         child: Container(
-            height: 175,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            decoration: const BoxDecoration(
+            height: 70,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            decoration: BoxDecoration(
                 color: Colors.white,
-                border: Border(top: BorderSide(color: Colors.grey))),
-            child: Column(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 0.5,
+                    blurRadius: 0.5,
+                    offset: const Offset(0, -2),
+                  ),
+                ],
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(20))),
+            child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          '${'subtotal'.tr}:',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                            '${'AED'.tr} ${userCubit.totalCartPrice().toStringAsFixed(2)}',
-                            style: const TextStyle()),
-                      ]),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          '${'discount'.tr}:',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                            '-${'AED'.tr} ${(((userCubit.totalCartPrice() * (couponData.discount / 100)) > couponData.max ? couponData.max : (userCubit.totalCartPrice() * (couponData.discount / 100)))).toStringAsFixed(2)}',
-                            style: const TextStyle()),
-                      ]),
-                  const Divider(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        '${'total'.tr}:',
+                        '${'total'.tr}: ${'AED'.tr} ${(userController.totalCartPrice()).toStringAsFixed(2)}',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             decoration: couponData.id.isNotEmpty
                                 ? TextDecoration.lineThrough
                                 : null),
                       ),
-                      Text(
-                          '${'AED'.tr} ${(userCubit.totalCartPrice() - ((userCubit.totalCartPrice() * (couponData.discount / 100)) > couponData.max ? couponData.max : (userCubit.totalCartPrice() * (couponData.discount / 100)))).toStringAsFixed(2)}'),
+                      if (couponData.id.isNotEmpty)
+                        Text(
+                          '${'AED'.tr} ${(userController.totalCartPrice() - ((userController.totalCartPrice() * (couponData.discount / 100)) > couponData.max ? couponData.max : (userController.totalCartPrice() * (couponData.discount / 100)))).toStringAsFixed(2)} ',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                     ],
-                  ),
-                  const SizedBox(
-                    height: 10,
                   ),
                   makeOrder
                       ? const CircularProgressIndicator()
@@ -183,22 +215,21 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           onPressed: () async {
                             if (auth.userData.address!.isNotEmpty) {
-                              // if (auth.userData.wallet!.isNotEmpty) {
                               setState(() {
                                 makeOrder = true;
                               });
 
                               await ordering();
-                              // } else {
-                              //   staticWidgets.showBottom(context,
-                              //       const BottomSheetPayment(), 0.85, 0.9);
-                              // }
+
+                              setState(() {
+                                makeOrder = false;
+                              });
                             } else {
                               Fluttertoast.showToast(msg: 'pleaseAddress'.tr);
                             }
                           },
                           height: 45,
-                          minWidth: Get.width,
+                          minWidth: 100,
                           shape: const RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(20))),
@@ -217,71 +248,26 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              height: 100,
-              width: Get.width,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: userCubit.cartList.length,
-                itemBuilder: (context, index) {
-                  CartModel cart = userCubit.cartList.values.toList()[index];
-                  return SizedBox(
-                    width: 275,
-                    child: ListTile(
-                      onTap: () async {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  ProductDetails(product: cart.productData!),
-                            ));
-                      },
-                      leading: ClipRRect(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10)),
-                        child: CachedNetworkImage(
-                          imageUrl: cart.productData!.media![0],
-                          width: 75,
-                          height: 75,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      title: Text(
-                        cart.productData!.titleEn,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      visualDensity: const VisualDensity(vertical: 4),
-                      subtitle: Text(
-                        '${'AED'.tr} ${cart.productData!.price}  x${cart.count}',
-                        style: const TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.w500),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            const Divider(
-              color: Colors.grey,
+            Text(
+              'shipping'.tr,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
             ),
             auth.userData.address!.isEmpty
-                ? Align(
-                    child: MaterialButton(
-                      minWidth: 0,
-                      height: 25,
-                      color: appConstant.primaryColor,
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      onPressed: () async {
-                        await Navigator.pushNamed(context, 'address');
-                        setState(() {});
-                      },
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(25))),
-                      child: Text(
-                        'addNew'.tr,
-                        style:
-                            const TextStyle(fontSize: 12, color: Colors.white),
-                      ),
+                ? MaterialButton(
+                    minWidth: 0,
+                    height: 25,
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    onPressed: () async {
+                      await Navigator.pushNamed(context, 'address');
+                      setState(() {});
+                    },
+                    shape: const RoundedRectangleBorder(
+                        side: BorderSide(),
+                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                    child: Text(
+                      'addNew'.tr,
+                      style:
+                          TextStyle(fontSize: 12, color: Colors.amber.shade700),
                     ),
                   )
                 : ListTile(
@@ -300,83 +286,115 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         await Navigator.pushNamed(context, 'address');
                         setState(() {});
                       },
-                      color: appConstant.primaryColor,
                       shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(25))),
+                          side: BorderSide(),
+                          borderRadius: BorderRadius.all(Radius.circular(20))),
                       child: Text(
                         'change'.tr,
                         style:
-                            const TextStyle(fontSize: 12, color: Colors.white),
+                            TextStyle(fontSize: 12, color: Colors.red.shade700),
                       ),
                     ),
                   ),
             const Divider(
               color: Colors.grey,
             ),
-            Container(
-              margin: const EdgeInsets.symmetric(vertical: 10),
-              child: Row(
-                children: [
-                  Flexible(
-                    child: EditText(
-                        function: () {},
-                        controller: code,
-                        validator: (v) => '',
-                        hint: '',
-                        title: 'promo'),
-                  ),
-                  Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                      ),
-                      child: loading
-                          ? const CircularProgressIndicator()
-                          : FloatingActionButton(
-                              shape: const RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(100))),
-                              backgroundColor: appConstant.primaryColor,
-                              mini: true,
-                              onPressed: () async {
-                                setState(() {
-                                  loading = true;
-                                });
+            Text(
+              'Payment methods'.tr,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            // Container(
+            //   decoration: BoxDecoration(
+            //       borderRadius: const BorderRadius.all(Radius.circular(25)),
+            //       color: Colors.grey.shade200),
+            //   child: Row(
+            //     children: [
+            //       Flexible(
+            //         child: TextField(
+            //           controller: code,
+            //           decoration: InputDecoration(
+            //               hintText: 'promo'.tr,
+            //               enabledBorder: const OutlineInputBorder(
+            //                 borderSide: BorderSide(color: Colors.transparent),
+            //               ),
+            //               focusedBorder: const OutlineInputBorder(
+            //                 borderSide: BorderSide(color: Colors.transparent),
+            //               ),
+            //               border: const OutlineInputBorder(
+            //                 borderSide: BorderSide(color: Colors.transparent),
+            //               ),
+            //               contentPadding:
+            //                   const EdgeInsets.symmetric(horizontal: 15)),
+            //         ),
+            //       ),
+            //       Padding(
+            //         padding: const EdgeInsets.symmetric(horizontal: 10),
+            //         child: loading
+            //             ? const CircularProgressIndicator()
+            //             : MaterialButton(
+            //                 textColor: Colors.white,
+            //                 onPressed: () async {
+            //                   setState(() {
+            //                     loading = true;
+            //                   });
 
-                                await firestore
-                                    .collection('coupons')
-                                    .where('code', whereIn: [
-                                      code.text.toLowerCase(),
-                                      code.text.toUpperCase()
-                                    ])
-                                    .get()
-                                    .then((value) {
-                                      if (value.size > 0) {
-                                        couponData = CouponModel.fromJson(
-                                            value.docs.first.data());
+            //                   await firestore
+            //                       .collection('coupons')
+            //                       .where('code', whereIn: [
+            //                         code.text.toLowerCase(),
+            //                         code.text.toUpperCase()
+            //                       ])
+            //                       .get()
+            //                       .then((value) {
+            //                         if (value.size > 0) {
+            //                           couponData = CouponModel.fromJson(
+            //                               value.docs.first.data());
 
-                                        if (couponData.endTime!
-                                            .isBefore(DateTime.now())) {
-                                          Fluttertoast.showToast(
-                                              msg: 'expired'.tr);
-                                          couponData = CouponModel();
-                                        }
-                                      } else {
-                                        couponData = CouponModel();
-                                        Fluttertoast.showToast(
-                                            msg: 'noCode'.tr);
-                                      }
-                                    });
-                                setState(() {
-                                  loading = false;
-                                });
-                              },
-                              child: const Icon(
-                                Icons.send,
-                                color: Colors.white,
-                                size: 20,
-                              )))
-                ],
-              ),
+            //                           if (couponData.endTime!
+            //                               .isBefore(DateTime.now())) {
+            //                             Fluttertoast.showToast(
+            //                                 msg: 'expired'.tr);
+            //                             couponData = CouponModel();
+            //                           }
+            //                         } else {
+            //                           couponData = CouponModel();
+            //                           Fluttertoast.showToast(msg: 'noCode'.tr);
+            //                         }
+            //                       });
+            //                   setState(() {
+            //                     loading = false;
+            //                   });
+            //                 },
+            //                 color: appConstant.primaryColor,
+            //                 height: 40,
+            //                 shape: const RoundedRectangleBorder(
+            //                     borderRadius:
+            //                         BorderRadius.all(Radius.circular(25))),
+            //                 child: Text('apply'.tr),
+            //               ),
+            //       )
+            //     ],
+            //   ),
+            // ),
+            Column(
+              children: auth.appData!.paymobs!
+                  .where((w) => w.status)
+                  .map((m) => RadioListTile(
+                        activeColor: appConstant.primaryColor,
+                        contentPadding: EdgeInsets.zero,
+                        value: m,
+                        onChanged: (value) {
+                          setState(() {
+                            paymob = m;
+                          });
+                        },
+                        groupValue: paymob,
+                        title: Text(m.name),
+                      ))
+                  .toList(),
             ),
             if (couponData.id.isNotEmpty)
               ListTile(
@@ -385,6 +403,51 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 subtitle: Text(
                     '${'upTo'.tr} ${couponData.max.toStringAsFixed(2)} ${'AED'.tr}'),
               ),
+            const Divider(
+              color: Colors.grey,
+            ),
+            Text(
+              'orderList'.tr,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: userController.cartList.length,
+                itemBuilder: (context, index) {
+                  CartModel cart =
+                      userController.cartList.values.toList()[index];
+                  return ListTile(
+                    leading: ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      child: CachedNetworkImage(
+                        imageUrl: cart.productData!.media![0],
+                        width: 75,
+                        height: 75,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                ProductDetails(product: cart.productData!),
+                          ));
+                    },
+                    title: Text(
+                      cart.productData!.titleEn,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    visualDensity: const VisualDensity(vertical: 4),
+                    subtitle: Text(
+                      '${'AED'.tr} ${cart.productData!.price}',
+                      style: const TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.w500),
+                    ),
+                  );
+                },
+              ),
+            )
           ],
         ),
       ),

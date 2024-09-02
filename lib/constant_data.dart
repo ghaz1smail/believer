@@ -14,6 +14,7 @@ import 'package:believer/views/screens/orders_screen.dart';
 import 'package:believer/views/screens/payment_screen.dart';
 import 'package:believer/views/screens/register_screen.dart';
 import 'package:believer/views/screens/settings_screen.dart';
+import 'package:believer/views/screens/updated_screen.dart';
 import 'package:believer/views/screens/user_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -52,6 +53,7 @@ class AppConstant {
     'coupons': (context) => const AdminCoupons(),
     'checkout': (context) => const CheckoutScreen(),
     'notification': (context) => const NotificationScreen(),
+    'updated': (context) => const UpdatedScreen(),
   };
 
   ThemeData theme = ThemeData(

@@ -1,5 +1,6 @@
 import 'package:believer/controller/user_controller.dart';
 import 'package:believer/get_initial.dart';
+import 'package:believer/models/app_data_model.dart';
 import 'package:believer/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,9 +9,11 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class AuthController extends GetxController {
+  AppDataModel? appData;
   GlobalKey<FormState> key = GlobalKey();
   final _googleSignIn = GoogleSignIn();
   AuthorizationCredentialAppleID? appleCredential;
@@ -19,6 +22,32 @@ class AuthController extends GetxController {
       name = TextEditingController();
   UserModel userData = UserModel();
   bool agree = false, notification = false, loading = false;
+
+  changeOrders() {
+    appData!.orders = !appData!.orders;
+    firestore
+        .collection('appInfo')
+        .doc('0')
+        .update({'orders': appData!.orders});
+    update();
+  }
+
+  changePaymobs(x) {
+    appData!.paymobs!.firstWhere((w) => w.id == x).status =
+        !appData!.paymobs!.firstWhere((w) => w.id == x).status;
+
+    firestore.collection('appInfo').doc('0').update({
+      'paymobs': appData!.paymobs!
+          .map((m) => {
+                'id': m.id,
+                'username': m.username,
+                'status': m.status,
+                'name': m.name
+              })
+          .toList()
+    });
+    update();
+  }
 
   changeNotification(x) async {
     notification = x;
@@ -63,6 +92,31 @@ class AuthController extends GetxController {
   }
 
   checkUser() async {
+    String v = '0';
+    await firestore.collection('appInfo').doc('0').get().then((value) async {
+      appData = AppDataModel.fromJson(value.data() as Map);
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      v = packageInfo.version;
+    }).onError((e, e1) {
+      Get.offNamed('updated');
+    });
+
+    if (!appData!.server) {
+      Get.offNamed('updated');
+      return;
+    }
+
+    if (GetPlatform.isIOS) {
+      if (v != appData!.ios) {
+        Get.offNamed('updated');
+        return;
+      }
+    } else {
+      if (v != appData!.android) {
+        Get.offNamed('updated');
+        return;
+      }
+    }
     if (firebaseAuth.currentUser != null) {
       if (firebaseAuth.currentUser!.uid == appConstant.adminUid) {
         await Future.delayed(const Duration(seconds: 3));

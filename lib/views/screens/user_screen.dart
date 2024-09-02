@@ -1,3 +1,4 @@
+import 'package:believer/controller/auth_controller.dart';
 import 'package:believer/controller/user_controller.dart';
 import 'package:believer/views/widgets/home.dart';
 import 'package:believer/views/widgets/icon_badge.dart';
@@ -28,7 +29,7 @@ class _UserScreenState extends State<UserScreen> {
               backgroundColor: Colors.transparent,
               centerTitle: false,
               title: Text(
-                '${'hi'.tr} ${auth.userData.name}',
+                '${'hi'.tr} ${Get.find<AuthController>().userData.name}',
                 style: const TextStyle(
                   color: Colors.black,
                 ),

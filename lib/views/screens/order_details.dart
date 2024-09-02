@@ -196,13 +196,11 @@ class _OrderDetailsState extends State<OrderDetails> {
                             .get()
                             .then((value) {
                           if (value.exists) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ProductDetails(
-                                      product: ProductModel.fromJson(
-                                          value.data() as Map)),
-                                ));
+                            Get.to(
+                              () => ProductDetails(
+                                  product: ProductModel.fromJson(
+                                      value.data() as Map)),
+                            );
                           }
                         });
                       },
@@ -217,9 +215,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                         ),
                       ),
                       title: Text(
-                        Get.locale!.languageCode == 'ar'
-                            ? orderList.titleAr
-                            : orderList.titleEn,
+                        orderList.titleEn,
                         overflow: TextOverflow.ellipsis,
                       ),
                       visualDensity: const VisualDensity(vertical: 4),

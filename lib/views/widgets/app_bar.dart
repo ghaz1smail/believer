@@ -47,7 +47,7 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
         child: InkWell(
           borderRadius: const BorderRadius.all(Radius.circular(100)),
           onTap: () async {
-            Navigator.pop(context);
+            Get.back();
           },
           child: CircleAvatar(
             backgroundColor: Colors.grey.shade200,

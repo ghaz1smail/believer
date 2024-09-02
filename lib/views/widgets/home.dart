@@ -18,7 +18,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  CarouselController controller = CarouselController();
   int current = 0;
   @override
   void initState() {
@@ -144,7 +143,6 @@ class _HomeState extends State<Home> {
                     return Column(
                       children: [
                         CarouselSlider(
-                          carouselController: controller,
                           options: CarouselOptions(
                               autoPlay: true,
                               height: 200,
@@ -166,19 +164,15 @@ class _HomeState extends State<Home> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: data.asMap().entries.map((entry) {
-                            return GestureDetector(
-                              onTap: () => controller.animateToPage(entry.key),
-                              child: Container(
-                                width: 8.0,
-                                height: 8.0,
-                                margin:
-                                    const EdgeInsets.symmetric(horizontal: 4.0),
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: (appConstant.primaryColor)
-                                        .withOpacity(
-                                            current == entry.key ? 0.9 : 0.4)),
-                              ),
+                            return Container(
+                              width: 8.0,
+                              height: 8.0,
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 4.0),
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: (appConstant.primaryColor).withOpacity(
+                                      current == entry.key ? 0.9 : 0.4)),
                             );
                           }).toList(),
                         ),

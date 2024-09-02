@@ -9,12 +9,14 @@ class EditText extends StatefulWidget {
       required this.controller,
       required this.validator,
       required this.hint,
+      this.length,
       this.secure = false,
       this.number = false,
       required this.title});
   final String title;
   final bool number;
   final String hint;
+  final int? length;
   final Function function;
   final bool secure;
   final String? Function(String?)? validator;
@@ -29,6 +31,7 @@ class _EditTextState extends State<EditText> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+        maxLength: widget.length,
         keyboardType: widget.number ? TextInputType.number : null,
         obscureText: !showPass && widget.secure,
         cursorColor: appConstant.primaryColor,

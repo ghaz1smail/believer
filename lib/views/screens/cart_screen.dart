@@ -55,35 +55,36 @@ class _CartScreenState extends State<CartScreen> {
                                 )
                               ],
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 10),
-                              child: MaterialButton(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 20),
-                                onPressed: () {
-                                  if (auth.userData.uid.isEmpty) {
-                                    Fluttertoast.showToast(
-                                        msg: 'pleaseFirst'.tr);
-                                    auth.logOut();
-                                  } else {
-                                    Navigator.pushNamed(context, 'checkout');
-                                  }
-                                },
-                                height: 45,
-                                minWidth: Get.width,
-                                shape: const RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(25))),
-                                color: appConstant.primaryColor,
-                                child: Text(
-                                  'CHECKOUT'.tr,
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.white,
+                            if (auth.appData!.orders)
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 10),
+                                child: MaterialButton(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20),
+                                  onPressed: () {
+                                    if (auth.userData.uid.isEmpty) {
+                                      Fluttertoast.showToast(
+                                          msg: 'pleaseFirst'.tr);
+                                      auth.logOut();
+                                    } else {
+                                      Get.toNamed('checkout');
+                                    }
+                                  },
+                                  height: 45,
+                                  minWidth: Get.width,
+                                  shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(25))),
+                                  color: appConstant.primaryColor,
+                                  child: Text(
+                                    'CHECKOUT'.tr,
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            )
+                              )
                           ]),
                     ),
                   ),
@@ -123,13 +124,9 @@ class _CartScreenState extends State<CartScreen> {
                               child: ListTile(
                                 contentPadding:
                                     const EdgeInsets.symmetric(horizontal: 10),
-                                onTap: () async {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => ProductDetails(
-                                            product: cart.productData!),
-                                      ));
+                                onTap: () {
+                                  Get.to(() => ProductDetails(
+                                      product: cart.productData!));
                                 },
                                 leading: ClipRRect(
                                   borderRadius: const BorderRadius.all(
