@@ -91,7 +91,7 @@ class AuthController extends GetxController {
     Get.offNamed('register');
   }
 
-  checkUser() async {
+  getAppInfo() async {
     String v = '0';
     await firestore.collection('appInfo').doc('0').get().then((value) async {
       appData = AppDataModel.fromJson(value.data() as Map);
@@ -117,6 +117,10 @@ class AuthController extends GetxController {
         return;
       }
     }
+  }
+
+  checkUser() async {
+    await getAppInfo();
     if (firebaseAuth.currentUser != null) {
       if (firebaseAuth.currentUser!.uid == appConstant.adminUid) {
         await Future.delayed(const Duration(seconds: 3));

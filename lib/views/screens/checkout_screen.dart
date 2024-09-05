@@ -40,7 +40,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           Uri.parse('https://uae.paymob.com/api/auth/tokens'),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode(
-              {"username": paymob!.username, "password": "Mariwan@1987"}));
+              {"username": paymob?.username, "password": paymob?.password}));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         var data = PaymentModel.fromMap(jsonDecode(response.body));

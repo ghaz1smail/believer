@@ -24,16 +24,22 @@ class AppDataModel {
 class Paymob {
   String id;
   String username;
+  String password;
   String name;
   bool status;
 
   Paymob(
-      {this.id = '', this.username = '', this.name = '', this.status = true});
+      {this.id = '',
+      this.username = '',
+      this.name = '',
+      this.status = true,
+      this.password = ''});
 
   factory Paymob.fromJson(Map json) {
     return Paymob(
         id: json['id'] ?? '',
         name: json['name'] ?? '',
+        password: json['password'] ?? '',
         username: json['username'] ?? '',
         status: json['status'] ?? false);
   }

@@ -43,7 +43,7 @@ class ProductModel {
         titleEn: json['titleEn'] ?? '',
         titleAr: json['titleAr'] ?? '',
         id: json['id'] ?? '',
-        timestamp: json['timestamp'] ?? '',
+        timestamp: json['timestamp'].toString(),
         category: json['category'] ?? '',
         mainCategory: json['mainCategory'] ?? '',
         media: json['media'] ?? [],

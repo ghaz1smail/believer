@@ -9,6 +9,7 @@ import 'package:believer/views/widgets/edit_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_pickers/image_pickers.dart';
 
@@ -111,7 +112,7 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
           .doc(id.millisecondsSinceEpoch.toString())
           .set({
         'id': id.millisecondsSinceEpoch.toString(),
-        'timestamp': id,
+        'timestamp': id.millisecondsSinceEpoch.toString(),
         'link': '',
         'titleAr': tar.text,
         'titleEn': ten.text,
@@ -142,7 +143,7 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
         'stock': int.parse(stock.text),
       });
     }
-
+    Fluttertoast.showToast(msg: 'Product added');
     Get.back();
   }
 
