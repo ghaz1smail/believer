@@ -71,13 +71,17 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 url: data2.clientUrl,
               ),
             );
-          } else {}
+          } else {
+            Get.log(request.body);
+          }
         } catch (e) {
-          //
+          Get.log(e.toString());
         }
-      } else {}
+      } else {
+        Get.log(response.body);
+      }
     } catch (e) {
-      //
+      Get.log(e.toString());
     }
   }
 
@@ -163,7 +167,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   @override
   void initState() {
-    paymob = auth.appData!.paymobs!.first;
+    paymob = auth.appData!.paymobs!
+        .firstWhere((w) => w.status, orElse: () => Paymob());
     super.initState();
   }
 
@@ -214,18 +219,20 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       : MaterialButton(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           onPressed: () async {
-                            if (auth.userData.address!.isNotEmpty) {
-                              setState(() {
-                                makeOrder = true;
-                              });
+                            if (paymob!.id.isNotEmpty) {
+                              if (auth.userData.address!.isNotEmpty) {
+                                setState(() {
+                                  makeOrder = true;
+                                });
 
-                              await ordering();
+                                await ordering();
 
-                              setState(() {
-                                makeOrder = false;
-                              });
-                            } else {
-                              Fluttertoast.showToast(msg: 'pleaseAddress'.tr);
+                                setState(() {
+                                  makeOrder = false;
+                                });
+                              } else {
+                                Fluttertoast.showToast(msg: 'pleaseAddress'.tr);
+                              }
                             }
                           },
                           height: 45,
@@ -379,23 +386,24 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             //     ],
             //   ),
             // ),
-            Column(
-              children: auth.appData!.paymobs!
-                  .where((w) => w.status)
-                  .map((m) => RadioListTile(
-                        activeColor: appConstant.primaryColor,
-                        contentPadding: EdgeInsets.zero,
-                        value: m,
-                        onChanged: (value) {
-                          setState(() {
-                            paymob = m;
-                          });
-                        },
-                        groupValue: paymob,
-                        title: Text(m.name),
-                      ))
-                  .toList(),
-            ),
+            if (paymob!.id.isNotEmpty)
+              Column(
+                children: auth.appData!.paymobs!
+                    .where((w) => w.status)
+                    .map((m) => RadioListTile(
+                          activeColor: appConstant.primaryColor,
+                          contentPadding: EdgeInsets.zero,
+                          value: m,
+                          onChanged: (value) {
+                            setState(() {
+                              paymob = m;
+                            });
+                          },
+                          groupValue: paymob,
+                          title: Text(m.name),
+                        ))
+                    .toList(),
+              ),
             if (couponData.id.isNotEmpty)
               ListTile(
                 title: Text(couponData.titleEn),

@@ -42,7 +42,8 @@ class AuthController extends GetxController {
                 'id': m.id,
                 'username': m.username,
                 'status': m.status,
-                'name': m.name
+                'name': m.name,
+                'password': m.password
               })
           .toList()
     });
@@ -52,30 +53,12 @@ class AuthController extends GetxController {
   changeNotification(x) async {
     notification = x;
     getStorage.write('notification', x);
-    if (x) {
-      requestPermission();
-    } else {
-      firebaseMessaging.deleteToken();
-    }
+
     update();
   }
 
   requestPermission() async {
     notification = getStorage.read('notification') ?? true;
-
-    await firebaseMessaging.requestPermission(
-        alert: true, badge: true, sound: true);
-
-    if (notification) {
-      firebaseMessaging.getToken().then((value) {
-        firestore
-            .collection('users')
-            .doc(firebaseAuth.currentUser!.uid)
-            .update({
-          'token': value,
-        });
-      });
-    }
   }
 
   agreeTerm() {
@@ -92,15 +75,19 @@ class AuthController extends GetxController {
   }
 
   getAppInfo() async {
-    String v = '0';
     await firestore.collection('appInfo').doc('0').get().then((value) async {
       appData = AppDataModel.fromJson(value.data() as Map);
-      PackageInfo packageInfo = await PackageInfo.fromPlatform();
-      v = packageInfo.version;
     }).onError((e, e1) {
       Get.offNamed('updated');
+      return;
     });
+  }
 
+  checkUser() async {
+    String v = '0';
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    v = packageInfo.version;
+    await getAppInfo();
     if (!appData!.server) {
       Get.offNamed('updated');
       return;
@@ -117,10 +104,6 @@ class AuthController extends GetxController {
         return;
       }
     }
-  }
-
-  checkUser() async {
-    await getAppInfo();
     if (firebaseAuth.currentUser != null) {
       if (firebaseAuth.currentUser!.uid == appConstant.adminUid) {
         await Future.delayed(const Duration(seconds: 3));
@@ -145,6 +128,7 @@ class AuthController extends GetxController {
         await firestore
             .collection('users')
             .doc(firebaseAuth.currentUser!.uid)
+            // .doc('URK1NqILN6SJ9ODWMsRPRX3Pns03')
             .get()
             .then((value) {
           userData = UserModel.fromJson(value.data() as Map);
